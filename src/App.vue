@@ -1,5 +1,9 @@
+<!--  this is a Vue/HTML comment -->
 <script setup>
 import { ref, computed } from "vue";
+import roofPeakWidth from "./assets/roofPeakWidth.png";
+import roofPeakDepth from "./assets/roofPeakDepth.png";
+import twoIso from "./assets/two_iso.png";
 
 const acceptedTerms = ref(false);
 const showFAQ = ref(false);
@@ -53,6 +57,48 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "6";
     eavesOverHang.value = 6;
+  }
+
+  if (type === "yardShed") {
+    width.value = 8;
+    depth.value = 8;
+    wallHeight.value = 6;
+    skidType.value = "2x4flat";
+    floorJoistSize.value = "2x4";
+    floorPlywoodThickness.value = "2";
+    wallStudSize.value = "2x4";
+    roofPeakDirection.value = "depth";
+    roofRafterSize.value = "2x4";
+    roofPitch.value = "8";
+    eavesOverHang.value = 8;
+  }
+
+  if (type === "workshopGarage") {
+    width.value = 12;
+    depth.value = 8;
+    wallHeight.value = 8;
+    skidType.value = "4x4";
+    floorJoistSize.value = "2x6";
+    floorPlywoodThickness.value = "4";
+    wallStudSize.value = "2x6";
+    roofPeakDirection.value = "width";
+    roofRafterSize.value = "2x6";
+    roofPitch.value = "12";
+    eavesOverHang.value = 18;
+  }
+
+  if (type === "customStructure") {
+    width.value = 12;
+    depth.value = 12;
+    wallHeight.value = 8;
+    skidType.value = "4x4";
+    floorJoistSize.value = "2x6";
+    floorPlywoodThickness.value = "3";
+    wallStudSize.value = "2x6";
+    roofPeakDirection.value = "depth";
+    roofRafterSize.value = "2x6";
+    roofPitch.value = "10";
+    eavesOverHang.value = 10;
   }
 }
 
@@ -261,7 +307,7 @@ function loadTheMechanism() {
 
     <label> I understand and accept these terms. </label>
   </div>
-  <div v-if="acceptedTerms">
+  <div v-if="acceptedTerms" style="border: 10px solid red">
     <h1>WELCOME TO:</h1>
     <h1>Beaver Built Canada Shed Configurator</h1>
     <p>
@@ -285,6 +331,7 @@ function loadTheMechanism() {
       may not be available as work in progress, please check back soon). If you
       require additional help, feel free to contact us by email at:
     </p>
+
     <div v-if="!buildingType">
       <h2>What Would You Like To Build?</h2>
       <div class="building-card" @click="selectBuildingType('animalHousing')">
@@ -295,7 +342,7 @@ function loadTheMechanism() {
         </p>
       </div>
 
-      <div class="building-card" @click="buildingType = 'yardShed'">
+      <div class="building-card" @click="selectBuildingType('yardShed')">
         <h3>🏡 Yard Shed</h3>
         <p>
           Storage sheds, garden sheds, utility buildings, and general backyard
@@ -303,12 +350,12 @@ function loadTheMechanism() {
         </p>
       </div>
 
-      <div class="building-card" @click="buildingType = 'workshopGarage'">
+      <div class="building-card" @click="selectBuildingType('workshopGarage')">
         <h3>🔨 Workshop & Garage</h3>
         <p>Workshops, garages, hobby spaces, and larger utility structures.</p>
       </div>
 
-      <div class="building-card" @click="buildingType = 'customStructure'">
+      <div class="building-card" @click="selectBuildingType('customStructure')">
         <h3>⚙️ Custom Structure</h3>
         <p>Start with a blank configuration and build exactly what you need.</p>
       </div>
@@ -357,6 +404,12 @@ function loadTheMechanism() {
     <div v-if="buildingType">
       <h2>Building Dimensions</h2>
       <div class="building-card">
+        <img
+          :src="twoIso"
+          alt="Building dimensions reference"
+          class="dimension_reference_image"
+        />
+
         <p>
           Enter the desired dimensions for your building. The floor area,
           perimeter, and wall area will be calculated and displayed below, for
@@ -371,6 +424,22 @@ function loadTheMechanism() {
             <option value="6">6'</option>
             <option value="7">7'</option>
             <option value="8">8'</option>
+            <option value="9">9'</option>
+            <option value="10">10'</option>
+            <option value="11">11'</option>
+            <option value="12">12'</option>
+            <option value="13">13'</option>
+            <option value="14">14'</option>
+            <option value="15">15'</option>
+            <option value="16">16'</option>
+            <option value="17">17'</option>
+            <option value="18">18'</option>
+            <option value="19">19'</option>
+            <option value="20">20'</option>
+            <option value="21">21'</option>
+            <option value="22">22'</option>
+            <option value="23">23'</option>
+            <option value="24">24'</option>
           </select>
           <span class="dimension-value"
             >Your chosen width is {{ width }} feet.</span
@@ -401,6 +470,22 @@ function loadTheMechanism() {
             <option value="6">6'</option>
             <option value="7">7'</option>
             <option value="8">8'</option>
+            <option value="9">9'</option>
+            <option value="10">10'</option>
+            <option value="11">11'</option>
+            <option value="12">12'</option>
+            <option value="13">13'</option>
+            <option value="14">14'</option>
+            <option value="15">15'</option>
+            <option value="16">16'</option>
+            <option value="17">17'</option>
+            <option value="18">18'</option>
+            <option value="19">19'</option>
+            <option value="20">20'</option>
+            <option value="21">21'</option>
+            <option value="22">22'</option>
+            <option value="23">23'</option>
+            <option value="24">24'</option>
           </select>
           <span class="dimension-value"
             >Your chosen depth is {{ depth }} feet.</span
@@ -500,7 +585,7 @@ function loadTheMechanism() {
         <p>Recommended for smaller structures like animal housing.</p>
       </div>
 
-      <div v-if="skidType">
+      <div v-if="skidType" class="current_selection">
         <p>Selected Foundation Type; Pressure Treated: {{ skidType }}</p>
       </div>
 
@@ -517,7 +602,7 @@ function loadTheMechanism() {
 
       <div
         class="building-card"
-        :class="{ selected_wood004: centerSkid }"
+        :class="{ selected_wood004: centerSkid, current_selection: centerSkid }"
         @click="centerSkid = centerSkid ? '' : 'Use Center Skid'"
       >
         <h3>Use a Center Skid</h3>
@@ -527,7 +612,9 @@ function loadTheMechanism() {
         </p>
       </div>
 
-      <div v-if="centerSkid">Selected Center Skid: {{ centerSkid }}</div>
+      <div class="current_selection" v-if="centerSkid">
+        Selected Center Skid: {{ centerSkid }}
+      </div>
 
       <h2>Floor Joists</h2>
       <p>
@@ -571,7 +658,7 @@ function loadTheMechanism() {
         </p>
       </div>
 
-      <div v-if="floorJoistSize">
+      <div class="current_selection" v-if="floorJoistSize">
         Selected Floor Joist Size: {{ floorJoistSize }}
       </div>
 
@@ -628,7 +715,11 @@ function loadTheMechanism() {
         distribute the weight of the structure evenly across the walls.
       </div>
 
-      <div class="building-card" @click="wallStudSize = '2x4'">
+      <div
+        class="building-card"
+        :class="{ selected_wood034: wallStudSize === '2x4' }"
+        @click="wallStudSize = '2x4'"
+      >
         <h3>Use 2x4 Wall Studs</h3>
         <p>
           <button @click="showMoreAbout2x4Studs = !showMoreAbout2x4Studs">
@@ -652,9 +743,15 @@ function loadTheMechanism() {
           feature is currently non-operational)
         </p>
       </div>
-      <div v-if="wallStudSize">Selected Wall Stud Size: {{ wallStudSize }}</div>
+      <div class="current_selection" v-if="wallStudSize">
+        Selected Wall Stud Size: {{ wallStudSize }}
+      </div>
 
-      <div class="building-card" @click="wallStudSize = '2x6'">
+      <div
+        class="building-card"
+        :class="{ selected_wood034: wallStudSize === '2x6' }"
+        @click="wallStudSize = '2x6'"
+      >
         <h3>Use 2x6 Wall Studs</h3>
         <p>
           <button @click="showMoreAbout2x6Studs = !showMoreAbout2x6Studs">
@@ -679,32 +776,52 @@ function loadTheMechanism() {
         </div>
       </div>
       <h2>Roof Peak Direction</h2>
+
       <p>
         <button @click="showMoreAboutRoofPeak = !showMoreAboutRoofPeak">
           more about roof peaks and gables
         </button>
       </p>
-      <p v-if="showMoreAboutRoofPeak">
-        <strong> Q: What is a roof peak?</strong><br />
-        A: A roof peak is the highest point of a roof, typically found at the
-        center of a gable roof.
-      </p>
-      <p>
-        <strong> Q: What is a gable?</strong><br />
-        A: A gable is the triangular section of a wall between the edges of a
-        sloping roof.
-      </p>
+      <div v-if="showMoreAboutRoofPeak">
+        <p>
+          <strong>Q: What is a roof peak?</strong><br />
+          A: A roof peak is the highest point of a roof, typically found at the
+          center of a gable roof.
+        </p>
 
-      <div class="building-card" @click="roofPeakDirection = 'width'">
+        <p>
+          <strong>Q: What is a gable?</strong><br />
+          A: A gable is the triangular section of a wall between the edges of a
+          sloping roof.
+        </p>
+      </div>
+
+      <div
+        class="building-card roof_option"
+        @click="roofPeakDirection = 'width'"
+      >
+        <img
+          :src="roofPeakWidth"
+          alt="Roof peak runs width"
+          class="roof_direction_image"
+        />
         <h3>Peak Runs Width</h3>
         <p>Gable ends on the left and right walls.</p>
       </div>
 
-      <p v-if="roofPeakDirection">
+      <p class="current_selection" v-if="roofPeakDirection">
         Selected Roof Direction: {{ roofPeakDirection }}
       </p>
 
-      <div class="building-card" @click="roofPeakDirection = 'depth'">
+      <div
+        class="building-card roof_option"
+        @click="roofPeakDirection = 'depth'"
+      >
+        <img
+          :src="roofPeakDepth"
+          alt="Roof peak runs depth"
+          class="roof_direction_image"
+        />
         <h3>Peak Runs Depth</h3>
         <p>Gable ends on the front and rear walls.</p>
       </div>
@@ -915,6 +1032,21 @@ function loadTheMechanism() {
   border-bottom: 1px solid #ccc;
 }
 
+.dimension_reference_image {
+  width: 100%;
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+}
+
+.current_selection {
+  font-size: 1.2rem;
+  text-align: center;
+  color: #d8b36a;
+  text-shadow: 1px 1px 1px black;
+  margin: 8px 0;
+}
+
 .selected_wood004 {
   background-image: url("./assets/Wood004_4K-JPG_Color.jpg");
   background-size: cover;
@@ -937,5 +1069,16 @@ function loadTheMechanism() {
   background-position: center;
   border: 3px solid #d8b36a;
   color: rgb(43, 4, 4);
+}
+
+.roof_option {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.roof_direction_image {
+  width: 120px;
+  flex-shrink: 0;
 }
 </style>
