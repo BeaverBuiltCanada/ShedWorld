@@ -342,7 +342,7 @@ function loadTheMechanism() {
     <h1>WELCOME TO:</h1>
     <h2>Beaver Built Canada: Custom Building Configurator, v1.0</h2>
     <p>and Thank You for deciding to try out our configurator!</p>
-    <div class="sticky-tape">
+    <div v-if="!buildingType" class="sticky-tape">
       <img :src="tapeMeasure" alt="Tape Measure" class="tape_measure_image" />
     </div>
     <p>
@@ -353,7 +353,7 @@ function loadTheMechanism() {
       experienced builders, additional options and advanced features are
       available to provide greater control over the final design.
     </p>
-
+    <!--=====================This is currently a link to a photo for development phase=========-->
     <p>
       Visit
       <a
@@ -417,67 +417,14 @@ function loadTheMechanism() {
           </p>
         </div>
       </div>
-      <!--=============================================Current Build Summary Card===========
-      ==========================-->
-      <div class="summary-column">
-        <div class="summary-card">
-          <p>
-            (these are system default values and will update with your choices)
-          </p>
-          <h4>Your Current Building Selections:</h4>
-          <div class="summary-row">
-            <span>Width:</span><span>{{ width }}'</span>
-          </div>
-          <!-- Width Row -->
-          <div class="summary-row">
-            <span>Depth:</span><span>{{ depth }}'</span>
-          </div>
-          <!-- Depth Row -->
-          <div class="summary-row">
-            <span>Wall Height:</span><span>{{ wallHeight }}'</span>
-          </div>
-          <!-- Wall Height Row -->
-          <div class="summary-row">
-            <span>Foundation:</span>
-            <span>{{ skidType }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Center Skid:</span>
-            <span>{{ centerSkid || "No" }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Floor Joists:</span>
-            <span>{{ floorJoistSize }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Plywood:</span>
-            <span>{{ plywoodDisplay }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Wall Studs:</span>
-            <span>{{ wallStudSize }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Peak:</span>
-            <span>{{ roofPeakDirection }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Rafters:</span>
-            <span>{{ roofRafterSize }}</span>
-          </div>
-          <div class="summary-row">
-            <span>Pitch:</span>
-            <span>{{ roofPitch }}:12</span>
-          </div>
-          <div class="summary-row">
-            <span>Eaves:</span>
-            <span>{{ eavesOverHang }}"</span>
-          </div>
-        </div>
-      </div>
-
       <div v-if="buildingType === 'yardShed'">
         <div class="building-card">
+          <a
+            href="#"
+            class="change-building-link"
+            @click.prevent="buildingType = ''"
+            >← Choose a different building type</a
+          >
           <h3>🏡 Yard Shed</h3>
           <p>
             Storage sheds, garden sheds, utility buildings, and general backyard
@@ -487,6 +434,12 @@ function loadTheMechanism() {
       </div>
       <div v-if="buildingType === 'workshopGarage'">
         <div class="building-card">
+          <a
+            href="#"
+            class="change-building-link"
+            @click.prevent="buildingType = ''"
+            >← Choose a different building type</a
+          >
           <h3>🔨 Workshop & Garage</h3>
           <p>
             Workshops, garages, hobby spaces, and larger utility structures.
@@ -495,6 +448,12 @@ function loadTheMechanism() {
       </div>
       <div v-if="buildingType === 'customStructure'">
         <div class="building-card">
+          <a
+            href="#"
+            class="change-building-link"
+            @click.prevent="buildingType = ''"
+            >← Choose a different building type</a
+          >
           <h3>⚙️ Custom Structure</h3>
           <p>
             Start with a blank configuration and build exactly what you need.
@@ -506,643 +465,711 @@ function loadTheMechanism() {
     <!--==========This is where 2 column layout should start...me thinks=========-->
     <!-- Start of Building Dimensions above two orthographic views with view cubes -->
     <div v-if="buildingType" class="configurator-layout">
-      <div class="main-column">
-        <h2>Building Dimensions</h2>
-        <!-- double isometric pic with the view cubes -->
-
-        <div class="reference-card">
-          <p>
-            Enter the desired dimensions for your building. The floor area,
-            perimeter, and wall area will be calculated and displayed below, for
-            your reference.
-          </p>
-          <h4>Dimensions Reference</h4>
-          <div class="dimension-reference-container">
-            <img
-              :src="twoIso"
-              alt="Building dimensions reference"
-              class="dimensions_reference_image"
-            />
-            <!--Start of RED GREEN BLUE legend-->
-            <div class="dimension-legend">
-              <div class="legend-width">Width</div>
-              <div class="legend-depth">Depth</div>
-              <div class="legend-height">Wall Height</div>
+      <aside class="page3-sidebar">
+        <div class="page3-sticky-panel">
+          <img :src="tapeMeasure" alt="Tape Measure" class="page3-tape-image" />
+          <div class="summary-card">
+            <p>
+              (these are system default values and will update with your
+              choices)
+            </p>
+            <h4>Your Current Building Selections:</h4>
+            <div class="summary-row">
+              <span>Width:</span><span>{{ width }}'</span>
+            </div>
+            <div class="summary-row">
+              <span>Depth:</span><span>{{ depth }}'</span>
+            </div>
+            <div class="summary-row">
+              <span>Wall Height:</span><span>{{ wallHeight }}'</span>
+            </div>
+            <div class="summary-row">
+              <span>Foundation:</span>
+              <span>{{ skidType }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Center Skid:</span>
+              <span>{{ centerSkid || "No" }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Floor Joists:</span>
+              <span>{{ floorJoistSize }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Plywood:</span>
+              <span>{{ plywoodDisplay }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Wall Studs:</span>
+              <span>{{ wallStudSize }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Peak:</span>
+              <span>{{ roofPeakDirection }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Rafters:</span>
+              <span>{{ roofRafterSize }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Pitch:</span>
+              <span>{{ roofPitch }}:12</span>
+            </div>
+            <div class="summary-row">
+              <span>Eaves:</span>
+              <span>{{ eavesOverHang }}"</span>
             </div>
           </div>
-          <!--=================This is the test spot for column set up closing div==============-->
         </div>
-        <!--Start of WIDTH drop down-->
-        <div class="dimension-row">
-          <label class="dimension-label">Width:</label>
-          <select v-model="width">
-            <option value="4">4'</option>
-            <option value="5">5'</option>
-            <option value="6">6'</option>
-            <option value="7">7'</option>
-            <option value="8">8'</option>
-            <option value="9">9'</option>
-            <option value="10">10'</option>
-            <option value="11">11'</option>
-            <option value="12">12'</option>
-            <option value="13">13'</option>
-            <option value="14">14'</option>
-            <option value="15">15'</option>
-            <option value="16">16'</option>
-            <option value="17">17'</option>
-            <option value="18">18'</option>
-            <option value="19">19'</option>
-            <option value="20">20'</option>
-            <option value="21">21'</option>
-            <option value="22">22'</option>
-            <option value="23">23'</option>
-            <option value="24">24'</option>
-          </select>
-          <span class="dimension-value"
-            >Your chosen width is {{ width }} feet.</span
-          >
-        </div>
-        <p>
-          <button @click="showWhatIsWidth = !showWhatIsWidth">
-            What Is Width?
-          </button>
-        </p>
-        <div v-if="showWhatIsWidth">
-          <p>
-            <strong> Q: What is width?</strong><br />
-            A: Width is the side-to-side measurement of the building.
-          </p>
-          <p>
-            <strong>Q: What are we considering to be the width?</strong><br />
-            A: Imagine you're standing at the front door facing the building.
-            The width runs from left to right across the front wall.
-          </p>
-        </div>
-        <!--Start of DEPTH drop down-->
-        <div class="dimension-row">
-          <label class="dimension-label">Depth:</label>
-          <select v-model="depth">
-            <option value="4">4'</option>
-            <option value="5">5'</option>
-            <option value="6">6'</option>
-            <option value="7">7'</option>
-            <option value="8">8'</option>
-            <option value="9">9'</option>
-            <option value="10">10'</option>
-            <option value="11">11'</option>
-            <option value="12">12'</option>
-            <option value="13">13'</option>
-            <option value="14">14'</option>
-            <option value="15">15'</option>
-            <option value="16">16'</option>
-            <option value="17">17'</option>
-            <option value="18">18'</option>
-            <option value="19">19'</option>
-            <option value="20">20'</option>
-            <option value="21">21'</option>
-            <option value="22">22'</option>
-            <option value="23">23'</option>
-            <option value="24">24'</option>
-          </select>
-          <span class="dimension-value"
-            >Your chosen depth is {{ depth }} feet.</span
-          >
-          <div v-if="dimensionWarning" class="warning_box">
-            ⚠️ Depth is typically treated as the longer dimension of the
-            building. Future floor joist, center skid, and roof calculations
-            will use this orientation as the default assumption. You may
-            continue with any dimensions, but understanding this convention will
-            help when selecting later options.
+      </aside>
+      <div class="options-column">
+        <div class="main-column">
+          <h2>Building Dimensions</h2>
+          <!-- double isometric pic with the view cubes -->
+
+          <div class="reference-card">
+            <p>
+              Enter the desired dimensions for your building. The floor area,
+              perimeter, and wall area will be calculated and displayed below,
+              for your reference.
+            </p>
+            <h4>Dimensions Reference</h4>
+            <div class="dimension-reference-container">
+              <img
+                :src="twoIso"
+                alt="Building dimensions reference"
+                class="dimensions_reference_image"
+              />
+              <!--Start of RED GREEN BLUE legend-->
+              <div class="dimension-legend">
+                <div class="legend-width">Width</div>
+                <div class="legend-depth">Depth</div>
+                <div class="legend-height">Wall Height</div>
+              </div>
+            </div>
+            <!--=================This is the test spot for column set up closing div==============-->
           </div>
-        </div>
-        <p>
-          <button @click="showWhatIsDepth = !showWhatIsDepth">
-            What Is Depth?
-          </button>
-        </p>
-        <div v-if="showWhatIsDepth">
+          <!--Start of WIDTH drop down-->
+          <div class="dimension-row">
+            <label class="dimension-label">Width:</label>
+            <select v-model="width">
+              <option value="4">4'</option>
+              <option value="5">5'</option>
+              <option value="6">6'</option>
+              <option value="7">7'</option>
+              <option value="8">8'</option>
+              <option value="9">9'</option>
+              <option value="10">10'</option>
+              <option value="11">11'</option>
+              <option value="12">12'</option>
+              <option value="13">13'</option>
+              <option value="14">14'</option>
+              <option value="15">15'</option>
+              <option value="16">16'</option>
+              <option value="17">17'</option>
+              <option value="18">18'</option>
+              <option value="19">19'</option>
+              <option value="20">20'</option>
+              <option value="21">21'</option>
+              <option value="22">22'</option>
+              <option value="23">23'</option>
+              <option value="24">24'</option>
+            </select>
+            <span class="dimension-value"
+              >Your chosen width is {{ width }} feet.</span
+            >
+          </div>
           <p>
-            <strong> Q: What is depth?</strong><br />
-            A: Depth is the front-to-back measurement of the building.
+            <button @click="showWhatIsWidth = !showWhatIsWidth">
+              What Is Width?
+            </button>
           </p>
+          <div v-if="showWhatIsWidth">
+            <p>
+              <strong> Q: What is width?</strong><br />
+              A: Width is the side-to-side measurement of the building.
+            </p>
+            <p>
+              <strong>Q: What are we considering to be the width?</strong><br />
+              A: Imagine you're standing at the front door facing the building.
+              The width runs from left to right across the front wall.
+            </p>
+          </div>
+          <!--Start of DEPTH drop down-->
+          <div class="dimension-row">
+            <label class="dimension-label">Depth:</label>
+            <select v-model="depth">
+              <option value="4">4'</option>
+              <option value="5">5'</option>
+              <option value="6">6'</option>
+              <option value="7">7'</option>
+              <option value="8">8'</option>
+              <option value="9">9'</option>
+              <option value="10">10'</option>
+              <option value="11">11'</option>
+              <option value="12">12'</option>
+              <option value="13">13'</option>
+              <option value="14">14'</option>
+              <option value="15">15'</option>
+              <option value="16">16'</option>
+              <option value="17">17'</option>
+              <option value="18">18'</option>
+              <option value="19">19'</option>
+              <option value="20">20'</option>
+              <option value="21">21'</option>
+              <option value="22">22'</option>
+              <option value="23">23'</option>
+              <option value="24">24'</option>
+            </select>
+            <span class="dimension-value"
+              >Your chosen depth is {{ depth }} feet.</span
+            >
+            <div v-if="dimensionWarning" class="warning_box">
+              ⚠️ Depth is typically treated as the longer dimension of the
+              building. Future floor joist, center skid, and roof calculations
+              will use this orientation as the default assumption. You may
+              continue with any dimensions, but understanding this convention
+              will help when selecting later options.
+            </div>
+          </div>
           <p>
-            <strong>Q: What do we mean by the building's depth?</strong><br />
-            A: Imagine you're standing at the front door looking inside. The
-            depth is the distance your line of sight travels from the front wall
-            to the back wall.
+            <button @click="showWhatIsDepth = !showWhatIsDepth">
+              What Is Depth?
+            </button>
           </p>
-        </div>
-        <!--===========================================Start of WALL HEIGHT drop down===
+          <div v-if="showWhatIsDepth">
+            <p>
+              <strong> Q: What is depth?</strong><br />
+              A: Depth is the front-to-back measurement of the building.
+            </p>
+            <p>
+              <strong>Q: What do we mean by the building's depth?</strong><br />
+              A: Imagine you're standing at the front door looking inside. The
+              depth is the distance your line of sight travels from the front
+              wall to the back wall.
+            </p>
+          </div>
+          <!--===========================================Start of WALL HEIGHT drop down===
         =============================================-->
-        <div class="dimension-row">
-          <label class="dimension-label">Wall Height:</label>
-          <select v-model="wallHeight">
-            <option value="4">4'</option>
-            <option value="5">5'</option>
-            <option value="6">6'</option>
-            <option value="7">7'</option>
-            <option value="8">8'</option>
-          </select>
-          <span class="dimension-value"
-            >Your chosen wall height is {{ wallHeight }} feet.</span
-          >
-        </div>
-        <p>
-          <button @click="showWhatIsWallHeight = !showWhatIsWallHeight">
-            What Is Wall Height?
-          </button>
-        </p>
-        <div v-if="showWhatIsWallHeight">
+          <div class="dimension-row">
+            <label class="dimension-label">Wall Height:</label>
+            <select v-model="wallHeight">
+              <option value="4">4'</option>
+              <option value="5">5'</option>
+              <option value="6">6'</option>
+              <option value="7">7'</option>
+              <option value="8">8'</option>
+            </select>
+            <span class="dimension-value"
+              >Your chosen wall height is {{ wallHeight }} feet.</span
+            >
+          </div>
           <p>
-            <strong> Q: What is wall height?</strong><br />
-            A: Wall height is the vertical distance from the floor to the top of
-            the building's walls.
+            <button @click="showWhatIsWallHeight = !showWhatIsWallHeight">
+              What Is Wall Height?
+            </button>
           </p>
+          <div v-if="showWhatIsWallHeight">
+            <p>
+              <strong> Q: What is wall height?</strong><br />
+              A: Wall height is the vertical distance from the floor to the top
+              of the building's walls.
+            </p>
 
+            <p>
+              <strong>Q: How do we determine the wall height?</strong><br />
+              A: Wall height is measured from the top of the floor to the top of
+              the wall where the roof structure begins. It does not include the
+              gable, which is the triangular section of wall above the main wall
+              on a gable roof.
+            </p>
+          </div>
+
+          <p>reference, Floor Area: {{ floorArea }} sq ft</p>
+          <p>reference, Perimeter: {{ perimeter }} ft</p>
+          <p>reference, Wall Area: {{ wallArea }} sq ft</p>
+        </div>
+
+        <h2>Foundation Skids</h2>
+
+        <div class="reference-card reference_images">
+          <h4>Foundation Skids Reference</h4>
+          <img
+            :src="skidsShowing"
+            alt="Foundation skids reference"
+            class="skids_reference_image"
+          />
           <p>
-            <strong>Q: How do we determine the wall height?</strong><br />
-            A: Wall height is measured from the top of the floor to the top of
-            the wall where the roof structure begins. It does not include the
-            gable, which is the triangular section of wall above the main wall
-            on a gable roof.
+            <button @click="showWhatIsASkid = !showWhatIsASkid">
+              What Is A Skid?
+            </button>
           </p>
         </div>
 
-        <p>reference, Floor Area: {{ floorArea }} sq ft</p>
-        <p>reference, Perimeter: {{ perimeter }} ft</p>
-        <p>reference, Wall Area: {{ wallArea }} sq ft</p>
-      </div>
+        <div v-if="showWhatIsASkid">
+          <p>
+            <strong> Q: What is a skid?</strong><br />
+            A: A skid is a horizontal support beam that runs along the bottom of
+            a structure, providing stability and support. Skids are typically
+            made of pressure-treated lumber because they are usually in contact
+            with the ground. They are used in various types of buildings,
+            including sheds, workshops, and animal housing. They help distribute
+            the weight of the structure evenly and can also make it easier to
+            move the building if necessary. By not being permanently fixed to
+            the ground, skids allow for some flexibility in placement and can
+            help prevent moisture damage by elevating the structure slightly
+            above the ground level. Skids also do not require permanent
+            anchoring, which can sometimes be an advantage when navigating
+            building codes and municipal bylaws. As always, be sure to follow
+            the rules and requirements of your local jurisdiction.
+          </p>
+          <p>
+            By default, this configurator will use four skids around the
+            underside perimeter of the building. For larger depth span buildings
+            it is recommended to use a center skid also. The center skid will be
+            placed equal distance and parallel between the front skid and the
+            back skid.
+          </p>
+        </div>
+        <div
+          class="building-card"
+          :class="{ selected_wood004: skidType === '2x4flat' }"
+          @click="skidType = '2x4flat'"
+        >
+          <h3>Use 2x4 Pressure Treated - Flat Orientation</h3>
+          <p>Recommended for smaller structures like animal housing.</p>
+        </div>
 
-      <h2>Foundation Skids</h2>
+        <div v-if="skidType" class="current_selection">
+          <p>Selected Foundation Skid Type; Pressure Treated: {{ skidType }}</p>
+        </div>
 
-      <div class="reference-card reference_images">
-        <h4>Foundation Skids Reference</h4>
-        <img
-          :src="skidsShowing"
-          alt="Foundation skids reference"
-          class="skids_reference_image"
-        />
-        <p>
-          <button @click="showWhatIsASkid = !showWhatIsASkid">
-            What Is A Skid?
-          </button>
-        </p>
-      </div>
+        <div
+          class="building-card"
+          :class="{ selected_wood004: skidType === '4x4' }"
+          @click="skidType = '4x4'"
+        >
+          <h3>Use 4x4 Pressure Treated</h3>
+          <p>
+            Recommended for larger size structures like sheds and small
+            buildings.
+          </p>
+        </div>
 
-      <div v-if="showWhatIsASkid">
-        <p>
-          <strong> Q: What is a skid?</strong><br />
-          A: A skid is a horizontal support beam that runs along the bottom of a
-          structure, providing stability and support. Skids are typically made
-          of pressure-treated lumber because they are usually in contact with
-          the ground. They are used in various types of buildings, including
-          sheds, workshops, and animal housing. They help distribute the weight
-          of the structure evenly and can also make it easier to move the
-          building if necessary. By not being permanently fixed to the ground,
-          skids allow for some flexibility in placement and can help prevent
-          moisture damage by elevating the structure slightly above the ground
-          level. Skids also do not require permanent anchoring, which can
-          sometimes be an advantage when navigating building codes and municipal
-          bylaws. As always, be sure to follow the rules and requirements of
-          your local jurisdiction.
-        </p>
-        <p>
-          By default, this configurator will use four skids around the underside
-          perimeter of the building. For larger depth span buildings it is
-          recommended to use a center skid also. The center skid will be placed
-          equal distance and parallel between the front skid and the back skid.
-        </p>
-      </div>
-      <div
-        class="building-card"
-        :class="{ selected_wood004: skidType === '2x4flat' }"
-        @click="skidType = '2x4flat'"
-      >
-        <h3>Use 2x4 Pressure Treated - Flat Orientation</h3>
-        <p>Recommended for smaller structures like animal housing.</p>
-      </div>
+        <div
+          class="building-card"
+          :class="{
+            selected_wood004: centerSkid,
+            current_selection: centerSkid,
+          }"
+          @click="centerSkid = centerSkid ? '' : 'Use Center Skid'"
+        >
+          <h3>Use a Center Skid</h3>
+          <p>
+            Recommended for larger size structures with a deep span. Such as
+            large sheds and large buildings.
+          </p>
+        </div>
 
-      <div v-if="skidType" class="current_selection">
-        <p>Selected Foundation Skid Type; Pressure Treated: {{ skidType }}</p>
-      </div>
-
-      <div
-        class="building-card"
-        :class="{ selected_wood004: skidType === '4x4' }"
-        @click="skidType = '4x4'"
-      >
-        <h3>Use 4x4 Pressure Treated</h3>
-        <p>
-          Recommended for larger size structures like sheds and small buildings.
-        </p>
-      </div>
-
-      <div
-        class="building-card"
-        :class="{
-          selected_wood004: centerSkid,
-          current_selection: centerSkid,
-        }"
-        @click="centerSkid = centerSkid ? '' : 'Use Center Skid'"
-      >
-        <h3>Use a Center Skid</h3>
-        <p>
-          Recommended for larger size structures with a deep span. Such as large
-          sheds and large buildings.
-        </p>
-      </div>
-
-      <div class="current_selection" v-if="centerSkid">
-        Selected Center Skid: {{ centerSkid }}
-      </div>
-      <!--==============================================================FLOOR JOISTS======
+        <div class="current_selection" v-if="centerSkid">
+          Selected Center Skid: {{ centerSkid }}
+        </div>
+        <!--==============================================================FLOOR JOISTS======
 =====================================================================================-->
-      <h2>Floor Joists</h2>
-      <p>
-        <button @click="showWhatIsAJoist = !showWhatIsAJoist">
-          What is a floor joist?
-        </button>
-      </p>
-      <div v-if="showWhatIsAJoist">
+        <h2>Floor Joists</h2>
         <p>
-          <strong> Q: What is a floor joist?</strong><br />
-          A: A floor joist is a horizontal structural element that supports the
-          floor of a building. They are typically made of wood or steel and are
-          used to distribute the weight of the floor evenly across the
-          structure.
-        </p>
-
-        <p>
-          By default, this configurator will place the floor joists in a depth
-          orientation. If you are designing a rectangular shaped structure, it
-          would be better to have the depth be the longer side, in the event you
-          choose to use a center skid to support the floor joists in the middle
-          of their length.
-        </p>
-      </div>
-
-      <div
-        class="building-card"
-        :class="{ selected_wood034: floorJoistSize === '2x4' }"
-        @click="floorJoistSize = '2x4'"
-      >
-        <h3>Use 2x4 Floor Joists</h3>
-        <p>
-          <button @click="show2x4FloorJoistInfo = !show2x4FloorJoistInfo">
-            more about 2x4 joists
+          <button @click="showWhatIsAJoist = !showWhatIsAJoist">
+            What is a floor joist?
           </button>
         </p>
-      </div>
-      <div v-if="show2x4FloorJoistInfo">
-        <p>
-          2x4 joists are recommended for smaller structures like animal housing,
-          and small light duty sheds for storage, gardening tools and push type
-          lawnmowers.
-        </p>
-        Conventional framing practice is to use the same size floor joists as
-        used for wall studs and roof rafters. However, you may choose an
-        unconventional approach by mixing sizes, to suit your design intent.
-
-        <p>
-          Using 2x4 joists defaults to conventional framing method of 16" on
-          centers. You may choose to over-ride that by using more advanced
-          settings later. (this feature is currently non-operational)
-        </p>
-      </div>
-
-      <div class="current_selection" v-if="floorJoistSize">
-        Selected Floor Joist Size: {{ floorJoistSize }}
-      </div>
-
-      <div
-        class="building-card"
-        :class="{ selected_wood034: floorJoistSize === '2x6' }"
-        @click="floorJoistSize = '2x6'"
-      >
-        <h3>Use 2x6 Floor Joists</h3>
-        <p>
-          <button @click="show2x6FloorJoistInfo = !show2x6FloorJoistInfo">
-            more about 2x6 joists
-          </button>
-        </p>
-        <div v-if="show2x6FloorJoistInfo">
+        <div v-if="showWhatIsAJoist">
           <p>
-            2x6 joists are recommended for larger size structures like equipment
-            sheds and small buildings.
+            <strong> Q: What is a floor joist?</strong><br />
+            A: A floor joist is a horizontal structural element that supports
+            the floor of a building. They are typically made of wood or steel
+            and are used to distribute the weight of the floor evenly across the
+            structure.
           </p>
+
           <p>
-            Conventional framing practice is to use the same size floor joists
-            as used for wall studs and roof rafters. However, you may choose an
-            unconventional approach by mixing sizes, to suit your design intent.
-          </p>
-          <p>
-            Using 2x6 floor joists defaults to conventional framing method of
-            24" on centers. You may choose to over-ride that by using more
-            advanced settings later.(this feature is currently non-operational)
+            By default, this configurator will place the floor joists in a depth
+            orientation. If you are designing a rectangular shaped structure, it
+            would be better to have the depth be the longer side, in the event
+            you choose to use a center skid to support the floor joists in the
+            middle of their length.
           </p>
         </div>
-      </div>
-      <!--=========================================================PLYWOOD============
-=========================-->
-      <h2>Floor Plywood</h2>
-      <div class="building-card selected_osb">
-        <label class="dimension-label">Plywood Thickness: </label>
-        <select v-model="floorPlywoodThickness">
-          <option value="1">1/2"</option>
-          <option value="2">5/8"</option>
-          <option value="3">3/4"</option>
-          <option value="4">1"</option>
-        </select>
-      </div>
 
-      <h2>Wall Studs</h2>
-      <p>
-        <button @click="showWhatIsAStud = !showWhatIsAStud">
-          What is a wall stud?
-        </button>
-      </p>
-      <div v-if="showWhatIsAStud">
-        <strong> Q: What is a wall stud?</strong><br />
-        A: A wall stud is a vertical structural element that supports the walls
-        of a building. They are typically made of wood or steel and are used to
-        distribute the weight of the structure evenly across the walls.
-      </div>
-
-      <div
-        class="building-card"
-        :class="{ selected_wood034: wallStudSize === '2x4' }"
-        @click="wallStudSize = '2x4'"
-      >
-        <h3>Use 2x4 Wall Studs</h3>
-        <p>
-          <button @click="showMoreAbout2x4Studs = !showMoreAbout2x4Studs">
-            more about 2x4 studs
-          </button>
-        </p>
-      </div>
-      <div v-if="showMoreAbout2x4Studs">
-        <p>
-          2x4 studs are recommended for smaller structures like animal housing,
-          and small light duty sheds for storage, gardening tools and push type
-          lawnmowers.
-        </p>
-        Conventional framing practice is to use the same size studs as used for
-        floor joists and roof rafters. However, you may choose an unconventional
-        approach by mixing sizes.
-
-        <p>
-          Using 2x4 studs defaults to conventional 16" on centers. You may
-          choose to over-ride that by using more advanced settings later.(this
-          feature is currently non-operational)
-        </p>
-      </div>
-      <div class="current_selection" v-if="wallStudSize">
-        Selected Wall Stud Size: {{ wallStudSize }}
-      </div>
-
-      <div
-        class="building-card"
-        :class="{ selected_wood034: wallStudSize === '2x6' }"
-        @click="wallStudSize = '2x6'"
-      >
-        <h3>Use 2x6 Wall Studs</h3>
-        <p>
-          <button @click="showMoreAbout2x6Studs = !showMoreAbout2x6Studs">
-            more about 2x6 studs
-          </button>
-        </p>
-        <div v-if="showMoreAbout2x6Studs">
+        <div
+          class="building-card"
+          :class="{ selected_wood034: floorJoistSize === '2x4' }"
+          @click="floorJoistSize = '2x4'"
+        >
+          <h3>Use 2x4 Floor Joists</h3>
           <p>
-            2x6 studs are recommended for larger structures like equipment sheds
-            and small buildings.
-          </p>
-          <p>
-            Conventional framing practice is to use the same size studs as used
-            for floor joists and roof rafters. However, you may choose an
-            unconventional approach by mixing sizes.
-          </p>
-          <p>
-            Using 2x6 wall studs defaults to conventional 24" on centers. You
-            may choose to over-ride that by using more advanced settings
-            later.(this feature is currently disabled)
+            <button @click="show2x4FloorJoistInfo = !show2x4FloorJoistInfo">
+              more about 2x4 joists
+            </button>
           </p>
         </div>
-      </div>
-      <h2>Roof Peak Direction</h2>
-
-      <p>
-        <button @click="showMoreAboutRoofPeak = !showMoreAboutRoofPeak">
-          more about roof peaks and gables
-        </button>
-      </p>
-      <div v-if="showMoreAboutRoofPeak">
-        <p>
-          <strong>Q: What is a roof peak?</strong><br />
-          A: A roof peak is the highest point of a roof, typically found at the
-          center of a gable roof.
-        </p>
-
-        <p>
-          <strong>Q: What is a gable?</strong><br />
-          A: A gable is the triangular section of a wall between the edges of a
-          sloping roof.
-        </p>
-      </div>
-
-      <div
-        class="building-card roof_option"
-        @click="roofPeakDirection = 'width'"
-      >
-        <img
-          :src="roofPeakWidth"
-          alt="Roof peak runs width"
-          class="roof_direction_image"
-        />
-        <h3>Peak Runs Width</h3>
-        <p>Gable ends on the left and right walls.</p>
-      </div>
-
-      <p class="current_selection" v-if="roofPeakDirection">
-        Selected Roof Direction: {{ roofPeakDirection }}
-      </p>
-
-      <div
-        class="building-card roof_option"
-        @click="roofPeakDirection = 'depth'"
-      >
-        <img
-          :src="roofPeakDepth"
-          alt="Roof peak runs depth"
-          class="roof_direction_image"
-        />
-        <h3>Peak Runs Depth</h3>
-        <p>Gable ends on the front and rear walls.</p>
-      </div>
-      <h2>Roof Rafters</h2>
-      <p>
-        <button @click="showWhatIsARoofRafter = !showWhatIsARoofRafter">
-          What is a roof rafter?
-        </button>
-      </p>
-      <p v-if="showWhatIsARoofRafter">
-        <strong> Q: What is a roof rafter?</strong><br />
-        A: A roof rafter is a structural component that supports the roof and
-        transfers the load to the walls.
-      </p>
-
-      <div class="building-card" @click="roofRafterSize = '2x4'">
-        <h3>Use 2x4 Roof Rafters</h3>
-        <p>
-          <button
-            @click="showMoreAbout2x4RoofRafters = !showMoreAbout2x4RoofRafters"
-          >
-            More about 2x4 roof rafters
-          </button>
-        </p>
-        <div v-if="showMoreAbout2x4RoofRafters">
+        <div v-if="show2x4FloorJoistInfo">
           <p>
-            2x4 roof rafters are typically used in smaller structures and are
-            less expensive than larger rafters.
-          </p>
-          <p>
-            2x4 roof rafters are recommended for smaller structures like animal
+            2x4 joists are recommended for smaller structures like animal
             housing, and small light duty sheds for storage, gardening tools and
             push type lawnmowers.
           </p>
+          Conventional framing practice is to use the same size floor joists as
+          used for wall studs and roof rafters. However, you may choose an
+          unconventional approach by mixing sizes, to suit your design intent.
 
           <p>
-            Conventional framing practice is to use the same size roof rafters
-            as used for floor joists and wall studs. However, you may choose an
-            unconventional approach by mixing sizes.
-          </p>
-          <p>
-            Using 2x4 roof rafters defaults to conventional 16" on centers. You
-            may choose to over-ride that by using more advanced settings
-            later.(this feature is currently disabled)
+            Using 2x4 joists defaults to conventional framing method of 16" on
+            centers. You may choose to over-ride that by using more advanced
+            settings later. (this feature is currently non-operational)
           </p>
         </div>
-      </div>
 
-      <p v-if="roofRafterSize">
-        Selected Roof Rafter Size: {{ roofRafterSize }}
-      </p>
+        <div class="current_selection" v-if="floorJoistSize">
+          Selected Floor Joist Size: {{ floorJoistSize }}
+        </div>
 
-      <div class="building-card" @click="roofRafterSize = '2x6'">
-        <h3>Use 2x6 Roof Rafters</h3>
+        <div
+          class="building-card"
+          :class="{ selected_wood034: floorJoistSize === '2x6' }"
+          @click="floorJoistSize = '2x6'"
+        >
+          <h3>Use 2x6 Floor Joists</h3>
+          <p>
+            <button @click="show2x6FloorJoistInfo = !show2x6FloorJoistInfo">
+              more about 2x6 joists
+            </button>
+          </p>
+          <div v-if="show2x6FloorJoistInfo">
+            <p>
+              2x6 joists are recommended for larger size structures like
+              equipment sheds and small buildings.
+            </p>
+            <p>
+              Conventional framing practice is to use the same size floor joists
+              as used for wall studs and roof rafters. However, you may choose
+              an unconventional approach by mixing sizes, to suit your design
+              intent.
+            </p>
+            <p>
+              Using 2x6 floor joists defaults to conventional framing method of
+              24" on centers. You may choose to over-ride that by using more
+              advanced settings later.(this feature is currently
+              non-operational)
+            </p>
+          </div>
+        </div>
+        <!--=========================================================PLYWOOD============
+=========================-->
+        <h2>Floor Plywood</h2>
+        <div class="building-card selected_osb">
+          <label class="dimension-label">Plywood Thickness: </label>
+          <select v-model="floorPlywoodThickness">
+            <option value="1">1/2"</option>
+            <option value="2">5/8"</option>
+            <option value="3">3/4"</option>
+            <option value="4">1"</option>
+          </select>
+        </div>
+
+        <h2>Wall Studs</h2>
         <p>
-          <button
-            @click="showMoreAbout2x6RoofRafters = !showMoreAbout2x6RoofRafters"
-          >
-            More about 2x6 roof rafters
+          <button @click="showWhatIsAStud = !showWhatIsAStud">
+            What is a wall stud?
           </button>
         </p>
-        <div v-if="showMoreAbout2x6RoofRafters">
-          <p>
-            2x6 roof rafters are recommended for larger structures such as
-            equipment sheds, workshops, garages, and small buildings.
-          </p>
+        <div v-if="showWhatIsAStud">
+          <strong> Q: What is a wall stud?</strong><br />
+          A: A wall stud is a vertical structural element that supports the
+          walls of a building. They are typically made of wood or steel and are
+          used to distribute the weight of the structure evenly across the
+          walls.
+        </div>
 
+        <div
+          class="building-card"
+          :class="{ selected_wood034: wallStudSize === '2x4' }"
+          @click="wallStudSize = '2x4'"
+        >
+          <h3>Use 2x4 Wall Studs</h3>
           <p>
-            Compared to 2x4 rafters, 2x6 rafters provide greater strength and
-            are better suited for longer spans and heavier roof loads.
-          </p>
-
-          <p>
-            Using 2x6 roof rafters defaults to conventional 24" on-center
-            spacing. This can be customized later using advanced settings. (This
-            feature is currently disabled.)
+            <button @click="showMoreAbout2x4Studs = !showMoreAbout2x4Studs">
+              more about 2x4 studs
+            </button>
           </p>
         </div>
-      </div>
+        <div v-if="showMoreAbout2x4Studs">
+          <p>
+            2x4 studs are recommended for smaller structures like animal
+            housing, and small light duty sheds for storage, gardening tools and
+            push type lawnmowers.
+          </p>
+          Conventional framing practice is to use the same size studs as used
+          for floor joists and roof rafters. However, you may choose an
+          unconventional approach by mixing sizes.
 
-      <h2>Roof Pitch</h2>
-      <p>
-        <button @click="showWhatIsRoofPitch = !showWhatIsRoofPitch">
-          More about roof pitch
-        </button>
-      </p>
-      <div v-if="showWhatIsRoofPitch">
-        <p>
-          <strong> Q: What is roof pitch?</strong><br />
-          A: Roof pitch is the slope of the roof, typically expressed as a ratio
-          of rise over run.
-        </p>
-        <p>
-          <strong> Q: What is rise?</strong><br />
-          A: Rise is the vertical distance the roof rises over a horizontal
-          distance (run).
-        </p>
-        <p>
-          The smaller the ratio, the flatter the roof. A 3:12 ratio is 15
-          degrees, a 6:12 ratio is 26.57 degrees, and a 12:12 ratio is 45
-          degrees.
-        </p>
-      </div>
-      <div class="building-card">
-        <label class="dimension-label">Roof Pitch: </label>
-        <input type="number" v-model="roofPitch" min="3" max="12" />
-        <span class="dimension-value">:12</span>
-      </div>
+          <p>
+            Using 2x4 studs defaults to conventional 16" on centers. You may
+            choose to over-ride that by using more advanced settings later.(this
+            feature is currently non-operational)
+          </p>
+        </div>
+        <div class="current_selection" v-if="wallStudSize">
+          Selected Wall Stud Size: {{ wallStudSize }}
+        </div>
 
-      <h2>Roof Over Hang: Eaves</h2>
-      <p>
-        <button @click="showWhatAreEaves = !showWhatAreEaves">
-          What are eaves?
-        </button>
-      </p>
-      <div v-if="showWhatAreEaves">
-        <p>
-          <strong> Q: What are eaves?</strong><br />
-          A: Eaves are the portions of the roof that extend past the exterior
-          walls of the building. They help direct rain and snow away from the
-          siding, doors, windows and walls and can provide additional shade and
-          weather protection.
-        </p>
-      </div>
-      <div class="building-card">
-        <label class="dimension-label">Eaves Over Hang: </label>
-        <input
-          type="number"
-          v-model="eavesOverHang"
-          min="2"
-          max="20"
-          step="2"
-        />
-        <span class="dimension-value">inches</span>
-      </div>
+        <div
+          class="building-card"
+          :class="{ selected_wood034: wallStudSize === '2x6' }"
+          @click="wallStudSize = '2x6'"
+        >
+          <h3>Use 2x6 Wall Studs</h3>
+          <p>
+            <button @click="showMoreAbout2x6Studs = !showMoreAbout2x6Studs">
+              more about 2x6 studs
+            </button>
+          </p>
+          <div v-if="showMoreAbout2x6Studs">
+            <p>
+              2x6 studs are recommended for larger structures like equipment
+              sheds and small buildings.
+            </p>
+            <p>
+              Conventional framing practice is to use the same size studs as
+              used for floor joists and roof rafters. However, you may choose an
+              unconventional approach by mixing sizes.
+            </p>
+            <p>
+              Using 2x6 wall studs defaults to conventional 24" on centers. You
+              may choose to over-ride that by using more advanced settings
+              later.(this feature is currently disabled)
+            </p>
+          </div>
+        </div>
+        <h2>Roof Peak Direction</h2>
 
-      <h2>Roof Over Hang: Gable Ends</h2>
-      <p>
-        <button @click="showWhatAreGableEnds = !showWhatAreGableEnds">
-          What are gable ends?
-        </button>
-      </p>
-      <div v-if="showWhatAreGableEnds">
         <p>
-          <strong> Q: What are gable ends overhangs?</strong><br />
-          A: Gable overhangs are the parts of the roof that extend beyond the
-          gable-end walls of the building. They provide additional weather
-          protection and can improve the overall appearance of the structure.
+          <button @click="showMoreAboutRoofPeak = !showMoreAboutRoofPeak">
+            more about roof peaks and gables
+          </button>
         </p>
-        <p>
-          We are currently working on gable ends overhangs and hope to have that
-          option available soon.
-        </p>
-      </div>
-      <div class="building-card">
-        <label class="dimension-label">Gable Ends Over Hang: </label>
-        <input
-          type="number"
-          v-model="gableEndsOverHang"
-          min="0"
-          max="0"
-          step="2"
-        />
-        <span class="dimension-value">inches</span>
-      </div>
+        <div v-if="showMoreAboutRoofPeak">
+          <p>
+            <strong>Q: What is a roof peak?</strong><br />
+            A: A roof peak is the highest point of a roof, typically found at
+            the center of a gable roof.
+          </p>
 
-      <div>
-        <button @click="loadTheMechanism">Load The Mechanism</button>
+          <p>
+            <strong>Q: What is a gable?</strong><br />
+            A: A gable is the triangular section of a wall between the edges of
+            a sloping roof.
+          </p>
+        </div>
+
+        <div
+          class="building-card roof_option"
+          @click="roofPeakDirection = 'width'"
+        >
+          <img
+            :src="roofPeakWidth"
+            alt="Roof peak runs width"
+            class="roof_direction_image"
+          />
+          <h3>Peak Runs Width</h3>
+          <p>Gable ends on the left and right walls.</p>
+        </div>
+
+        <p class="current_selection" v-if="roofPeakDirection">
+          Selected Roof Direction: {{ roofPeakDirection }}
+        </p>
+
+        <div
+          class="building-card roof_option"
+          @click="roofPeakDirection = 'depth'"
+        >
+          <img
+            :src="roofPeakDepth"
+            alt="Roof peak runs depth"
+            class="roof_direction_image"
+          />
+          <h3>Peak Runs Depth</h3>
+          <p>Gable ends on the front and rear walls.</p>
+        </div>
+        <h2>Roof Rafters</h2>
+        <p>
+          <button @click="showWhatIsARoofRafter = !showWhatIsARoofRafter">
+            What is a roof rafter?
+          </button>
+        </p>
+        <p v-if="showWhatIsARoofRafter">
+          <strong> Q: What is a roof rafter?</strong><br />
+          A: A roof rafter is a structural component that supports the roof and
+          transfers the load to the walls.
+        </p>
+
+        <div class="building-card" @click="roofRafterSize = '2x4'">
+          <h3>Use 2x4 Roof Rafters</h3>
+          <p>
+            <button
+              @click="
+                showMoreAbout2x4RoofRafters = !showMoreAbout2x4RoofRafters
+              "
+            >
+              More about 2x4 roof rafters
+            </button>
+          </p>
+          <div v-if="showMoreAbout2x4RoofRafters">
+            <p>
+              2x4 roof rafters are typically used in smaller structures and are
+              less expensive than larger rafters.
+            </p>
+            <p>
+              2x4 roof rafters are recommended for smaller structures like
+              animal housing, and small light duty sheds for storage, gardening
+              tools and push type lawnmowers.
+            </p>
+
+            <p>
+              Conventional framing practice is to use the same size roof rafters
+              as used for floor joists and wall studs. However, you may choose
+              an unconventional approach by mixing sizes.
+            </p>
+            <p>
+              Using 2x4 roof rafters defaults to conventional 16" on centers.
+              You may choose to over-ride that by using more advanced settings
+              later.(this feature is currently disabled)
+            </p>
+          </div>
+        </div>
+
+        <p v-if="roofRafterSize">
+          Selected Roof Rafter Size: {{ roofRafterSize }}
+        </p>
+
+        <div class="building-card" @click="roofRafterSize = '2x6'">
+          <h3>Use 2x6 Roof Rafters</h3>
+          <p>
+            <button
+              @click="
+                showMoreAbout2x6RoofRafters = !showMoreAbout2x6RoofRafters
+              "
+            >
+              More about 2x6 roof rafters
+            </button>
+          </p>
+          <div v-if="showMoreAbout2x6RoofRafters">
+            <p>
+              2x6 roof rafters are recommended for larger structures such as
+              equipment sheds, workshops, garages, and small buildings.
+            </p>
+
+            <p>
+              Compared to 2x4 rafters, 2x6 rafters provide greater strength and
+              are better suited for longer spans and heavier roof loads.
+            </p>
+
+            <p>
+              Using 2x6 roof rafters defaults to conventional 24" on-center
+              spacing. This can be customized later using advanced settings.
+              (This feature is currently disabled.)
+            </p>
+          </div>
+        </div>
+
+        <h2>Roof Pitch</h2>
+        <p>
+          <button @click="showWhatIsRoofPitch = !showWhatIsRoofPitch">
+            More about roof pitch
+          </button>
+        </p>
+        <div v-if="showWhatIsRoofPitch">
+          <p>
+            <strong> Q: What is roof pitch?</strong><br />
+            A: Roof pitch is the slope of the roof, typically expressed as a
+            ratio of rise over run.
+          </p>
+          <p>
+            <strong> Q: What is rise?</strong><br />
+            A: Rise is the vertical distance the roof rises over a horizontal
+            distance (run).
+          </p>
+          <p>
+            The smaller the ratio, the flatter the roof. A 3:12 ratio is 15
+            degrees, a 6:12 ratio is 26.57 degrees, and a 12:12 ratio is 45
+            degrees.
+          </p>
+        </div>
+        <div class="building-card">
+          <label class="dimension-label">Roof Pitch: </label>
+          <input type="number" v-model="roofPitch" min="3" max="12" />
+          <span class="dimension-value">:12</span>
+        </div>
+
+        <h2>Roof Over Hang: Eaves</h2>
+        <p>
+          <button @click="showWhatAreEaves = !showWhatAreEaves">
+            What are eaves?
+          </button>
+        </p>
+        <div v-if="showWhatAreEaves">
+          <p>
+            <strong> Q: What are eaves?</strong><br />
+            A: Eaves are the portions of the roof that extend past the exterior
+            walls of the building. They help direct rain and snow away from the
+            siding, doors, windows and walls and can provide additional shade
+            and weather protection.
+          </p>
+        </div>
+        <div class="building-card">
+          <label class="dimension-label">Eaves Over Hang: </label>
+          <input
+            type="number"
+            v-model="eavesOverHang"
+            min="2"
+            max="20"
+            step="2"
+          />
+          <span class="dimension-value">inches</span>
+        </div>
+
+        <h2>Roof Over Hang: Gable Ends</h2>
+        <p>
+          <button @click="showWhatAreGableEnds = !showWhatAreGableEnds">
+            What are gable ends?
+          </button>
+        </p>
+        <div v-if="showWhatAreGableEnds">
+          <p>
+            <strong> Q: What are gable ends overhangs?</strong><br />
+            A: Gable overhangs are the parts of the roof that extend beyond the
+            gable-end walls of the building. They provide additional weather
+            protection and can improve the overall appearance of the structure.
+          </p>
+          <p>
+            We are currently working on gable ends overhangs and hope to have
+            that option available soon.
+          </p>
+        </div>
+        <div class="building-card">
+          <label class="dimension-label">Gable Ends Over Hang: </label>
+          <input
+            type="number"
+            v-model="gableEndsOverHang"
+            min="0"
+            max="0"
+            step="2"
+          />
+          <span class="dimension-value">inches</span>
+        </div>
+
+        <div>
+          <button @click="loadTheMechanism">Load The Mechanism</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1192,8 +1219,7 @@ function loadTheMechanism() {
   z-index: 1000;
   background: transparent;
   border: none;
-  width: fit-content;
-  margin-left: auto;
+  width: 100%;
   pointer-events: none;
 }
 
@@ -1203,13 +1229,38 @@ function loadTheMechanism() {
 }
 
 .configurator-layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(280px, 38%) minmax(0, 62%);
   gap: 20px;
   border: 5px solid red;
 }
 
+.page3-sidebar {
+  min-width: 0;
+  border: 5px solid rgb(60, 255, 0);
+  padding: 10px;
+  align-self: start;
+}
+
+.page3-sticky-panel {
+  position: sticky;
+  top: 20px;
+}
+
+.page3-tape-image {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 16px;
+}
+
+.options-column {
+  min-width: 0;
+  border: 5px solid rgb(60, 255, 0);
+  padding: 10px;
+}
+
 .main-column {
-  flex: 1;
   min-width: 0;
   padding: 10px;
   border: 5px solid blue;
@@ -1226,8 +1277,8 @@ function loadTheMechanism() {
   border-radius: 8px;
   padding: 30px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  width: fit-content; /* start here */
-  margin-left: auto; /* pushes card right */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .summary-row {
@@ -1356,5 +1407,19 @@ function loadTheMechanism() {
 .roof_direction_image {
   width: 120px;
   flex-shrink: 0;
+}
+
+@media (max-width: 800px) {
+  .configurator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .page3-sticky-panel {
+    position: static;
+  }
+
+  .page3-tape-image {
+    max-width: 100%;
+  }
 }
 </style>
