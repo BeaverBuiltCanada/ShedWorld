@@ -1,9 +1,11 @@
 <!--  this is a Vue/HTML comment -->
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import roofPeakWidth from "./assets/roofPeakWidth.png";
 import roofPeakDepth from "./assets/roofPeakDepth.png";
 import twoIso from "./assets/two_iso.png";
+import skidsShowing from "./assets/skidsShowing.png";
+import tapeMeasure from "./assets/tapeMeasureBorder.png";
 
 const acceptedTerms = ref(false);
 const showFAQ = ref(false);
@@ -27,6 +29,20 @@ const floorJoistSize = ref("");
 const show2x4FloorJoistInfo = ref(false);
 const show2x6FloorJoistInfo = ref(false);
 const floorPlywoodThickness = ref("2"); // Default floor plywood thickness should be set to 5/8"
+const plywoodDisplay = computed(() => {
+  switch (floorPlywoodThickness.value) {
+    case "1":
+      return '1/2"';
+    case "2":
+      return '5/8"';
+    case "3":
+      return '3/4"';
+    case "4":
+      return '1"';
+    default:
+      return floorPlywoodThickness.value;
+  }
+});
 const showWhatIsAStud = ref(false);
 const wallStudSize = ref("");
 const showMoreAbout2x4Studs = ref(false);
@@ -41,6 +57,9 @@ const roofPitch = ref("6"); // Default roof pitch should be set to 6:12
 const showWhatAreEaves = ref(false);
 const eavesOverHang = ref(6); // Default eaves overhang is 6 inches
 const showWhatAreGableEnds = ref(false);
+const dimensionWarning = computed(() => {
+  return Number(width.value) > Number(depth.value);
+});
 
 function selectBuildingType(type) {
   buildingType.value = type;
@@ -139,7 +158,9 @@ function loadTheMechanism() {
 
 <template>
   <div v-if="!acceptedTerms">
-    <h1>Welcome to BeaverBuilt Canada</h1>
+    <!-- ====================Landing PAGE 1====WELCOME====FAQ===Terms & Disclaimer Page =========
+     ============================================================-->
+    <h1>Welcome to BeaverBuiltCanada</h1>
     <h2>Custom Building Configurator</h2>
 
     <p>
@@ -154,6 +175,7 @@ function loadTheMechanism() {
       is treated as 1½" × 5½" actual size).
     </p>
     <h3>Before You Begin:</h3>
+    <!--Start of BULLET POINTS on LANDING PAGE-->
     <ul>
       <li>
         These are emailed or downloadable plans and cut lists intended for
@@ -173,6 +195,7 @@ function loadTheMechanism() {
         loads, wind loads, and all other local requirements before construction.
       </li>
     </ul>
+    <!--Start of FAQ-->
     <div>
       <p>
         <button @click="showFAQ = !showFAQ">Frequently Asked Questions</button>
@@ -227,12 +250,14 @@ function loadTheMechanism() {
           link to download the plans and cut list in your email.
         </p>
         <p>
-          <strong>Q: What is the early builders club?</strong><br />
-          A: The early builders club is a group of early adopters who receive
-          free plans and cut lists for testing and feedback. They have also
-          agreed to allow Beaver Built Canada to use their projects, pictures
-          and their feedback on the BeaverBuiltCanada.ca website and for
-          marketing purposes.
+          <strong>Q: What is the early builders honor club?</strong><br />
+          A: The early builders honor club is a group of early adopters who
+          receive free plans and cut lists for testing and feedback. They have
+          also agreed to allow Beaver Built Canada to use their projects,
+          pictures and their feedback on the BeaverBuiltCanada.ca website and
+          for marketing purposes. This is based on the honor system, and their
+          feedback is greatly appreciated and helps drive improvements for
+          everybody.
         </p>
         <p>
           These are real builders of designs they made themselves using this
@@ -240,10 +265,10 @@ function loadTheMechanism() {
           clicking this link:
         </p>
         <p>
-          Should you wish to join the early builders club, please contact us at:
-          (if the link is active, we are looking for early builders to test and
-          provide feedback on this configurator) and tell them, "Beaver sent
-          me".
+          Should you wish to join the early builders honor club, please contact
+          us at: (if the link is active, we are looking for early builders to
+          test and provide feedback on this configurator) and tell them, "Beaver
+          sent me".
         </p>
         <p>
           <strong>Q: Do you provide lumber or hardware?</strong><br />
@@ -258,6 +283,7 @@ function loadTheMechanism() {
         </p>
       </div>
     </div>
+    <!--Start of VIEW FULL DISCLAIMER-->
     <p>
       <button @click="showTerms = !showTerms">View Full Disclaimer</button>
     </p>
@@ -307,16 +333,25 @@ function loadTheMechanism() {
 
     <label> I understand and accept these terms. </label>
   </div>
-  <div v-if="acceptedTerms" style="border: 10px solid red">
+  <!-- End Terms & Disclaimer Page -->
+  <!--========================================Start of PAGE 2 LANDING after I accept=========
+  ============================================Welcome----Configurator v1.0=============-->
+  <div v-if="acceptedTerms">
+    <!-- Main Building Type selection for Configurator -->
+    <!-- Top of page 2 landing -->
     <h1>WELCOME TO:</h1>
-    <h1>Beaver Built Canada Shed Configurator</h1>
+    <h2>Beaver Built Canada: Custom Building Configurator, v1.0</h2>
+    <p>and Thank You for deciding to try out our configurator!</p>
+    <div class="sticky-tape">
+      <img :src="tapeMeasure" alt="Tape Measure" class="tape_measure_image" />
+    </div>
     <p>
-      We have designed this configurator to be simple and user-friendly for
-      builders of all skill levels. Whether this is your first building project
-      or you've spent years working in the trades, the goal is to make designing
-      your building straightforward and enjoyable. For experienced builders,
-      additional options and advanced features are available to provide greater
-      control over the final design.
+      We have designed this configurator to be simple, enjoyable and
+      user-friendly for builders of all skill levels. Whether this is your first
+      building project or you've spent years working in the trades, the goal is
+      to make designing your building straightforward and enjoyable. For
+      experienced builders, additional options and advanced features are
+      available to provide greater control over the final design.
     </p>
 
     <p>
@@ -331,9 +366,12 @@ function loadTheMechanism() {
       may not be available as work in progress, please check back soon). If you
       require additional help, feel free to contact us by email at:
     </p>
+    <!-- ==========================WHAT WOULD YOU LIKE TO BUILD?============================
+     ==============================top of building-type cards of the class selectBuildingType====
+     ================================================== -->
 
     <div v-if="!buildingType">
-      <h2>What Would You Like To Build?</h2>
+      <h3 class="my-special-heading">What Would You Like To Build?</h3>
       <div class="building-card" @click="selectBuildingType('animalHousing')">
         <h3>🐕 Animal & Pet Housing</h3>
         <p>
@@ -360,13 +398,18 @@ function loadTheMechanism() {
         <p>Start with a blank configuration and build exactly what you need.</p>
       </div>
     </div>
-
+    <!-- ==========After Building type selection====Tape measure should get smaller to lhs========================
+     =================top of PAGE 3===building-type cards of the "sticky" kind.================================================== -->
+    <!--============Choose a different building link===sticks to top============-->
     <div v-else class="selected-building-banner">
-      <a href="#" @click.prevent="buildingType = ''">
-        ← Choose a different building type
-      </a>
       <div v-if="buildingType === 'animalHousing'">
         <div class="building-card">
+          <a
+            href="#"
+            class="change-building-link"
+            @click.prevent="buildingType = ''"
+            >← Choose a different building type</a
+          >
           <h3>🐕 Animal & Pet Housing</h3>
           <p>
             Dog houses, chicken coops, shelters and other small outdoor
@@ -374,6 +417,65 @@ function loadTheMechanism() {
           </p>
         </div>
       </div>
+      <!--=============================================Current Build Summary Card===========
+      ==========================-->
+      <div class="summary-column">
+        <div class="summary-card">
+          <p>
+            (these are system default values and will update with your choices)
+          </p>
+          <h4>Your Current Building Selections:</h4>
+          <div class="summary-row">
+            <span>Width:</span><span>{{ width }}'</span>
+          </div>
+          <!-- Width Row -->
+          <div class="summary-row">
+            <span>Depth:</span><span>{{ depth }}'</span>
+          </div>
+          <!-- Depth Row -->
+          <div class="summary-row">
+            <span>Wall Height:</span><span>{{ wallHeight }}'</span>
+          </div>
+          <!-- Wall Height Row -->
+          <div class="summary-row">
+            <span>Foundation:</span>
+            <span>{{ skidType }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Center Skid:</span>
+            <span>{{ centerSkid || "No" }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Floor Joists:</span>
+            <span>{{ floorJoistSize }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Plywood:</span>
+            <span>{{ plywoodDisplay }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Wall Studs:</span>
+            <span>{{ wallStudSize }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Peak:</span>
+            <span>{{ roofPeakDirection }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Rafters:</span>
+            <span>{{ roofRafterSize }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Pitch:</span>
+            <span>{{ roofPitch }}:12</span>
+          </div>
+          <div class="summary-row">
+            <span>Eaves:</span>
+            <span>{{ eavesOverHang }}"</span>
+          </div>
+        </div>
+      </div>
+
       <div v-if="buildingType === 'yardShed'">
         <div class="building-card">
           <h3>🏡 Yard Shed</h3>
@@ -400,22 +502,37 @@ function loadTheMechanism() {
         </div>
       </div>
     </div>
+    <!-- End of Main Building Type selection=========== -->
+    <!--==========This is where 2 column layout should start...me thinks=========-->
+    <!-- Start of Building Dimensions above two orthographic views with view cubes -->
+    <div v-if="buildingType" class="configurator-layout">
+      <div class="main-column">
+        <h2>Building Dimensions</h2>
+        <!-- double isometric pic with the view cubes -->
 
-    <div v-if="buildingType">
-      <h2>Building Dimensions</h2>
-      <div class="building-card">
-        <img
-          :src="twoIso"
-          alt="Building dimensions reference"
-          class="dimension_reference_image"
-        />
-
-        <p>
-          Enter the desired dimensions for your building. The floor area,
-          perimeter, and wall area will be calculated and displayed below, for
-          your reference.
-        </p>
-
+        <div class="reference-card">
+          <p>
+            Enter the desired dimensions for your building. The floor area,
+            perimeter, and wall area will be calculated and displayed below, for
+            your reference.
+          </p>
+          <h4>Dimensions Reference</h4>
+          <div class="dimension-reference-container">
+            <img
+              :src="twoIso"
+              alt="Building dimensions reference"
+              class="dimensions_reference_image"
+            />
+            <!--Start of RED GREEN BLUE legend-->
+            <div class="dimension-legend">
+              <div class="legend-width">Width</div>
+              <div class="legend-depth">Depth</div>
+              <div class="legend-height">Wall Height</div>
+            </div>
+          </div>
+          <!--=================This is the test spot for column set up closing div==============-->
+        </div>
+        <!--Start of WIDTH drop down-->
         <div class="dimension-row">
           <label class="dimension-label">Width:</label>
           <select v-model="width">
@@ -461,7 +578,7 @@ function loadTheMechanism() {
             The width runs from left to right across the front wall.
           </p>
         </div>
-
+        <!--Start of DEPTH drop down-->
         <div class="dimension-row">
           <label class="dimension-label">Depth:</label>
           <select v-model="depth">
@@ -490,6 +607,13 @@ function loadTheMechanism() {
           <span class="dimension-value"
             >Your chosen depth is {{ depth }} feet.</span
           >
+          <div v-if="dimensionWarning" class="warning_box">
+            ⚠️ Depth is typically treated as the longer dimension of the
+            building. Future floor joist, center skid, and roof calculations
+            will use this orientation as the default assumption. You may
+            continue with any dimensions, but understanding this convention will
+            help when selecting later options.
+          </div>
         </div>
         <p>
           <button @click="showWhatIsDepth = !showWhatIsDepth">
@@ -508,7 +632,8 @@ function loadTheMechanism() {
             to the back wall.
           </p>
         </div>
-
+        <!--===========================================Start of WALL HEIGHT drop down===
+        =============================================-->
         <div class="dimension-row">
           <label class="dimension-label">Wall Height:</label>
           <select v-model="wallHeight">
@@ -549,11 +674,21 @@ function loadTheMechanism() {
       </div>
 
       <h2>Foundation Skids</h2>
-      <p>
-        <button @click="showWhatIsASkid = !showWhatIsASkid">
-          What Is A Skid?
-        </button>
-      </p>
+
+      <div class="reference-card reference_images">
+        <h4>Foundation Skids Reference</h4>
+        <img
+          :src="skidsShowing"
+          alt="Foundation skids reference"
+          class="skids_reference_image"
+        />
+        <p>
+          <button @click="showWhatIsASkid = !showWhatIsASkid">
+            What Is A Skid?
+          </button>
+        </p>
+      </div>
+
       <div v-if="showWhatIsASkid">
         <p>
           <strong> Q: What is a skid?</strong><br />
@@ -567,13 +702,15 @@ function loadTheMechanism() {
           skids allow for some flexibility in placement and can help prevent
           moisture damage by elevating the structure slightly above the ground
           level. Skids also do not require permanent anchoring, which can
-          sometimes be a sticky point when navigating building codes and city
-          bylaws.
+          sometimes be an advantage when navigating building codes and municipal
+          bylaws. As always, be sure to follow the rules and requirements of
+          your local jurisdiction.
         </p>
         <p>
-          By default, this configurator will use 4 skids around the underside
-          perimeter of the building. For larger span buildings it is recommended
-          to use a center skid also.
+          By default, this configurator will use four skids around the underside
+          perimeter of the building. For larger depth span buildings it is
+          recommended to use a center skid also. The center skid will be placed
+          equal distance and parallel between the front skid and the back skid.
         </p>
       </div>
       <div
@@ -586,7 +723,7 @@ function loadTheMechanism() {
       </div>
 
       <div v-if="skidType" class="current_selection">
-        <p>Selected Foundation Type; Pressure Treated: {{ skidType }}</p>
+        <p>Selected Foundation Skid Type; Pressure Treated: {{ skidType }}</p>
       </div>
 
       <div
@@ -602,7 +739,10 @@ function loadTheMechanism() {
 
       <div
         class="building-card"
-        :class="{ selected_wood004: centerSkid, current_selection: centerSkid }"
+        :class="{
+          selected_wood004: centerSkid,
+          current_selection: centerSkid,
+        }"
         @click="centerSkid = centerSkid ? '' : 'Use Center Skid'"
       >
         <h3>Use a Center Skid</h3>
@@ -615,19 +755,31 @@ function loadTheMechanism() {
       <div class="current_selection" v-if="centerSkid">
         Selected Center Skid: {{ centerSkid }}
       </div>
-
+      <!--==============================================================FLOOR JOISTS======
+=====================================================================================-->
       <h2>Floor Joists</h2>
       <p>
         <button @click="showWhatIsAJoist = !showWhatIsAJoist">
           What is a floor joist?
         </button>
       </p>
-      <p v-if="showWhatIsAJoist">
-        <strong> Q: What is a floor joist?</strong><br />
-        A: A floor joist is a horizontal structural element that supports the
-        floor of a building. They are typically made of wood or steel and are
-        used to distribute the weight of the floor evenly across the structure.
-      </p>
+      <div v-if="showWhatIsAJoist">
+        <p>
+          <strong> Q: What is a floor joist?</strong><br />
+          A: A floor joist is a horizontal structural element that supports the
+          floor of a building. They are typically made of wood or steel and are
+          used to distribute the weight of the floor evenly across the
+          structure.
+        </p>
+
+        <p>
+          By default, this configurator will place the floor joists in a depth
+          orientation. If you are designing a rectangular shaped structure, it
+          would be better to have the depth be the longer side, in the event you
+          choose to use a center skid to support the floor joists in the middle
+          of their length.
+        </p>
+      </div>
 
       <div
         class="building-card"
@@ -690,7 +842,8 @@ function loadTheMechanism() {
           </p>
         </div>
       </div>
-
+      <!--=========================================================PLYWOOD============
+=========================-->
       <h2>Floor Plywood</h2>
       <div class="building-card selected_osb">
         <label class="dimension-label">Plywood Thickness: </label>
@@ -996,7 +1149,93 @@ function loadTheMechanism() {
 </template>
 
 <style scoped>
+.sticky-tape {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: white;
+  padding-bottom: 20px;
+}
+.tape_measure_image {
+  display: block;
+  width: 100%;
+  max-width: 1200px;
+  margin: 10px auto;
+}
+
+.my-special-heading,
+.change-building-link {
+  color: #5e3d16; /* darker wood color */
+  text-align: center;
+
+  position: relative;
+  z-index: 600;
+
+  background: rgba(255, 255, 255, 0.89);
+  padding: 4px 12px;
+  border-radius: 6px;
+
+  width: fit-content;
+  margin: 100px auto 0 auto;
+}
+
 .building-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.selected-building-banner {
+  position: sticky;
+  top: 20px;
+  z-index: 1000;
+  background: transparent;
+  border: none;
+  width: fit-content;
+  margin-left: auto;
+  pointer-events: none;
+}
+
+.change-building-link,
+.summary-card {
+  pointer-events: auto;
+}
+
+.configurator-layout {
+  display: flex;
+  gap: 20px;
+  border: 5px solid red;
+}
+
+.main-column {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border: 5px solid blue;
+}
+
+.summary-column {
+  width: 225px;
+  border: 5px solid rgb(60, 255, 0);
+  padding: 10px;
+}
+
+.summary-card {
+  background: transparent;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  width: fit-content; /* start here */
+  margin-left: auto; /* pushes card right */
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reference-card {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
@@ -1023,20 +1262,57 @@ function loadTheMechanism() {
   margin-left: 10px;
 }
 
-.selected-building-banner {
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 1000;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-.dimension_reference_image {
+.dimensions_reference_image {
   width: 100%;
   max-width: 600px;
   display: block;
-  margin: 0 auto;
+  margin-right: auto;
+}
+
+.dimension-legend {
+  align-self: flex-start;
+  margin-bottom: 40px;
+}
+
+.legend-width {
+  border-left: 8px solid red;
+  padding-left: 10px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.legend-depth {
+  border-left: 8px solid rgb(93, 245, 93);
+  padding-left: 10px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.legend-height {
+  border-left: 8px solid blue;
+  padding-left: 10px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.warning_box {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+  color: #856404;
+  font-weight: bold;
+}
+
+.skids_reference_image {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  margin-right: auto;
 }
 
 .current_selection {
