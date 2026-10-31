@@ -63,6 +63,19 @@ const showWhatAreGableEnds = ref(false);
 const dimensionWarning = computed(() => {
   return Number(width.value) > Number(depth.value);
 });
+const leftWallRO2Window = ref(0);
+
+const showWhatIsALeftWallWindow = ref(false);
+const showMoreAboutLeftWallWindow = ref(false);
+
+const leftWallRO2Width = ref(24);
+const leftWallRO2Height = ref(36);
+
+const leftWallRO2FloorHeight = ref(36);
+
+const leftWallRO2HeaderSize = ref("2x4");
+
+const leftWallRO2StudIndex = ref(1);
 
 function acceptTerms() {
   acceptedTerms.value = true;
@@ -93,6 +106,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "4";
     eavesOverHang.value = "4";
+    leftWallRO2Window.value = "0";
   }
 
   if (type === "yardShed") {
@@ -107,6 +121,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "6";
     eavesOverHang.value = "6";
+    leftWallRO2Window.value = "0";
   }
 
   if (type === "workshopGarage") {
@@ -121,6 +136,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x6";
     roofPitch.value = "8";
     eavesOverHang.value = "8";
+    leftWallRO2Window.value = "0";
   }
 
   if (type === "customStructure") {
@@ -135,6 +151,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x6";
     roofPitch.value = "10";
     eavesOverHang.value = "8";
+    leftWallRO2Window.value = "0";
   }
   window.scrollTo({
     top: 0,
@@ -156,6 +173,7 @@ function loadTheMechanism() {
     roofRafterSize: roofRafterSize.value,
     roofPitch: roofPitch.value,
     eavesOverHang: eavesOverHang.value,
+    leftWallRO2Window: leftWallRO2Window.value,
   };
 
   const json = JSON.stringify(config, null, 2);
@@ -582,7 +600,7 @@ function loadTheMechanism() {
           <h2>Building Dimensions</h2>
           <!-- double isometric pic with the view cubes -->
 
-          <div class="reference-card">
+          <div class="travelerQ-card">
             <p>
               Enter the desired dimensions for your building. The floor area,
               perimeter, and wall area will be calculated and displayed below,
@@ -766,7 +784,7 @@ function loadTheMechanism() {
 
           <h2>Foundation Skids</h2>
 
-          <div class="reference-card reference_images">
+          <div class="travelerQ-card reference_images">
             <h4>Foundation Skids Reference</h4>
             <img
               :src="skidsShowing"
@@ -807,7 +825,7 @@ function loadTheMechanism() {
             </p>
           </div>
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{ selected_wood004: skidType === '2x4flat' }"
             @click="skidType = '2x4flat'"
           >
@@ -822,7 +840,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{ selected_wood004: skidType === '4x4' }"
             @click="skidType = '4x4'"
           >
@@ -834,7 +852,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{
               selected_wood004: centerSkid,
               current_selection: centerSkid,
@@ -878,7 +896,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{ selected_wood034: floorJoistSize === '2x4' }"
             @click="floorJoistSize = '2x4'"
           >
@@ -911,7 +929,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{ selected_wood034: floorJoistSize === '2x6' }"
             @click="floorJoistSize = '2x6'"
           >
@@ -943,7 +961,7 @@ function loadTheMechanism() {
           <!--=========================================================PLYWOOD============
 =========================-->
           <h2>Floor Plywood</h2>
-          <div class="building-card selected_osb">
+          <div class="travelerQ-card selected_osb">
             <label class="dimension-label">Plywood Thickness: </label>
             <select v-model="floorPlywoodThickness">
               <option value="1">1/2"</option>
@@ -968,7 +986,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{ selected_wood034: wallStudSize === '2x4' }"
             @click="wallStudSize = '2x4'"
           >
@@ -1000,7 +1018,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card"
+            class="travelerQ-card"
             :class="{ selected_wood034: wallStudSize === '2x6' }"
             @click="wallStudSize = '2x6'"
           >
@@ -1049,7 +1067,7 @@ function loadTheMechanism() {
           </div>
 
           <div
-            class="building-card roof_option"
+            class="travelerQ-card roof_option"
             @click="roofPeakDirection = 'width'"
           >
             <img
@@ -1059,6 +1077,7 @@ function loadTheMechanism() {
             />
             <h3>Peak Runs Width</h3>
             <p>Gable ends on the left and right walls.</p>
+            <p>Eaves overhangs on the front and back.</p>
           </div>
 
           <p class="current_selection" v-if="roofPeakDirection">
@@ -1066,7 +1085,7 @@ function loadTheMechanism() {
           </p>
 
           <div
-            class="building-card roof_option"
+            class="travelerQ-card roof_option"
             @click="roofPeakDirection = 'depth'"
           >
             <img
@@ -1076,6 +1095,7 @@ function loadTheMechanism() {
             />
             <h3>Peak Runs Depth</h3>
             <p>Gable ends on the front and rear walls.</p>
+            <p>Eaves overhangs on the left and right.</p>
           </div>
           <h2>Roof Rafters</h2>
           <p>
@@ -1088,8 +1108,15 @@ function loadTheMechanism() {
             A: A roof rafter is a structural component that supports the roof
             and transfers the load to the walls.
           </p>
+          <div class="current_selection" v-if="roofRafterSizeSize">
+            Selected Roof Rafter Size: {{ roofRafterSize }}
+          </div>
 
-          <div class="building-card" @click="roofRafterSize = '2x4'">
+          <div
+            class="travelerQ-card"
+            :class="{ selected_wood034: roofRafterSize === '2x4' }"
+            @click="roofRafterSize = '2x4'"
+          >
             <h3>Use 2x4 Roof Rafters</h3>
             <p>
               <button
@@ -1124,11 +1151,15 @@ function loadTheMechanism() {
             </div>
           </div>
 
-          <p v-if="roofRafterSize">
+          <div class="current_selection" v-if="roofRafterSize">
             Selected Roof Rafter Size: {{ roofRafterSize }}
-          </p>
+          </div>
 
-          <div class="building-card" @click="roofRafterSize = '2x6'">
+          <div
+            class="travelerQ-card"
+            :class="{ selected_wood034: roofRafterSize === '2x6' }"
+            @click="roofRafterSize = '2x6'"
+          >
             <h3>Use 2x6 Roof Rafters</h3>
             <p>
               <button
@@ -1181,7 +1212,7 @@ function loadTheMechanism() {
               degrees.
             </p>
           </div>
-          <div class="building-card">
+          <div class="travelerQ-card">
             <label class="dimension-label">Roof Pitch: </label>
             <input type="number" v-model="roofPitch" min="3" max="12" />
             <span class="dimension-value">:12</span>
@@ -1202,7 +1233,7 @@ function loadTheMechanism() {
               additional shade and weather protection.
             </p>
           </div>
-          <div class="building-card">
+          <div class="travelerQ-card">
             <label class="dimension-label">Eaves Over Hang: </label>
             <input
               type="number"
@@ -1231,7 +1262,7 @@ function loadTheMechanism() {
               structure.
             </p>
           </div>
-          <div class="building-card">
+          <div class="travelerQ-card">
             <label class="dimension-label">Gable Ends Over Hang: </label>
             <input
               type="number"
@@ -1245,6 +1276,86 @@ function loadTheMechanism() {
               We are currently working on gable ends overhangs and hope to have
               that option available soon.
             </p>
+          </div>
+          <!--==========================Start of LEFT WALL WINDOW=====================-->
+          <h2>Left Wall Window</h2>
+
+          <p>
+            <button
+              @click="showWhatIsALeftWallWindow = !showWhatIsALeftWallWindow"
+            >
+              What is a left wall window?
+            </button>
+          </p>
+
+          <p v-if="showWhatIsALeftWallWindow">
+            <strong class="whatIs-q">Q: What is a left wall window?</strong
+            ><br />
+            A: A left wall window is an optional rough opening placed in the
+            left wall of the structure. Window dimensions, height above the
+            floor, and framing options can be customized.
+          </p>
+
+          <div class="current_selection" v-if="leftWallRO2Window === 1">
+            Left Wall Window: Included
+          </div>
+
+          <div
+            class="travelerQ-card"
+            :class="{ selected_wood034: leftWallRO2Window === 1 }"
+            @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
+          >
+            <h3>Add Left Wall Window</h3>
+
+            <p>
+              <button
+                @click.stop="
+                  showMoreAboutLeftWallWindow = !showMoreAboutLeftWallWindow
+                "
+              >
+                More about left wall windows
+              </button>
+            </p>
+
+            <div v-if="showMoreAboutLeftWallWindow">
+              <p>
+                Rough Opening Width:
+                <input
+                  type="number"
+                  v-model="leftWallRO2Width"
+                  min="12"
+                  max="72"
+                />
+              </p>
+
+              <p>
+                Rough Opening Height:
+                <input
+                  type="number"
+                  v-model="leftWallRO2Height"
+                  min="12"
+                  max="72"
+                />
+              </p>
+
+              <p>
+                Distance From Floor:
+                <input type="number" v-model="leftWallRO2FloorHeight" min="0" />
+              </p>
+
+              <p>
+                Header Size:
+                <select v-model="leftWallRO2HeaderSize">
+                  <option value="2x4">2x4</option>
+                  <option value="2x6">2x6</option>
+                </select>
+              </p>
+
+              <p>
+                Stud Index:
+                <input type="number" v-model="leftWallRO2StudIndex" min="1" />
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -1497,7 +1608,7 @@ h4 {
   justify-content: space-between;
 }
 
-.reference-card {
+.travelerQ-card {
   border: 1px solid #5e3d16; /* darker wood color */
   border-radius: 8px;
   padding: 16px;
