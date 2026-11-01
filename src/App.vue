@@ -63,19 +63,74 @@ const showWhatAreGableEnds = ref(false);
 const dimensionWarning = computed(() => {
   return Number(width.value) > Number(depth.value);
 });
-const leftWallRO2Window = ref(0);
+
+const leftWallRO2WindowDisplay = computed(() => {
+  return leftWallRO2Window.value === 1 ? "Included" : "Not Installed";
+});
+
+const leftWallRO2StudIndexDisplay = computed(() => {
+  return leftWallRO2StudIndex.value === 0
+    ? "Centered"
+    : `Stud Bay ${leftWallRO2StudIndex.value}`;
+});
+
+const leftWallRO2HeaderSizeDisplay = computed(() => {
+  return leftWallRO2HeaderSize.value === "2x6" ? "2x6 Header" : "2x4 Header";
+});
 
 const showWhatIsALeftWallWindow = ref(false);
 const showMoreAboutLeftWallWindow = ref(false);
 
-const leftWallRO2Width = ref(24);
-const leftWallRO2Height = ref(36);
+const leftWallRO2Window = ref(0);
 
-const leftWallRO2FloorHeight = ref(36);
+const leftWallRO2Width = ref(24);
+
+const leftWallRO2Height = ref(24);
+
+const leftWallRO2FloorHeight = ref(10);
 
 const leftWallRO2HeaderSize = ref("2x4");
 
-const leftWallRO2StudIndex = ref(1);
+const leftWallRO2StudIndex = ref(0);
+
+const windowWidthWarning = computed(() => {
+  const wallLengthInches = Number(depth.value) * 12;
+
+  return Number(leftWallRO2Width.value) > wallLengthInches - 10;
+});
+
+const windowFitWarning = computed(() => {
+  const wallHeightInches = Number(wallHeight.value) * 12;
+
+  const headerHeight = leftWallRO2HeaderSize.value === "2x6" ? 5.5 : 3.5;
+
+  const requiredHeight =
+    Number(leftWallRO2FloorHeight.value) +
+    Number(leftWallRO2Height.value) +
+    headerHeight;
+
+  return requiredHeight > wallHeightInches;
+});
+
+const windowHeightPlacementWarning = computed(() => {
+  const wallHeightInches = Number(wallHeight.value) * 12;
+
+  return (
+    Number(leftWallRO2FloorHeight.value) + Number(leftWallRO2Height.value) >
+    wallHeightInches
+  );
+});
+
+const studIndexWarning = computed(() => {
+  if (Number(leftWallRO2StudIndex.value) === 0) {
+    return false;
+  }
+
+  const wallLengthInches = Number(depth.value) * 12;
+  const estimatedBayCount = Math.floor(wallLengthInches / 16);
+
+  return Number(leftWallRO2StudIndex.value) > estimatedBayCount;
+});
 
 function acceptTerms() {
   acceptedTerms.value = true;
@@ -106,7 +161,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "4";
     eavesOverHang.value = "4";
-    leftWallRO2Window.value = "0";
+    leftWallRO2Window.value = 0;
   }
 
   if (type === "yardShed") {
@@ -121,7 +176,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "6";
     eavesOverHang.value = "6";
-    leftWallRO2Window.value = "0";
+    leftWallRO2Window.value = 0;
   }
 
   if (type === "workshopGarage") {
@@ -129,6 +184,7 @@ function selectBuildingType(type) {
     depth.value = 8;
     wallHeight.value = 8;
     skidType.value = "4x4";
+    centerSkid.value = "Use Center Skid";
     floorJoistSize.value = "2x6";
     floorPlywoodThickness.value = "4";
     wallStudSize.value = "2x6";
@@ -136,7 +192,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x6";
     roofPitch.value = "8";
     eavesOverHang.value = "8";
-    leftWallRO2Window.value = "0";
+    leftWallRO2Window.value = 0;
   }
 
   if (type === "customStructure") {
@@ -151,7 +207,7 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x6";
     roofPitch.value = "10";
     eavesOverHang.value = "8";
-    leftWallRO2Window.value = "0";
+    leftWallRO2Window.value = 0;
   }
   window.scrollTo({
     top: 0,
@@ -174,6 +230,11 @@ function loadTheMechanism() {
     roofPitch: roofPitch.value,
     eavesOverHang: eavesOverHang.value,
     leftWallRO2Window: leftWallRO2Window.value,
+    leftWallRO2Width: leftWallRO2Width.value,
+    leftWallRO2Height: leftWallRO2Height.value,
+    leftWallRO2FloorHeight: leftWallRO2FloorHeight.value,
+    leftWallRO2HeaderSize: leftWallRO2HeaderSize.value,
+    leftWallRO2StudIndex: leftWallRO2StudIndex.value,
   };
 
   const json = JSON.stringify(config, null, 2);
@@ -200,9 +261,10 @@ function loadTheMechanism() {
     <!-- ============================Landing PAGE 1====WELCOME====FAQ===Terms & Disclaimer=========
      ============================================================-->
     <div class="landingPage1">
-      <h1>Welcome to Beaver Built Canada</h1>
-      <h2>Custom Building Configurator</h2>
-
+      <div class="heroHeader">
+        <h1>Welcome to Beaver Built Canada</h1>
+        <h2>Custom Building Configurator</h2>
+      </div>
       <p>
         Design your own shed, workshop, garage, animal shelter, or outbuilding
         using standard Canadian dimensional lumber and generate a customized set
@@ -414,7 +476,7 @@ function loadTheMechanism() {
       </button>
       <div v-if="showWelcomeDetails" class="welcome-details">
         <p>
-          We have designed this configurator to be simple, enjoyable and
+          🦫 We have designed this configurator to be simple, enjoyable and
           user-friendly for builders of all skill levels. Whether this is your
           first building project or you've spent years working in the trades,
           the goal is to make designing your building straightforward and
@@ -434,7 +496,7 @@ function loadTheMechanism() {
           to read the documentation and configurator help topics (some
           documentation may not be available as work in progress, please check
           back soon). If you require additional help, feel free to contact us by
-          email at:
+          email at: 🦫
         </p>
       </div>
       <!-- ==========================WHAT WOULD YOU LIKE TO BUILD?============================
@@ -553,7 +615,7 @@ function loadTheMechanism() {
                 <span>Wall Height:</span><span>{{ wallHeight }}'</span>
               </div>
               <div class="summary-row">
-                <span>Foundation:</span>
+                <span>Foundation Skids:</span>
                 <span>{{ skidType }}</span>
               </div>
               <div class="summary-row">
@@ -565,7 +627,7 @@ function loadTheMechanism() {
                 <span>{{ floorJoistSize }}</span>
               </div>
               <div class="summary-row">
-                <span>Plywood:</span>
+                <span>Floor Plywood:</span>
                 <span>{{ plywoodDisplay }}</span>
               </div>
               <div class="summary-row">
@@ -573,20 +635,56 @@ function loadTheMechanism() {
                 <span>{{ wallStudSize }}</span>
               </div>
               <div class="summary-row">
-                <span>Peak:</span>
+                <span>Roof Peak Direction:</span>
                 <span>{{ roofPeakDirection }}</span>
               </div>
               <div class="summary-row">
-                <span>Rafters:</span>
+                <span>Roof Rafters:</span>
                 <span>{{ roofRafterSize }}</span>
               </div>
               <div class="summary-row">
-                <span>Pitch:</span>
+                <span>Roof Pitch:</span>
                 <span>{{ roofPitch }}:12</span>
               </div>
               <div class="summary-row">
-                <span>Eaves:</span>
+                <span>Eaves Overhang:</span>
                 <span>{{ eavesOverHang }}"</span>
+              </div>
+              <div class="summary-row">
+                <span>Gable Ends Overhang, currently n/a:</span>
+                <span>{{ gableEndsOverHang }}</span>
+              </div>
+              <div class="window-summary-section">
+                <div class="summary-row">
+                  <span>Left Wall Window:</span>
+                  <span>{{ leftWallRO2WindowDisplay }}</span>
+                </div>
+                <div v-if="leftWallRO2Window === 1">
+                  <div class="summary-row">
+                    <span>Window Width:</span>
+                    <span>{{ leftWallRO2Width }}"</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Window Height:</span>
+                    <span>{{ leftWallRO2Height }}"</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Distance From Floor:</span>
+                    <span>{{ leftWallRO2FloorHeight }}"</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Header:</span>
+                    <span>{{ leftWallRO2HeaderSizeDisplay }}</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Stud Location:</span>
+                    <span>{{ leftWallRO2StudIndexDisplay }}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <button class="load-mechanism-button" @click="loadTheMechanism">
@@ -595,6 +693,9 @@ function loadTheMechanism() {
           </div>
         </aside>
       </div>
+      <!--===============================THIS MARKS THE BOTTOM OF THE LHS CONTROL PANEL==
+      ==========================AND THE BEGINNING OF THE OPTIONS AND MAIN COLUMN==========
+      ===================================================================================-->
       <div class="options-column">
         <div class="main-column">
           <h2>Building Dimensions</h2>
@@ -830,7 +931,10 @@ function loadTheMechanism() {
             @click="skidType = '2x4flat'"
           >
             <h3>Use 2x4 Pressure Treated - Flat Orientation</h3>
-            <p>Recommended for smaller structures like animal housing.</p>
+            <p>
+              Recommended for smaller structures like pets and small animal
+              housing.
+            </p>
           </div>
 
           <div v-if="skidType" class="current_selection">
@@ -846,8 +950,8 @@ function loadTheMechanism() {
           >
             <h3>Use 4x4 Pressure Treated</h3>
             <p>
-              Recommended for larger size structures like sheds and small
-              buildings.
+              Recommended for larger size structures like large animal housing,
+              sheds and small buildings.
             </p>
           </div>
 
@@ -861,8 +965,9 @@ function loadTheMechanism() {
           >
             <h3>Use a Center Skid</h3>
             <p>
-              Recommended for larger size structures with a deep span. Such as
-              large sheds and large buildings.
+              Recommended for larger size structures with a deep span and
+              heavier floor loads. Such as large equipment sheds and large
+              buildings.
             </p>
           </div>
 
@@ -920,7 +1025,7 @@ function loadTheMechanism() {
             <p>
               Using 2x4 joists defaults to conventional framing method of 16" on
               centers. You may choose to over-ride that by using more advanced
-              settings later. (this feature is currently non-operational)
+              settings later. (This feature is currently in development.)
             </p>
           </div>
 
@@ -953,8 +1058,8 @@ function loadTheMechanism() {
               <p>
                 Using 2x6 floor joists defaults to conventional framing method
                 of 24" on centers. You may choose to over-ride that by using
-                more advanced settings later.(this feature is currently
-                non-operational)
+                more advanced settings later.(This feature is currently in
+                development.)
               </p>
             </div>
           </div>
@@ -970,7 +1075,8 @@ function loadTheMechanism() {
               <option value="4">1"</option>
             </select>
           </div>
-
+          <!--=====================================================WALL STUDS=======
+======================================================================================-->
           <h2>Wall Studs</h2>
           <p>
             <button @click="showWhatIsAStud = !showWhatIsAStud">
@@ -1010,7 +1116,7 @@ function loadTheMechanism() {
             <p>
               Using 2x4 studs defaults to conventional 16" on centers. You may
               choose to over-ride that by using more advanced settings
-              later.(this feature is currently non-operational)
+              later.(This feature is currently in development.)
             </p>
           </div>
           <div class="current_selection" v-if="wallStudSize">
@@ -1041,10 +1147,12 @@ function loadTheMechanism() {
               <p>
                 Using 2x6 wall studs defaults to conventional 24" on centers.
                 You may choose to over-ride that by using more advanced settings
-                later.(this feature is currently disabled)
+                later.(This feature is currently in development.)
               </p>
             </div>
           </div>
+          <!--===========================================ROOF PEAK DIRECTION=========
+          ==========================================================================-->
           <h2>Roof Peak Direction</h2>
 
           <p>
@@ -1068,6 +1176,7 @@ function loadTheMechanism() {
 
           <div
             class="travelerQ-card roof_option"
+            :class="{ selected_roofPeak: roofPeakDirection === 'width' }"
             @click="roofPeakDirection = 'width'"
           >
             <img
@@ -1086,6 +1195,7 @@ function loadTheMechanism() {
 
           <div
             class="travelerQ-card roof_option"
+            :class="{ selected_roofPeak: roofPeakDirection === 'depth' }"
             @click="roofPeakDirection = 'depth'"
           >
             <img
@@ -1146,7 +1256,7 @@ function loadTheMechanism() {
               <p>
                 Using 2x4 roof rafters defaults to conventional 16" on centers.
                 You may choose to over-ride that by using more advanced settings
-                later.(this feature is currently disabled)
+                later.(This feature is currently in development.)
               </p>
             </div>
           </div>
@@ -1184,7 +1294,7 @@ function loadTheMechanism() {
               <p>
                 Using 2x6 roof rafters defaults to conventional 24" on-center
                 spacing. This can be customized later using advanced settings.
-                (This feature is currently disabled.)
+                (This feature is currently in development.)
               </p>
             </div>
           </div>
@@ -1277,84 +1387,245 @@ function loadTheMechanism() {
               that option available soon.
             </p>
           </div>
-          <!--==========================Start of LEFT WALL WINDOW=====================-->
-          <h2>Left Wall Window</h2>
-
-          <p>
-            <button
-              @click="showWhatIsALeftWallWindow = !showWhatIsALeftWallWindow"
-            >
-              What is a left wall window?
-            </button>
-          </p>
-
-          <p v-if="showWhatIsALeftWallWindow">
-            <strong class="whatIs-q">Q: What is a left wall window?</strong
-            ><br />
-            A: A left wall window is an optional rough opening placed in the
-            left wall of the structure. Window dimensions, height above the
-            floor, and framing options can be customized.
-          </p>
-
-          <div class="current_selection" v-if="leftWallRO2Window === 1">
-            Left Wall Window: Included
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: leftWallRO2Window === 1 }"
-            @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
-          >
-            <h3>Add Left Wall Window</h3>
+          <!--===================================================================
+          =========================START OF LEFT WALL WINDOW======================
+          ========================================================================-->
+          <div class="window-section">
+            <h2>Left Wall Window</h2>
 
             <p>
               <button
-                @click.stop="
-                  showMoreAboutLeftWallWindow = !showMoreAboutLeftWallWindow
-                "
+                @click="showWhatIsALeftWallWindow = !showWhatIsALeftWallWindow"
               >
-                More about left wall windows
+                What is a left wall window?
               </button>
             </p>
 
-            <div v-if="showMoreAboutLeftWallWindow">
-              <p>
-                Rough Opening Width:
-                <input
-                  type="number"
-                  v-model="leftWallRO2Width"
-                  min="12"
-                  max="72"
-                />
-              </p>
+            <p v-if="showWhatIsALeftWallWindow">
+              <strong class="whatIs-q">Q: What is a left wall window?</strong
+              ><br />
+              A: A left wall window is an optional rough opening placed in the
+              left wall of the structure. Window dimensions, height above the
+              floor, and framing options can be customized.
+            </p>
 
-              <p>
-                Rough Opening Height:
-                <input
-                  type="number"
-                  v-model="leftWallRO2Height"
-                  min="12"
-                  max="72"
-                />
-              </p>
+            <div class="current_selection" v-if="leftWallRO2Window === 1">
+              Left Wall Window: Included
+            </div>
 
-              <p>
-                Distance From Floor:
-                <input type="number" v-model="leftWallRO2FloorHeight" min="0" />
-              </p>
+            <div
+              class="traveler-windowQ-card"
+              :class="{ selected_window: leftWallRO2Window === 1 }"
+              @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
+            >
+              <h3>🪟 Add Left Wall Window</h3>
+            </div>
 
-              <p>
-                Header Size:
-                <select v-model="leftWallRO2HeaderSize">
-                  <option value="2x4">2x4</option>
-                  <option value="2x6">2x6</option>
-                </select>
-              </p>
+            <div v-if="leftWallRO2Window === 1">
+              <button
+                @click="
+                  showMoreAboutLeftWallWindow = !showMoreAboutLeftWallWindow
+                "
+              >
+                {{
+                  showMoreAboutLeftWallWindow
+                    ? "▼ Advanced Window Options"
+                    : "▶ Advanced Window Options"
+                }}
+              </button>
 
-              <p>
-                Stud Index:
-                <input type="number" v-model="leftWallRO2StudIndex" min="1" />
-              </p>
+              <div v-if="showMoreAboutLeftWallWindow">
+                <!--============================Start Of Advanced Window Options==============
+              ================================================================================-->
+                <h2>🪟 Advanced Window Options</h2>
+
+                <div class="traveler-windowQ-card">
+                  <p>
+                    These options control the size and placement of the left
+                    wall rough opening. The reference image below is intended to
+                    help visualize how each setting affects the final design.
+                  </p>
+                  <p class="tip-inline">
+                    💡 Tip: You can use the arrows or directly type your input
+                    values. Quarter-inch increments are supported.
+                  </p>
+
+                  <h4>Left Window Reference Diagram</h4>
+                  <!--=====================================================WINDOW LEGEND=========
+============================================================================-->
+                  <div class="window-dimension-legend">
+                    <div class="window-legend-width">RO Width</div>
+                    <div class="window-legend-height">RO Height</div>
+                    <div class="window-legend-headers">Headers</div>
+                    <div class="window-legend-stud-index">
+                      First Bay Stud Index
+                    </div>
+                    <div class="window-legend-dff">Dist From Floor</div>
+                  </div>
+
+                  <div class="dimension-reference-container">
+                    <img
+                      src="./assets/Left-Window-Reference-Image_v1.png"
+                      alt="Window reference"
+                      class="dimensions_reference_image"
+                    />
+                  </div>
+                  <h4>Window Reference</h4>
+                  <ul>
+                    <li>
+                      For added clarity, this reference image illustrates a
+                      typical 8' wide × 12' deep × 8' wall height structure with
+                      the roof peak running in the depth direction.
+                    </li>
+                    <li>
+                      The left wall window rough opening shown is 42" wide × 32"
+                      high, with the rough opening positioned 36" above the
+                      floor.
+                    </li>
+                    <li>
+                      The window is located at Stud Index 1. This means there is
+                      1 empty bay. The greater the stud index number, the
+                      farther the opening is positioned from the corner.
+                    </li>
+                    <li>
+                      A Stud Index of 0 represents the default centered position
+                      in the wall.
+                    </li>
+                    <li>
+                      This image is provided as a reference to help explain
+                      window configuration settings. Your actual building
+                      dimensions, window sizes, and locations may differ based
+                      on the selections made within the configurator.
+                    </li>
+                    <li>
+                      The reference images throughout the configurator are also
+                      representative of the style and level of detail customers
+                      can expect to see in their final drawing package.
+                      Additional drawing examples and sample plans will be
+                      provided as the project continues to develop.
+                    </li>
+                    <p>
+                      💡 Tip: Check with your window and door supplier for their
+                      recommended rough opening sizes for your particular
+                      windows and doors.
+                    </p>
+                  </ul>
+
+                  <!-- RO WIDTH -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-width dimension-label"
+                      >RO Width:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="leftWallRO2Width"
+                      min="12"
+                      max="72"
+                      step="0.25"
+                    />
+
+                    <span class="window-legend-width dimension-value">
+                      {{ leftWallRO2Width }}"
+                    </span>
+                  </div>
+                  <div v-if="windowWidthWarning" class="warning_box">
+                    ⚠️ The requested rough opening width may exceed the
+                    available wall space, or exceeds the failsafe limits set for
+                    the model. The Fusion model can safely resolve this
+                    condition, however the final design may require adjustments
+                    during human review. Please consider making your rough
+                    opening smaller or making your wall longer.
+                  </div>
+
+                  <!-- RO HEIGHT -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-height dimension-label"
+                      >RO Height:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="leftWallRO2Height"
+                      min="12"
+                      max="72"
+                      step="0.25"
+                    />
+
+                    <span class="window-legend-height dimension-value">
+                      {{ leftWallRO2Height }}"
+                    </span>
+                  </div>
+
+                  <!-- DISTANCE FROM FLOOR -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-dff dimension-label"
+                      >Distance From Floor:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="leftWallRO2FloorHeight"
+                      min="0"
+                      step="0.25"
+                    />
+
+                    <span class="window-legend-dff dimension-value">
+                      {{ leftWallRO2FloorHeight }}"
+                    </span>
+                  </div>
+                  <div v-if="windowFitWarning" class="warning_box">
+                    ⚠️ The selected rough opening height, distance from floor,
+                    and header size may exceed the available wall height. The
+                    Fusion model includes safeguards and may adjust the design,
+                    however final placement may require review.
+                  </div>
+
+                  <!-- HEADER SIZE -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-headers dimension-label"
+                      >Header Size:</label
+                    >
+
+                    <select v-model="leftWallRO2HeaderSize">
+                      <option value="2x4">2x4</option>
+                      <option value="2x6">2x6</option>
+                    </select>
+                    <span class="window-legend-headers dimension-value">
+                      {{ leftWallRO2HeaderSize }}
+                    </span>
+                  </div>
+
+                  <!-- STUD INDEX -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-stud-index dimension-label"
+                      >Stud Index:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="leftWallRO2StudIndex"
+                      min="0"
+                      step="1"
+                    />
+
+                    <span class="window-legend-stud-index dimension-value">
+                      {{ leftWallRO2StudIndexDisplay }}
+                    </span>
+                    <div v-if="studIndexWarning" class="warning_box">
+                      ⚠️ The selected stud index may exceed the available wall
+                      length. The Fusion model can safely resolve this
+                      condition, however the final design may require
+                      adjustments during human review.
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1365,6 +1636,10 @@ function loadTheMechanism() {
 <!--=====================================Start of Styling===================
 =================================================================================-->
 <style scoped>
+.heroHeader {
+  text-align: center;
+}
+
 h1,
 h2,
 h3,
@@ -1392,6 +1667,7 @@ h4 {
   width: fit-content;
   margin: 100px auto 0 auto;
 }
+
 .landingPage1 p,
 .landingPage2 p,
 .landingPage1 li {
@@ -1519,8 +1795,8 @@ h4 {
   min-width: 0;
 }
 
-.change-building-link,
-.summary-card {
+.change-building-link
+/*.summary-card*/ {
   pointer-events: auto;
 }
 
@@ -1556,6 +1832,8 @@ h4 {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
 }
 
 .page3-tape-image {
@@ -1579,14 +1857,14 @@ h4 {
   /*box-shadow: 6px 8px #5e3d16; /* this can be used for de-bugging, darker wood color */
 }
 
-.summary-card {
+/*.summary-card {
   background: transparent;
   border-radius: 8px;
   padding: 16px;
   width: 100%;
   box-sizing: border-box;
   flex: 1 1 auto;
-}
+}*/
 
 .load-mechanism-button {
   position: sticky;
@@ -1613,7 +1891,7 @@ h4 {
   border-radius: 8px;
   padding: 16px;
   margin-top: 12px;
-  box-shadow: 8px 10px #5e3d16; /* darker wood color */
+  box-shadow: 8px 10px #5e3d16;
 }
 
 .dimension-row {
@@ -1650,14 +1928,79 @@ h4 {
 
 .legend-width {
   border-left: 8px solid red;
+  color: red;
+  text-shadow: 1px 1px 1px black;
   padding-left: 10px;
   font-size: 1.3rem;
   font-weight: bold;
   margin-bottom: 12px;
 }
 
+.window-dimension-legend {
+  align-self: flex-start;
+  /*margin-bottom: 5px;*/
+  font-size: 1rem;
+}
+
+.window-legend-width {
+  border-left: 8px solid rgb(117, 238, 117);
+  color: rgb(117, 238, 117) !important;
+  text-shadow: 1px 1px 1px black;
+  padding-left: 10px;
+  /*font-size: 1.3rem;*/
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.window-legend-height {
+  border-left: 8px solid blue;
+  color: blue !important;
+  text-shadow: 1px 1px 1px black;
+  padding-left: 10px;
+  /*font-size: 1.3rem;*/
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.window-legend-headers {
+  border-left: 8px solid red;
+  color: red !important;
+  text-shadow: 1px 1px 1px black;
+  padding-left: 10px;
+  /*font-size: 1.3rem;*/
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.window-legend-stud-index {
+  border-left: 8px solid yellow;
+  color: yellow !important;
+  text-shadow: 1px 1px 1px black;
+  padding-left: 10px;
+  /*font-size: 1.3rem;*/
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.window-legend-dff {
+  border-left: 8px solid magenta;
+  color: magenta !important;
+  text-shadow: 1px 1px 1px black;
+  padding-left: 10px;
+  /*font-size: 1.3rem;*/
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.window-widthDimension-label {
+  color: rgb(117, 238, 117);
+  font-weight: bold;
+}
+
 .legend-depth {
   border-left: 8px solid rgb(93, 245, 93);
+  color: rgb(93, 245, 93);
+  text-shadow: 1px 1px 1px black;
   padding-left: 10px;
   font-size: 1.3rem;
   font-weight: bold;
@@ -1666,6 +2009,8 @@ h4 {
 
 .legend-height {
   border-left: 8px solid blue;
+  color: blue;
+  text-shadow: 1px 1px 1px black;
   padding-left: 10px;
   font-size: 1.3rem;
   font-weight: bold;
@@ -1727,9 +2072,46 @@ h4 {
   gap: 15px;
 }
 
+.selected_roofPeak {
+  border: 3px solid #7d8590;
+  border-radius: 8px;
+  box-shadow: 8px 10px #7d8590;
+  background-color: rgba(125, 133, 144, 0.08);
+}
+
 .roof_direction_image {
   width: 120px;
   flex-shrink: 0;
+}
+
+.traveler-windowQ-card {
+  /*border: 1px solid #4a90e2;*/
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  box-shadow: 8px 10px #4a90e2;
+  border: 3px solid #4a90e2;
+  /*background-image: ;*/
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(74, 144, 226, 0.08);
+}
+
+.selected_window {
+  border: 3px solid #4a90e2;
+  /*background-image: ;*/
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(74, 144, 226, 0.08);
+}
+
+.window-summary-section {
+  border-left: 6px solid #4a90e2;
+  background-color: rgba(74, 144, 226, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 @media (max-width: 800px) {
