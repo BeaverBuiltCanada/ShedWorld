@@ -106,6 +106,12 @@ Lets get this working and see where we are.
 - Blueprint unrolling into warning animation
 - Navigation panel
 - Drawing package matching
+  Future Feature:
+  Design Review Assistant
+
+✅ Good Decisions
+💡 Suggestions
+⚠️ Potential Issues
 
 copy paste place holder
 what I currently have for window
@@ -141,4 +147,13 @@ Left Window Reference Diagram
 This image is provided as a reference to help explain window configuration settings. Your actual building dimensions, window sizes, and locations may differ based on the selections made within the configurator.
 
 The reference images throughout the configurator are also representative of the style and level of detail customers can expect to see in their final drawing package. Additional drawing examples and sample plans will be provided as the project continues to develop.
+```
+
+```text
+CHOOSER_04_a_TOGGLE___Wall_Y_Right_Has_A_RO4_Window___TrueOrFalse
+CHOOSER_04_B_Wndw_RghOpn_RO4__Limited_WindowWidth_Inches_Requested
+CHOOSER_04_C___Wndw_RghOpn_RO4__Limited_Height_Inches_Requested
+CHOOSER_04_D___Wndw_RghOpn_RO4__Limited_ZDistance_DistFrmFlr_Inches_Requested
+CHOOSER_04_Fi_RO4_OPENING___Window_Use_2x6_Headers___TrueOrFalse
+CHOOSER_04_E___RO4_OPENING___Place_Window_By_Stud_Indexer
 ```

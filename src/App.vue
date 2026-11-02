@@ -31,6 +31,7 @@ const showWhatIsAJoist = ref(false);
 const floorJoistSize = ref("");
 const show2x4FloorJoistInfo = ref(false);
 const show2x6FloorJoistInfo = ref(false);
+/*=========FLOOR PLYWOOD==========*/
 const floorPlywoodThickness = ref("2"); // Default floor plywood thickness should be set to 5/8"
 const plywoodDisplay = computed(() => {
   switch (floorPlywoodThickness.value) {
@@ -63,7 +64,7 @@ const showWhatAreGableEnds = ref(false);
 const dimensionWarning = computed(() => {
   return Number(width.value) > Number(depth.value);
 });
-
+/*===========START OF LEFT WALL WINDOW==============*/
 const leftWallRO2WindowDisplay = computed(() => {
   return leftWallRO2Window.value === 1 ? "Included" : "Not Installed";
 });
@@ -112,15 +113,6 @@ const windowFitWarning = computed(() => {
   return requiredHeight > wallHeightInches;
 });
 
-const windowHeightPlacementWarning = computed(() => {
-  const wallHeightInches = Number(wallHeight.value) * 12;
-
-  return (
-    Number(leftWallRO2FloorHeight.value) + Number(leftWallRO2Height.value) >
-    wallHeightInches
-  );
-});
-
 const studIndexWarning = computed(() => {
   if (Number(leftWallRO2StudIndex.value) === 0) {
     return false;
@@ -130,6 +122,34 @@ const studIndexWarning = computed(() => {
   const estimatedBayCount = Math.floor(wallLengthInches / 16);
 
   return Number(leftWallRO2StudIndex.value) > estimatedBayCount;
+});
+/*==================START OF RIGHT WALL WINDOW================*/
+//======================================================
+// RIGHT WALL WINDOW
+//======================================================
+
+const rightWallRO4Window = ref(1);
+const rightWallRO4Width = ref(24);
+const rightWallRO4Height = ref(24);
+const rightWallRO4FloorHeight = ref(10);
+const rightWallRO4HeaderSize = ref("2x4");
+const rightWallRO4StudIndex = ref(0);
+
+const showWhatIsARightWallWindow = ref(false);
+const showMoreAboutRightWallWindow = ref(false);
+
+const rightWallRO4WindowDisplay = computed(() => {
+  return rightWallRO4Window.value === 1 ? "Included" : "Not Installed";
+});
+
+const rightWallRO4StudIndexDisplay = computed(() => {
+  return rightWallRO4StudIndex.value === 0
+    ? "Centered"
+    : `Stud Bay ${rightWallRO4StudIndex.value}`;
+});
+
+const rightWallRO4HeaderSizeDisplay = computed(() => {
+  return rightWallRO4HeaderSize.value === "2x6" ? "2x6 Header" : "2x4 Header";
 });
 
 function acceptTerms() {
@@ -214,7 +234,7 @@ function selectBuildingType(type) {
     behavior: "instant",
   });
 }
-
+/*==========EXPORT JSON===========*/
 function loadTheMechanism() {
   const config = {
     width: Number(width.value),
@@ -235,6 +255,12 @@ function loadTheMechanism() {
     leftWallRO2FloorHeight: leftWallRO2FloorHeight.value,
     leftWallRO2HeaderSize: leftWallRO2HeaderSize.value,
     leftWallRO2StudIndex: leftWallRO2StudIndex.value,
+    rightWallRO4Window: rightWallRO4Window.value,
+    rightWallRO4Width: rightWallRO4Width.value,
+    rightWallRO4Height: rightWallRO4Height.value,
+    rightWallRO4FloorHeight: rightWallRO4FloorHeight.value,
+    rightWallRO4HeaderSize: rightWallRO4HeaderSize.value,
+    rightWallRO4StudIndex: rightWallRO4StudIndex.value,
   };
 
   const json = JSON.stringify(config, null, 2);
@@ -654,7 +680,8 @@ function loadTheMechanism() {
                 <span>Gable Ends Overhang, currently n/a:</span>
                 <span>{{ gableEndsOverHang }}</span>
               </div>
-              <div class="window-summary-section">
+              <!--===========THIS IS THE START OF THE LEFT WINDOW SUMMARY SECTION=========-->
+              <div class="left-window-summary-section">
                 <div class="summary-row">
                   <span>Left Wall Window:</span>
                   <span>{{ leftWallRO2WindowDisplay }}</span>
@@ -686,6 +713,41 @@ function loadTheMechanism() {
                   </div>
                 </div>
               </div>
+              <!--============THIS IS THE END OF THE LEFT WINDOW SUMMARY SECTION=========-->
+              <!--===========THIS IS THE START OF THE RIGHT WINDOW SUMMARY SECTION=========-->
+              <div class="right-window-summary-section">
+                <div class="summary-row">
+                  <span>Right Wall Window:</span>
+                  <span>{{ rightWallRO4WindowDisplay }}</span>
+                </div>
+                <div v-if="rightWallRO4Window === 1">
+                  <div class="summary-row">
+                    <span>Window Width:</span>
+                    <span>{{ rightWallRO4Width }}"</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Window Height:</span>
+                    <span>{{ rightWallRO4Height }}"</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Distance From Floor:</span>
+                    <span>{{ rightWallRO4FloorHeight }}"</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Header:</span>
+                    <span>{{ rightWallRO4HeaderSizeDisplay }}</span>
+                  </div>
+
+                  <div class="summary-row">
+                    <span>Stud Location:</span>
+                    <span>{{ rightWallRO4StudIndexDisplay }}</span>
+                  </div>
+                </div>
+              </div>
+              <!--============THIS IS THE END OF THE RIGHT WINDOW SUMMARY SECTION=========-->
             </div>
             <button class="load-mechanism-button" @click="loadTheMechanism">
               Load The Mechanism
@@ -1414,8 +1476,8 @@ function loadTheMechanism() {
             </div>
 
             <div
-              class="traveler-windowQ-card"
-              :class="{ selected_window: leftWallRO2Window === 1 }"
+              class="left-traveler-windowQ-card"
+              :class="{ left_selected_window: leftWallRO2Window === 1 }"
               @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
             >
               <h3>🪟 Add Left Wall Window</h3>
@@ -1429,8 +1491,8 @@ function loadTheMechanism() {
               >
                 {{
                   showMoreAboutLeftWallWindow
-                    ? "▼ Advanced Window Options"
-                    : "▶ Advanced Window Options"
+                    ? "▼ Advanced Left Window Options"
+                    : "▶ Advanced Left Window Options"
                 }}
               </button>
 
@@ -1439,7 +1501,7 @@ function loadTheMechanism() {
               ================================================================================-->
                 <h2>🪟 Advanced Window Options</h2>
 
-                <div class="traveler-windowQ-card">
+                <div class="left-traveler-windowQ-card">
                   <p>
                     These options control the size and placement of the left
                     wall rough opening. The reference image below is intended to
@@ -1453,7 +1515,7 @@ function loadTheMechanism() {
                   <h4>Left Window Reference Diagram</h4>
                   <!--=====================================================WINDOW LEGEND=========
 ============================================================================-->
-                  <div class="window-dimension-legend">
+                  <div class="left-window-dimension-legend">
                     <div class="window-legend-width">RO Width</div>
                     <div class="window-legend-height">RO Height</div>
                     <div class="window-legend-headers">Headers</div>
@@ -1483,9 +1545,9 @@ function loadTheMechanism() {
                       floor.
                     </li>
                     <li>
-                      The window is located at Stud Index 1. This means there is
-                      1 empty bay. The greater the stud index number, the
-                      farther the opening is positioned from the corner.
+                      The window is located at Stud Index 1. This means there
+                      are 1 empty bay. The greater the stud index number, the
+                      farther the opening is positioned from the front corner.
                     </li>
                     <li>
                       A Stud Index of 0 represents the default centered position
@@ -1624,10 +1686,272 @@ function loadTheMechanism() {
                       adjustments during human review.
                     </div>
                   </div>
+                  <p>
+                    <button
+                      @click="showMoreAboutLeftWallWindow = false"
+                      class="clear-window-button"
+                    >
+                      🪟 Close Left Window Options
+                    </button>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
+          <!--CLOSING DIV ABOVE THIS LINE IS THE DIV THAT CLOSES THE ABOVE CLASS window-section==
+          =========================START OF RIGHT WALL WINDOW======================
+          ========================================================================-->
+          <div class="window-section">
+            <h2>Right Wall Window</h2>
+
+            <p>
+              <button
+                @click="
+                  showWhatIsARightWallWindow = !showWhatIsARightWallWindow
+                "
+              >
+                What is a right wall window?
+              </button>
+            </p>
+
+            <p v-if="showWhatIsARightWallWindow">
+              <strong class="whatIs-q">Q: What is a right wall window?</strong
+              ><br />
+              A: A right wall window is an optional rough opening placed in the
+              right wall of the structure. Window dimensions, height above the
+              floor, and framing options can be customized.
+            </p>
+
+            <div class="current_selection" v-if="rightWallRO4Window === 1">
+              Right Wall Window: Included
+            </div>
+
+            <div
+              class="right-traveler-windowQ-card"
+              :class="{ right_selected_window: rightWallRO4Window === 1 }"
+              @click="rightWallRO4Window = rightWallRO4Window === 1 ? 0 : 1"
+            >
+              <h3>🪟 Add Right Wall Window</h3>
+            </div>
+
+            <div v-if="rightWallRO4Window === 1">
+              <button
+                @click="
+                  showMoreAboutRightWallWindow = !showMoreAboutRightWallWindow
+                "
+              >
+                {{
+                  showMoreAboutRightWallWindow
+                    ? "▼ Advanced Right Window Options"
+                    : "▶ Advanced Right Window Options"
+                }}
+              </button>
+
+              <div v-if="showMoreAboutRightWallWindow">
+                <!--============================Start Of Advanced Window Options==============
+              ================================================================================-->
+                <h2>🪟 Advanced Window Options</h2>
+
+                <div class="right-traveler-windowQ-card">
+                  <p>
+                    These options control the size and placement of the right
+                    wall rough opening. The reference image below is intended to
+                    help visualize how each setting affects the final design.
+                  </p>
+                  <p class="tip-inline">
+                    💡 Tip: You can use the arrows or directly type your input
+                    values. Quarter-inch increments are supported.
+                  </p>
+
+                  <h4>Right Window Reference Diagram</h4>
+                  <!--===================================WINDOW LEGEND=========
+============================================================================-->
+                  <div class="right-window-dimension-legend">
+                    <div class="window-legend-width">RO Width</div>
+                    <div class="window-legend-height">RO Height</div>
+                    <div class="window-legend-headers">Headers</div>
+                    <div class="window-legend-stud-index">
+                      Fourth Bay Stud Index
+                    </div>
+                    <div class="window-legend-dff">Dist From Floor</div>
+                  </div>
+                  <!--===========================NEED A IMAGE FOR RHS WINDOW============-->
+                  <div class="dimension-reference-container">
+                    <img
+                      src="./assets/Right-Window-Reference-Image_v1.png"
+                      alt="Window reference"
+                      class="dimensions_reference_image"
+                    />
+                  </div>
+                  <h4>Window Reference</h4>
+                  <ul>
+                    <!--==========USE A DIFFERENT SIZE AND ROOF DIRECTION THAN LHS=========-->
+                    <li>
+                      For added clarity, this reference image illustrates a
+                      typical 10' wide × 10' deep × 8' wall height structure
+                      with the roof peak running in the width direction and the
+                      door rough opening is 60"w × 80"h.
+                    </li>
+                    <li>
+                      The right wall window rough opening shown is 36" wide ×
+                      42" high, with the rough opening positioned 28" above the
+                      floor.
+                    </li>
+                    <li>
+                      The window is located at Stud Index 4. This means there
+                      are 4 empty bays. The greater the stud index number, the
+                      farther the opening is positioned from the front corner.
+                    </li>
+                    <li>
+                      A Stud Index of 0 represents the default centered position
+                      in the wall.
+                    </li>
+                    <li>
+                      This image is provided as a reference to help explain
+                      window configuration settings. Your actual building
+                      dimensions, window sizes, and locations may differ based
+                      on the selections made within the configurator.
+                    </li>
+                    <li>
+                      The reference images throughout the configurator are also
+                      representative of the style and level of detail customers
+                      can expect to see in their final drawing package.
+                      Additional drawing examples and sample plans will be
+                      provided as the project continues to develop.
+                    </li>
+                    <p>
+                      💡 Tip: Check with your window and door supplier for their
+                      recommended rough opening sizes for your particular
+                      windows and doors.
+                    </p>
+                  </ul>
+
+                  <!-- RO WIDTH -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-width dimension-label"
+                      >RO Width:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="rightWallRO4Width"
+                      min="12"
+                      max="72"
+                      step="0.25"
+                    />
+
+                    <span class="window-legend-width dimension-value">
+                      {{ rightWallRO4Width }}"
+                    </span>
+                  </div>
+                  <div v-if="windowWidthWarning" class="warning_box">
+                    ⚠️ The requested rough opening width may exceed the
+                    available wall space, or exceeds the failsafe limits set for
+                    the model. The Fusion model can safely resolve this
+                    condition, however the final design may require adjustments
+                    during human review. Please consider making your rough
+                    opening smaller or making your wall longer.
+                  </div>
+
+                  <!-- RO HEIGHT -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-height dimension-label"
+                      >RO Height:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="rightWallRO4Height"
+                      min="12"
+                      max="72"
+                      step="0.25"
+                    />
+
+                    <span class="window-legend-height dimension-value">
+                      {{ rightWallRO4Height }}"
+                    </span>
+                  </div>
+
+                  <!-- DISTANCE FROM FLOOR -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-dff dimension-label"
+                      >Distance From Floor:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="rightWallRO4FloorHeight"
+                      min="0"
+                      step="0.25"
+                    />
+
+                    <span class="window-legend-dff dimension-value">
+                      {{ rightWallRO4FloorHeight }}"
+                    </span>
+                  </div>
+                  <div v-if="windowFitWarning" class="warning_box">
+                    ⚠️ The selected rough opening height, distance from floor,
+                    and header size may exceed the available wall height. The
+                    Fusion model includes safeguards and may adjust the design,
+                    however final placement may require review.
+                  </div>
+
+                  <!-- HEADER SIZE -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-headers dimension-label"
+                      >Header Size:</label
+                    >
+
+                    <select v-model="rightWallRO4HeaderSize">
+                      <option value="2x4">2x4</option>
+                      <option value="2x6">2x6</option>
+                    </select>
+                    <span class="window-legend-headers dimension-value">
+                      {{ rightWallRO4HeaderSize }}
+                    </span>
+                  </div>
+
+                  <!-- STUD INDEX -->
+
+                  <div class="dimension-row">
+                    <label class="window-legend-stud-index dimension-label"
+                      >Stud Index:</label
+                    >
+
+                    <input
+                      type="number"
+                      v-model="rightWallRO4StudIndex"
+                      min="0"
+                      step="1"
+                    />
+
+                    <span class="window-legend-stud-index dimension-value">
+                      {{ rightWallRO4StudIndexDisplay }}
+                    </span>
+                    <div v-if="studIndexWarning" class="warning_box">
+                      ⚠️ The selected stud index may exceed the available wall
+                      length. The Fusion model can safely resolve this
+                      condition, however the final design may require
+                      adjustments during human review.
+                    </div>
+                  </div>
+                  <p>
+                    <button
+                      @click="showMoreAboutRightWallWindow = false"
+                      class="clear-window-button"
+                    >
+                      🪟 Close Right Window Options
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--=========THIS IS THE CLOSING DIV ABOVE THIS LINE, THE DIV THAT CLOSES CLASS window-section?-->
         </div>
       </div>
     </div>
@@ -1936,9 +2260,15 @@ h4 {
   margin-bottom: 12px;
 }
 
-.window-dimension-legend {
-  align-self: flex-start;
-  /*margin-bottom: 5px;*/
+.left-window-dimension-legend {
+  /*display: flex;*/
+  /*justify-content: flex-start;*/
+  font-size: 1rem;
+}
+
+.right-window-dimension-legend {
+  /*display: flex;*/
+  /*justify-content: flex-end;*/
   font-size: 1rem;
 }
 
@@ -2084,30 +2414,63 @@ h4 {
   flex-shrink: 0;
 }
 
-.traveler-windowQ-card {
-  /*border: 1px solid #4a90e2;*/
+.left-traveler-windowQ-card {
   border-radius: 8px;
   padding: 16px;
   margin-top: 12px;
-  box-shadow: 8px 10px #4a90e2;
-  border: 3px solid #4a90e2;
-  /*background-image: ;*/
-  background-size: cover;
-  background-position: center;
-  background-color: rgba(74, 144, 226, 0.08);
+  border: 2px solid #4a90e2;
+  box-shadow: 5px 6px #4a90e2;
+  background-color: rgba(74, 144, 226, 0.07);
+  /*background-size: cover;
+  background-position: center; these would go if there was a background image added*/
 }
 
-.selected_window {
-  border: 3px solid #4a90e2;
-  /*background-image: ;*/
-  background-size: cover;
-  background-position: center;
-  background-color: rgba(74, 144, 226, 0.08);
+.right-traveler-windowQ-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+
+  border: 2px solid #4a90e2;
+  box-shadow: 5px 6px #4a90e2;
+
+  /*background-size: cover;
+  background-position: center;*/
+  background-color: rgba(74, 144, 226, 0.16);
 }
 
-.window-summary-section {
+.left_selected_window {
+  border: 5px solid #4a90e2;
+  box-shadow: 10px 12px #4a90e2;
+
+  background-color: rgba(74, 144, 226, 0.07);
+
+  /*background-image: ;*/
+  /*background-size: cover;
+  background-position: center;*/
+}
+
+.left-window-summary-section {
   border-left: 6px solid #4a90e2;
-  background-color: rgba(74, 144, 226, 0.08);
+  background-color: rgba(74, 144, 226, 0.07);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.right_selected_window {
+  border: 5px solid #4a90e2;
+  box-shadow: 10px 12px #4a90e2;
+
+  background-color: rgba(74, 144, 226, 0.16);
+  /*background-image: ;*/
+  background-size: cover;
+  background-position: center;
+}
+
+.right-window-summary-section {
+  border-left: 6px solid #4a90e2;
+  background-color: rgba(74, 144, 226, 0.16);
   border-radius: 6px;
   padding: 8px;
   margin-top: 6px;
