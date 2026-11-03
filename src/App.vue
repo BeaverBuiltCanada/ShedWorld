@@ -51,6 +51,9 @@ const showWhatIsAStud = ref(false);
 const wallStudSize = ref("");
 const showMoreAbout2x4Studs = ref(false);
 const showMoreAbout2x6Studs = ref(false);
+const showAdvancedStudOptions = ref(false);
+const wallStudSpacingOverride = ref(false);
+const wallStudOverrideSpacing = ref(24);
 const showMoreAboutRoofPeak = ref(false);
 const showWhatIsARoofRafter = ref(false);
 const showMoreAbout2x4RoofRafters = ref(false);
@@ -64,6 +67,7 @@ const showWhatAreGableEnds = ref(false);
 const dimensionWarning = computed(() => {
   return Number(width.value) > Number(depth.value);
 });
+
 /*===========START OF LEFT WALL WINDOW==============*/
 const leftWallRO2WindowDisplay = computed(() => {
   return leftWallRO2Window.value === 1 ? "Included" : "Not Installed";
@@ -72,7 +76,7 @@ const leftWallRO2WindowDisplay = computed(() => {
 const leftWallRO2StudIndexDisplay = computed(() => {
   return leftWallRO2StudIndex.value === 0
     ? "Centered"
-    : `Stud Bay ${leftWallRO2StudIndex.value}`;
+    : `${leftWallRO2StudIndex.value}"`;
 });
 
 const leftWallRO2HeaderSizeDisplay = computed(() => {
@@ -145,11 +149,15 @@ const rightWallRO4WindowDisplay = computed(() => {
 const rightWallRO4StudIndexDisplay = computed(() => {
   return rightWallRO4StudIndex.value === 0
     ? "Centered"
-    : `Stud Bay ${rightWallRO4StudIndex.value}`;
+    : `${rightWallRO4StudIndex.value}"`;
 });
 
 const rightWallRO4HeaderSizeDisplay = computed(() => {
   return rightWallRO4HeaderSize.value === "2x6" ? "2x6 Header" : "2x4 Header";
+});
+
+const wallStudSpacing = computed(() => {
+  return wallStudSize.value === "2x6" ? 24 : 16;
 });
 
 function acceptTerms() {
@@ -234,7 +242,7 @@ function selectBuildingType(type) {
     behavior: "instant",
   });
 }
-/*==========EXPORT JSON===========*/
+/*==========================================EXPORT JSON=============================*/
 function loadTheMechanism() {
   const config = {
     width: Number(width.value),
@@ -245,6 +253,8 @@ function loadTheMechanism() {
     floorJoistSize: floorJoistSize.value,
     floorPlywoodThickness: floorPlywoodThickness.value,
     wallStudSize: wallStudSize.value,
+    wallStudSpacingOverride: wallStudSpacingOverride.value,
+    wallStudOverrideSpacing: wallStudOverrideSpacing.value,
     roofPeakDirection: roofPeakDirection.value,
     roofRafterSize: roofRafterSize.value,
     roofPitch: roofPitch.value,
@@ -582,7 +592,7 @@ function loadTheMechanism() {
         </h2>
 
         <button
-          class="collapsed-welcome-button"
+          class="collapse-thanks-button"
           @click="showWelcomeDetails = !showWelcomeDetails"
         >
           {{
@@ -621,133 +631,156 @@ function loadTheMechanism() {
             />
           </div>
         </div>
-
+        <!--======================================TOP OF CONTROL PANEL=====================-->
         <aside class="page3-sidebar">
           <div class="page3-control-panel">
-            <div class="summary-card">
-              <p>
-                (these are system default values and will update with your
-                choices)
-              </p>
-              <h4>Your Current Building Selections:</h4>
-
-              <div class="summary-row">
+            <p>
+              (these are system default values and will update with your
+              choices)
+            </p>
+            <h4>Your Current Building Selections:</h4>
+            <div class="dimensions-summary-section">
+              <div class="CP-summary-row">
                 <span>Depth:</span><span>{{ depth }}'</span>
               </div>
-              <div class="summary-row">
+              <div class="CP-summary-row">
                 <span>Width:</span><span>{{ width }}'</span>
               </div>
-              <div class="summary-row">
+              <div class="CP-summary-row">
                 <span>Wall Height:</span><span>{{ wallHeight }}'</span>
               </div>
-              <div class="summary-row">
+            </div>
+            <div class="foundation-summary-section">
+              <div class="CP-summary-row">
                 <span>Foundation Skids:</span>
                 <span>{{ skidType }}</span>
               </div>
-              <div class="summary-row">
+              <div class="CP-summary-row">
                 <span>Center Skid:</span>
                 <span>{{ centerSkid || "No" }}</span>
               </div>
-              <div class="summary-row">
+            </div>
+
+            <div class="floor-joist-summary-section">
+              <div class="CP-summary-row">
                 <span>Floor Joists:</span>
                 <span>{{ floorJoistSize }}</span>
               </div>
-              <div class="summary-row">
+            </div>
+            <div class="plywood-summary-section">
+              <div class="CP-summary-row">
                 <span>Floor Plywood:</span>
                 <span>{{ plywoodDisplay }}</span>
               </div>
-              <div class="summary-row">
+            </div>
+
+            <!--======================THIS IS THE START OF THE ADVANCED STUD SYSTEM===-->
+            <div class="stud-summary-section">
+              <div class="CP-summary-row">
                 <span>Wall Studs:</span>
                 <span>{{ wallStudSize }}</span>
               </div>
-              <div class="summary-row">
+
+              <div v-if="wallStudSpacingOverride === 1">
+                <div class="CP-summary-row">
+                  <span>Stud Spacing:</span>
+                  <span>{{ wallStudSpacing }}" O/C</span>
+                </div>
+              </div>
+            </div>
+            <!--======================THIS IS THE END OF THE ADVANCED STUD SYSTEM===-->
+            <div class="roof-peak-summary-section">
+              <div class="CP-summary-row">
                 <span>Roof Peak Direction:</span>
                 <span>{{ roofPeakDirection }}</span>
               </div>
-              <div class="summary-row">
+            </div>
+            <div class="roof-rafters-summary-section">
+              <div class="CP-summary-row">
                 <span>Roof Rafters:</span>
                 <span>{{ roofRafterSize }}</span>
               </div>
-              <div class="summary-row">
+            </div>
+            <div class="roof-pitch-summary-section">
+              <div class="CP-summary-row">
                 <span>Roof Pitch:</span>
                 <span>{{ roofPitch }}:12</span>
               </div>
-              <div class="summary-row">
+              <div class="CP-summary-row">
                 <span>Eaves Overhang:</span>
                 <span>{{ eavesOverHang }}"</span>
               </div>
-              <div class="summary-row">
+              <div class="CP-summary-row">
                 <span>Gable Ends Overhang, currently n/a:</span>
                 <span>{{ gableEndsOverHang }}</span>
               </div>
-              <!--===========THIS IS THE START OF THE LEFT WINDOW SUMMARY SECTION=========-->
-              <div class="left-window-summary-section">
-                <div class="summary-row">
-                  <span>Left Wall Window:</span>
-                  <span>{{ leftWallRO2WindowDisplay }}</span>
+            </div>
+            <!--===========THIS IS THE START OF THE LEFT WINDOW SUMMARY SECTION=========-->
+            <div class="left-window-summary-section">
+              <div class="CP-summary-row">
+                <span>Left Wall Window:</span>
+                <span>{{ leftWallRO2WindowDisplay }}</span>
+              </div>
+              <div v-if="leftWallRO2Window === 1">
+                <div class="CP-summary-row">
+                  <span>Window Width:</span>
+                  <span>{{ leftWallRO2Width }}"</span>
                 </div>
-                <div v-if="leftWallRO2Window === 1">
-                  <div class="summary-row">
-                    <span>Window Width:</span>
-                    <span>{{ leftWallRO2Width }}"</span>
-                  </div>
 
-                  <div class="summary-row">
-                    <span>Window Height:</span>
-                    <span>{{ leftWallRO2Height }}"</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Window Height:</span>
+                  <span>{{ leftWallRO2Height }}"</span>
+                </div>
 
-                  <div class="summary-row">
-                    <span>Distance From Floor:</span>
-                    <span>{{ leftWallRO2FloorHeight }}"</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Distance From Floor:</span>
+                  <span>{{ leftWallRO2FloorHeight }}"</span>
+                </div>
 
-                  <div class="summary-row">
-                    <span>Header:</span>
-                    <span>{{ leftWallRO2HeaderSizeDisplay }}</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Header:</span>
+                  <span>{{ leftWallRO2HeaderSizeDisplay }}</span>
+                </div>
 
-                  <div class="summary-row">
-                    <span>Stud Location:</span>
-                    <span>{{ leftWallRO2StudIndexDisplay }}</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Distance From Front Corner:</span>
+                  <span>{{ leftWallRO2StudIndexDisplay }}</span>
                 </div>
               </div>
-              <!--============THIS IS THE END OF THE LEFT WINDOW SUMMARY SECTION=========-->
-              <!--===========THIS IS THE START OF THE RIGHT WINDOW SUMMARY SECTION=========-->
-              <div class="right-window-summary-section">
-                <div class="summary-row">
-                  <span>Right Wall Window:</span>
-                  <span>{{ rightWallRO4WindowDisplay }}</span>
+            </div>
+            <!--============THIS IS THE END OF THE LEFT WINDOW SUMMARY SECTION=========-->
+            <!--===========THIS IS THE START OF THE RIGHT WINDOW SUMMARY SECTION=========-->
+            <div class="right-window-summary-section">
+              <div class="CP-summary-row">
+                <span>Right Wall Window:</span>
+                <span>{{ rightWallRO4WindowDisplay }}</span>
+              </div>
+              <div v-if="rightWallRO4Window === 1">
+                <div class="CP-summary-row">
+                  <span>Window Width:</span>
+                  <span>{{ rightWallRO4Width }}"</span>
                 </div>
-                <div v-if="rightWallRO4Window === 1">
-                  <div class="summary-row">
-                    <span>Window Width:</span>
-                    <span>{{ rightWallRO4Width }}"</span>
-                  </div>
 
-                  <div class="summary-row">
-                    <span>Window Height:</span>
-                    <span>{{ rightWallRO4Height }}"</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Window Height:</span>
+                  <span>{{ rightWallRO4Height }}"</span>
+                </div>
 
-                  <div class="summary-row">
-                    <span>Distance From Floor:</span>
-                    <span>{{ rightWallRO4FloorHeight }}"</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Distance From Floor:</span>
+                  <span>{{ rightWallRO4FloorHeight }}"</span>
+                </div>
 
-                  <div class="summary-row">
-                    <span>Header:</span>
-                    <span>{{ rightWallRO4HeaderSizeDisplay }}</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Header:</span>
+                  <span>{{ rightWallRO4HeaderSizeDisplay }}</span>
+                </div>
 
-                  <div class="summary-row">
-                    <span>Stud Location:</span>
-                    <span>{{ rightWallRO4StudIndexDisplay }}</span>
-                  </div>
+                <div class="CP-summary-row">
+                  <span>Distance From Front Corner:</span>
+                  <span>{{ rightWallRO4StudIndexDisplay }}</span>
                 </div>
               </div>
-              <!--============THIS IS THE END OF THE RIGHT WINDOW SUMMARY SECTION=========-->
             </div>
             <button class="load-mechanism-button" @click="loadTheMechanism">
               Load The Mechanism
@@ -756,1197 +789,1267 @@ function loadTheMechanism() {
         </aside>
       </div>
       <!--===============================THIS MARKS THE BOTTOM OF THE LHS CONTROL PANEL==
-      ==========================AND THE BEGINNING OF THE OPTIONS AND MAIN COLUMN==========
-      ===================================================================================-->
+      ==========================AND THE BEGINNING OF THE RHS OPTIONS AND MAIN COLUMN==========
+      =================================================================================-->
       <div class="options-column">
         <div class="main-column">
-          <h2>Building Dimensions</h2>
-          <!-- double isometric pic with the view cubes -->
+          <!--==========DIMENSIONS SECTION===============-->
+          <div class="dimensions-section">
+            <h2>Building Dimensions</h2>
+            <!-- double isometric pic with the view cubes -->
 
-          <div class="travelerQ-card">
-            <p>
-              Enter the desired dimensions for your building. The floor area,
-              perimeter, and wall area will be calculated and displayed below,
-              for your reference.
-            </p>
-            <h4>Dimensions Reference</h4>
-            <div class="dimension-reference-container">
-              <img
-                :src="twoIso"
-                alt="Building dimensions reference"
-                class="dimensions_reference_image"
-              />
-              <!--Start of RED GREEN BLUE legend-->
-              <div class="dimension-legend">
-                <div class="legend-depth">Depth</div>
-                <div class="legend-width">Width</div>
-                <div class="legend-height">Wall Height</div>
+            <div class="traveler-dimensions-Q-card">
+              <p>
+                Enter the desired dimensions for your building. The floor area,
+                perimeter, and wall area will be calculated and displayed below,
+                for your reference.
+              </p>
+              <h4>Dimensions Reference</h4>
+              <div class="reference-image-container">
+                <img
+                  :src="twoIso"
+                  alt="Building dimensions reference"
+                  class="dimensions_reference_image"
+                />
+                <!--Start of RED GREEN BLUE legend-->
+                <div class="dimension-legend">
+                  <div class="legend-depth">Depth</div>
+                  <div class="legend-width">Width</div>
+                  <div class="legend-height">Wall Height</div>
+                </div>
               </div>
-            </div>
 
-            <!--Start of DEPTH drop down-->
-            <div class="dimension-row">
-              <label class="dimension-label">Depth:</label>
-              <select v-model="depth">
-                <option value="4">4'</option>
-                <option value="5">5'</option>
-                <option value="6">6'</option>
-                <option value="7">7'</option>
-                <option value="8">8'</option>
-                <option value="9">9'</option>
-                <option value="10">10'</option>
-                <option value="11">11'</option>
-                <option value="12">12'</option>
-                <option value="13">13'</option>
-                <option value="14">14'</option>
-                <option value="15">15'</option>
-                <option value="16">16'</option>
-                <option value="17">17'</option>
-                <option value="18">18'</option>
-                <option value="19">19'</option>
-                <option value="20">20'</option>
-                <option value="21">21'</option>
-                <option value="22">22'</option>
-                <option value="23">23'</option>
-                <option value="24">24'</option>
-              </select>
-              <span class="dimension-value"
-                >Your chosen depth is {{ depth }} feet.</span
-              >
-              <div v-if="dimensionWarning" class="warning_box">
-                ⚠️ Depth is typically treated as the longer dimension of the
-                building. Future floor joist, center skid, and roof calculations
-                will use this orientation as the default assumption. You may
-                continue with any dimensions, but understanding this convention
-                will help when selecting later options.
+              <!--Start of DEPTH drop down-->
+              <div class="dimension-row">
+                <label class="dimension-label">Depth:</label>
+                <select v-model="depth">
+                  <option value="4">4'</option>
+                  <option value="5">5'</option>
+                  <option value="6">6'</option>
+                  <option value="7">7'</option>
+                  <option value="8">8'</option>
+                  <option value="9">9'</option>
+                  <option value="10">10'</option>
+                  <option value="11">11'</option>
+                  <option value="12">12'</option>
+                  <option value="13">13'</option>
+                  <option value="14">14'</option>
+                  <option value="15">15'</option>
+                  <option value="16">16'</option>
+                  <option value="17">17'</option>
+                  <option value="18">18'</option>
+                  <option value="19">19'</option>
+                  <option value="20">20'</option>
+                  <option value="21">21'</option>
+                  <option value="22">22'</option>
+                  <option value="23">23'</option>
+                  <option value="24">24'</option>
+                </select>
+                <span class="dimension-value"
+                  >Your chosen depth is {{ depth }} feet.</span
+                >
+                <div v-if="dimensionWarning" class="warning_box">
+                  ⚠️ Depth is typically treated as the longer dimension of the
+                  building. Future floor joist, center skid, and roof
+                  calculations will use this orientation as the default
+                  assumption. You may continue with any dimensions, but
+                  understanding this convention will help when selecting later
+                  options.
+                </div>
               </div>
-            </div>
-            <p>
-              <button @click="showWhatIsDepth = !showWhatIsDepth">
-                What Is Depth?
-              </button>
-            </p>
-            <div v-if="showWhatIsDepth">
               <p>
-                <strong class="whatIs-q"> Q: What is depth?</strong><br />
-                A: Depth is the front-to-back measurement of the building.
+                <button @click="showWhatIsDepth = !showWhatIsDepth">
+                  What Is Depth?
+                </button>
               </p>
+              <div v-if="showWhatIsDepth">
+                <p>
+                  <strong class="whatIs-q"> Q: What is depth?</strong><br />
+                  A: Depth is the front-to-back measurement of the building.
+                </p>
+                <p>
+                  <strong class="whatIs-q"
+                    >Q: What do we mean by the building's depth?</strong
+                  ><br />
+                  A: Imagine you're standing at the front door looking inside.
+                  The depth is the distance your line of sight travels from the
+                  front wall to the back wall.
+                </p>
+              </div>
+              <!--Start of WIDTH drop down-->
+              <div class="dimension-row">
+                <label class="dimension-label">Width:</label>
+                <select v-model="width">
+                  <option value="4">4'</option>
+                  <option value="5">5'</option>
+                  <option value="6">6'</option>
+                  <option value="7">7'</option>
+                  <option value="8">8'</option>
+                  <option value="9">9'</option>
+                  <option value="10">10'</option>
+                  <option value="11">11'</option>
+                  <option value="12">12'</option>
+                  <option value="13">13'</option>
+                  <option value="14">14'</option>
+                  <option value="15">15'</option>
+                  <option value="16">16'</option>
+                  <option value="17">17'</option>
+                  <option value="18">18'</option>
+                  <option value="19">19'</option>
+                  <option value="20">20'</option>
+                  <option value="21">21'</option>
+                  <option value="22">22'</option>
+                  <option value="23">23'</option>
+                  <option value="24">24'</option>
+                </select>
+                <span class="dimension-value"
+                  >Your chosen width is {{ width }} feet.</span
+                >
+              </div>
               <p>
-                <strong class="whatIs-q"
-                  >Q: What do we mean by the building's depth?</strong
-                ><br />
-                A: Imagine you're standing at the front door looking inside. The
-                depth is the distance your line of sight travels from the front
-                wall to the back wall.
+                <button @click="showWhatIsWidth = !showWhatIsWidth">
+                  What Is Width?
+                </button>
               </p>
-            </div>
-            <!--Start of WIDTH drop down-->
-            <div class="dimension-row">
-              <label class="dimension-label">Width:</label>
-              <select v-model="width">
-                <option value="4">4'</option>
-                <option value="5">5'</option>
-                <option value="6">6'</option>
-                <option value="7">7'</option>
-                <option value="8">8'</option>
-                <option value="9">9'</option>
-                <option value="10">10'</option>
-                <option value="11">11'</option>
-                <option value="12">12'</option>
-                <option value="13">13'</option>
-                <option value="14">14'</option>
-                <option value="15">15'</option>
-                <option value="16">16'</option>
-                <option value="17">17'</option>
-                <option value="18">18'</option>
-                <option value="19">19'</option>
-                <option value="20">20'</option>
-                <option value="21">21'</option>
-                <option value="22">22'</option>
-                <option value="23">23'</option>
-                <option value="24">24'</option>
-              </select>
-              <span class="dimension-value"
-                >Your chosen width is {{ width }} feet.</span
-              >
-            </div>
-            <p>
-              <button @click="showWhatIsWidth = !showWhatIsWidth">
-                What Is Width?
-              </button>
-            </p>
-            <div v-if="showWhatIsWidth">
-              <p>
-                <strong class="whatIs-q"> Q: What is width?</strong><br />
-                A: Width is the side-to-side measurement of the building.
-              </p>
-              <p>
-                <strong class="whatIs-q"
-                  >Q: What are we considering to be the width?</strong
-                ><br />
-                A: Imagine you're standing at the front door facing the
-                building. The width runs from left to right across the front
-                wall.
-              </p>
-            </div>
-            <!--===========================================Start of WALL HEIGHT drop down===
+              <div v-if="showWhatIsWidth">
+                <p>
+                  <strong class="whatIs-q"> Q: What is width?</strong><br />
+                  A: Width is the side-to-side measurement of the building.
+                </p>
+                <p>
+                  <strong class="whatIs-q"
+                    >Q: What are we considering to be the width?</strong
+                  ><br />
+                  A: Imagine you're standing at the front door facing the
+                  building. The width runs from left to right across the front
+                  wall.
+                </p>
+              </div>
+              <!--===========================================Start of WALL HEIGHT drop down===
         =============================================-->
-            <div class="dimension-row">
-              <label class="dimension-label">Wall Height:</label>
-              <select v-model="wallHeight">
-                <option value="3.5">3 1/2'</option>
-                <option value="4">4'</option>
-                <option value="4.5">4 1/2'</option>
-                <option value="5">5'</option>
-                <option value="5.5">5 1/2'</option>
-                <option value="6">6'</option>
-                <option value="6.5">6 1/2'</option>
-                <option value="7">7'</option>
-                <option value="7.5">7 1/2'</option>
-                <option value="8">8'</option>
-                <option value="8.5">8 1/2'</option>
-                <option value="9">9'</option>
-                <option value="9.5">9 1/2'</option>
-                <option value="10">10'</option>
-                <option value="10.5">10 1/2'</option>
-                <option value="11">11'</option>
-                <option value="11.5">11 1/2'</option>
-                <option value="12">12'</option>
-              </select>
-              <span class="dimension-value"
-                >Your chosen wall height is {{ wallHeight }} feet.</span
-              >
-            </div>
-            <p>
-              <button @click="showWhatIsWallHeight = !showWhatIsWallHeight">
-                What Is Wall Height?
-              </button>
-            </p>
-            <div v-if="showWhatIsWallHeight">
+              <div class="dimension-row">
+                <label class="dimension-label">Wall Height:</label>
+                <select v-model="wallHeight">
+                  <option value="3.5">3 1/2'</option>
+                  <option value="4">4'</option>
+                  <option value="4.5">4 1/2'</option>
+                  <option value="5">5'</option>
+                  <option value="5.5">5 1/2'</option>
+                  <option value="6">6'</option>
+                  <option value="6.5">6 1/2'</option>
+                  <option value="7">7'</option>
+                  <option value="7.5">7 1/2'</option>
+                  <option value="8">8'</option>
+                  <option value="8.5">8 1/2'</option>
+                  <option value="9">9'</option>
+                  <option value="9.5">9 1/2'</option>
+                  <option value="10">10'</option>
+                  <option value="10.5">10 1/2'</option>
+                  <option value="11">11'</option>
+                  <option value="11.5">11 1/2'</option>
+                  <option value="12">12'</option>
+                </select>
+                <span class="dimension-value"
+                  >Your chosen wall height is {{ wallHeight }} feet.</span
+                >
+              </div>
               <p>
-                <strong class="whatIs-q"> Q: What is wall height?</strong><br />
-                A: Wall height is the vertical distance from the floor to the
-                top of the building's walls.
+                <button @click="showWhatIsWallHeight = !showWhatIsWallHeight">
+                  What Is Wall Height?
+                </button>
               </p>
+              <div v-if="showWhatIsWallHeight">
+                <p>
+                  <strong class="whatIs-q"> Q: What is wall height?</strong
+                  ><br />
+                  A: Wall height is the vertical distance from the floor to the
+                  top of the building's walls.
+                </p>
 
+                <p>
+                  <strong class="whatIs-q"
+                    >Q: How do we determine the wall height?</strong
+                  ><br />
+                  A: Wall height is measured from the top of the floor to the
+                  top of the wall where the roof structure begins. It does not
+                  include the gable, which is the triangular section of wall
+                  above the main wall on a gable roof.
+                </p>
+              </div>
+
+              <p>reference, Floor Area: {{ floorArea }} sq ft</p>
+              <p>reference, Perimeter: {{ perimeter }} ft</p>
+              <p>reference, Wall Area: {{ wallArea }} sq ft</p>
+            </div>
+          </div>
+          <!--=========================START OF FOUNDATION SECTION==================-->
+          <!--======================================================================-->
+          <div class="foundation-section">
+            <h2>Foundation Skids</h2>
+
+            <div class="travelerQ-card reference_images">
+              <h4>Foundation Skids Reference</h4>
+              <div class="reference-image-container">
+                <img
+                  :src="skidsShowing"
+                  alt="Foundation skids reference"
+                  class="skids_reference_image"
+                />
+              </div>
               <p>
-                <strong class="whatIs-q"
-                  >Q: How do we determine the wall height?</strong
-                ><br />
-                A: Wall height is measured from the top of the floor to the top
-                of the wall where the roof structure begins. It does not include
-                the gable, which is the triangular section of wall above the
-                main wall on a gable roof.
+                <button @click="showWhatIsASkid = !showWhatIsASkid">
+                  What Is A Skid?
+                </button>
               </p>
             </div>
 
-            <p>reference, Floor Area: {{ floorArea }} sq ft</p>
-            <p>reference, Perimeter: {{ perimeter }} ft</p>
-            <p>reference, Wall Area: {{ wallArea }} sq ft</p>
-          </div>
+            <div v-if="showWhatIsASkid">
+              <p>
+                <strong class="whatIs-q"> Q: What is a skid?</strong><br />
+                A: A skid is a horizontal support beam that runs along the
+                bottom of a structure, providing stability and support. Skids
+                are typically made of pressure-treated lumber because they are
+                usually in contact with the ground. They are used in various
+                types of buildings, including sheds, workshops, and animal
+                housing. They help distribute the weight of the structure evenly
+                and can also make it easier to move the building if necessary.
+                By not being permanently fixed to the ground, skids allow for
+                some flexibility in placement and can help prevent moisture
+                damage by elevating the structure slightly above the ground
+                level. Skids also do not require permanent anchoring, which can
+                sometimes be an advantage when navigating building codes and
+                municipal bylaws. As always, be sure to follow the rules and
+                requirements of your local jurisdiction.
+              </p>
+              <p>
+                By default, this configurator will use four skids around the
+                underside perimeter of the building. For larger depth span
+                buildings it is recommended to use a center skid also. The
+                center skid will be automatically positioned for equal spacing
+                and parallel between the front skid and the back skid.
+              </p>
+            </div>
+            <div
+              class="travelerQ-card"
+              :class="{ selected_wood004: skidType === '2x4flat' }"
+              @click="skidType = '2x4flat'"
+            >
+              <h3>Use 2x4 Pressure Treated - Flat Orientation</h3>
+              <p>
+                Recommended for smaller structures like pets and small animal
+                housing.
+              </p>
+            </div>
 
-          <h2>Foundation Skids</h2>
+            <div v-if="skidType" class="current_selection">
+              <p>
+                Selected Foundation Skid Type; Pressure Treated: {{ skidType }}
+              </p>
+            </div>
 
-          <div class="travelerQ-card reference_images">
-            <h4>Foundation Skids Reference</h4>
-            <img
-              :src="skidsShowing"
-              alt="Foundation skids reference"
-              class="skids_reference_image"
-            />
-            <p>
-              <button @click="showWhatIsASkid = !showWhatIsASkid">
-                What Is A Skid?
-              </button>
-            </p>
-          </div>
+            <div
+              class="travelerQ-card"
+              :class="{ selected_wood004: skidType === '4x4' }"
+              @click="skidType = '4x4'"
+            >
+              <h3>Use 4x4 Pressure Treated</h3>
+              <p>
+                Recommended for larger size structures like large animal
+                housing, sheds and small buildings.
+              </p>
+            </div>
 
-          <div v-if="showWhatIsASkid">
-            <p>
-              <strong class="whatIs-q"> Q: What is a skid?</strong><br />
-              A: A skid is a horizontal support beam that runs along the bottom
-              of a structure, providing stability and support. Skids are
-              typically made of pressure-treated lumber because they are usually
-              in contact with the ground. They are used in various types of
-              buildings, including sheds, workshops, and animal housing. They
-              help distribute the weight of the structure evenly and can also
-              make it easier to move the building if necessary. By not being
-              permanently fixed to the ground, skids allow for some flexibility
-              in placement and can help prevent moisture damage by elevating the
-              structure slightly above the ground level. Skids also do not
-              require permanent anchoring, which can sometimes be an advantage
-              when navigating building codes and municipal bylaws. As always, be
-              sure to follow the rules and requirements of your local
-              jurisdiction.
-            </p>
-            <p>
-              By default, this configurator will use four skids around the
-              underside perimeter of the building. For larger depth span
-              buildings it is recommended to use a center skid also. The center
-              skid will be automatically positioned for equal spacing and
-              parallel between the front skid and the back skid.
-            </p>
-          </div>
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood004: skidType === '2x4flat' }"
-            @click="skidType = '2x4flat'"
-          >
-            <h3>Use 2x4 Pressure Treated - Flat Orientation</h3>
-            <p>
-              Recommended for smaller structures like pets and small animal
-              housing.
-            </p>
-          </div>
+            <div
+              class="travelerQ-card"
+              :class="{
+                selected_wood004: centerSkid,
+                current_selection: centerSkid,
+              }"
+              @click="centerSkid = centerSkid ? '' : 'Use Center Skid'"
+            >
+              <h3>Use a Center Skid</h3>
+              <p>
+                Recommended for larger size structures with a deep span and
+                heavier floor loads. Such as large equipment sheds and large
+                buildings.
+              </p>
+            </div>
 
-          <div v-if="skidType" class="current_selection">
-            <p>
-              Selected Foundation Skid Type; Pressure Treated: {{ skidType }}
-            </p>
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood004: skidType === '4x4' }"
-            @click="skidType = '4x4'"
-          >
-            <h3>Use 4x4 Pressure Treated</h3>
-            <p>
-              Recommended for larger size structures like large animal housing,
-              sheds and small buildings.
-            </p>
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{
-              selected_wood004: centerSkid,
-              current_selection: centerSkid,
-            }"
-            @click="centerSkid = centerSkid ? '' : 'Use Center Skid'"
-          >
-            <h3>Use a Center Skid</h3>
-            <p>
-              Recommended for larger size structures with a deep span and
-              heavier floor loads. Such as large equipment sheds and large
-              buildings.
-            </p>
-          </div>
-
-          <div class="current_selection" v-if="centerSkid">
-            Selected Center Skid: {{ centerSkid }}
+            <div class="current_selection" v-if="centerSkid">
+              Selected Center Skid: {{ centerSkid }}
+            </div>
           </div>
           <!--=====================================================FLOOR JOISTS======
 =====================================================================================-->
-          <h2>Floor Joists</h2>
-          <p>
-            <button @click="showWhatIsAJoist = !showWhatIsAJoist">
-              What is a floor joist?
-            </button>
-          </p>
-          <div v-if="showWhatIsAJoist">
+          <div class="floor-joist-section">
+            <h2>Floor Joists</h2>
             <p>
-              <strong class="whatIs-q"> Q: What is a floor joist?</strong><br />
-              A: A floor joist is a horizontal structural element that supports
-              the floor of a building. They are typically made of wood or steel
-              and are used to distribute the weight of the floor evenly across
-              the structure.
-            </p>
-
-            <p>
-              By default, this configurator will place the floor joists in a
-              depth orientation. If you are designing a rectangular shaped
-              structure, it would be better to have the depth be the longer
-              side, in the event you choose to use a center skid to support the
-              floor joists in the middle of their length.
-            </p>
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: floorJoistSize === '2x4' }"
-            @click="floorJoistSize = '2x4'"
-          >
-            <h3>Use 2x4 Floor Joists</h3>
-            <p>
-              <button @click="show2x4FloorJoistInfo = !show2x4FloorJoistInfo">
-                more about 2x4 joists
+              <button @click="showWhatIsAJoist = !showWhatIsAJoist">
+                What is a floor joist?
               </button>
             </p>
-          </div>
-          <div v-if="show2x4FloorJoistInfo">
-            <p>
-              2x4 joists are recommended for smaller structures like animal
-              housing, and small light duty sheds for storage, gardening tools
-              and push type lawnmowers.
-            </p>
-            Conventional framing practice is to use the same size floor joists
-            as used for wall studs and roof rafters. However, you may choose an
-            unconventional approach by mixing sizes, to suit your design intent.
-
-            <p>
-              Using 2x4 joists defaults to conventional framing method of 16" on
-              centers. You may choose to over-ride that by using more advanced
-              settings later. (This feature is currently in development.)
-            </p>
-          </div>
-
-          <div class="current_selection" v-if="floorJoistSize">
-            Selected Floor Joist Size: {{ floorJoistSize }}
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: floorJoistSize === '2x6' }"
-            @click="floorJoistSize = '2x6'"
-          >
-            <h3>Use 2x6 Floor Joists</h3>
-            <p>
-              <button @click="show2x6FloorJoistInfo = !show2x6FloorJoistInfo">
-                more about 2x6 joists
-              </button>
-            </p>
-            <div v-if="show2x6FloorJoistInfo">
+            <div v-if="showWhatIsAJoist">
               <p>
-                2x6 joists are recommended for larger size structures like
-                equipment sheds and small buildings.
+                <strong class="whatIs-q"> Q: What is a floor joist?</strong
+                ><br />
+                A: A floor joist is a horizontal structural element that
+                supports the floor of a building. They are typically made of
+                wood or steel and are used to distribute the weight of the floor
+                evenly across the structure.
               </p>
+
               <p>
-                Conventional framing practice is to use the same size floor
-                joists as used for wall studs and roof rafters. However, you may
-                choose an unconventional approach by mixing sizes, to suit your
-                design intent.
+                By default, this configurator will place the floor joists in a
+                depth orientation. If you are designing a rectangular shaped
+                structure, it would be better to have the depth be the longer
+                side, in the event you choose to use a center skid to support
+                the floor joists in the middle of their length.
               </p>
+            </div>
+
+            <div
+              class="traveler-2x4stud-Q-card"
+              :class="{ selected_wood034: floorJoistSize === '2x4' }"
+              @click="floorJoistSize = '2x4'"
+            >
+              <h3>Use 2x4 Floor Joists</h3>
               <p>
-                Using 2x6 floor joists defaults to conventional framing method
-                of 24" on centers. You may choose to over-ride that by using
-                more advanced settings later.(This feature is currently in
+                <button @click="show2x4FloorJoistInfo = !show2x4FloorJoistInfo">
+                  more about 2x4 joists
+                </button>
+              </p>
+            </div>
+            <div v-if="show2x4FloorJoistInfo">
+              <p>
+                2x4 joists are recommended for smaller structures like animal
+                housing, and small light duty sheds for storage, gardening tools
+                and push type lawnmowers.
+              </p>
+              Conventional framing practice is to use the same size floor joists
+              as used for wall studs and roof rafters. However, you may choose
+              an unconventional approach by mixing sizes, to suit your design
+              intent.
+
+              <p>
+                Using 2x4 joists defaults to conventional framing method of 16"
+                on centers. You may choose to over-ride that by using more
+                advanced settings later. (This feature is currently in
                 development.)
               </p>
+            </div>
+
+            <div class="current_selection" v-if="floorJoistSize">
+              Selected Floor Joist Size: {{ floorJoistSize }}
+            </div>
+
+            <div
+              class="traveler-2x6stud-Q-card"
+              :class="{ selected_wood034: floorJoistSize === '2x6' }"
+              @click="floorJoistSize = '2x6'"
+            >
+              <h3>Use 2x6 Floor Joists</h3>
+              <p>
+                <button @click="show2x6FloorJoistInfo = !show2x6FloorJoistInfo">
+                  more about 2x6 joists
+                </button>
+              </p>
+              <div v-if="show2x6FloorJoistInfo">
+                <p>
+                  2x6 joists are recommended for larger size structures like
+                  equipment sheds and small buildings.
+                </p>
+                <p>
+                  Conventional framing practice is to use the same size floor
+                  joists as used for wall studs and roof rafters. However, you
+                  may choose an unconventional approach by mixing sizes, to suit
+                  your design intent.
+                </p>
+                <p>
+                  Using 2x6 floor joists defaults to conventional framing method
+                  of 24" on centers. You may choose to over-ride that by using
+                  more advanced settings later.(This feature is currently in
+                  development.)
+                </p>
+              </div>
             </div>
           </div>
           <!--=========================================================PLYWOOD============
 =========================-->
-          <h2>Floor Plywood</h2>
-          <div class="travelerQ-card selected_osb">
-            <label class="dimension-label">Plywood Thickness: </label>
-            <select v-model="floorPlywoodThickness">
-              <option value="1">1/2"</option>
-              <option value="2">5/8"</option>
-              <option value="3">3/4"</option>
-              <option value="4">1"</option>
-            </select>
+          <div class="plywood-section">
+            <h2>Floor Plywood</h2>
+            <div class="travelerQ-card selected_osb">
+              <label class="dimension-label">Plywood Thickness: </label>
+              <select v-model="floorPlywoodThickness">
+                <option value="1">1/2"</option>
+                <option value="2">5/8"</option>
+                <option value="3">3/4"</option>
+                <option value="4">1"</option>
+              </select>
+            </div>
           </div>
-          <!--=====================================================WALL STUDS=======
-======================================================================================-->
-          <h2>Wall Studs</h2>
-          <p>
-            <button @click="showWhatIsAStud = !showWhatIsAStud">
-              What is a wall stud?
-            </button>
-          </p>
-          <div v-if="showWhatIsAStud">
-            <strong class="whatIs-q"> Q: What is a wall stud?</strong><br />
-            A: A wall stud is a vertical structural element that supports the
-            walls of a building. They are typically made of wood or steel and
-            are used to distribute the weight of the structure evenly across the
-            walls.
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: wallStudSize === '2x4' }"
-            @click="wallStudSize = '2x4'"
-          >
-            <h3>Use 2x4 Wall Studs</h3>
+          <!--===============================THIS IS THE START OF WALL STUDS=======
+          ======================================================================-->
+          <div class="stud-section">
+            <h2>Wall Studs</h2>
             <p>
-              <button @click="showMoreAbout2x4Studs = !showMoreAbout2x4Studs">
-                more about 2x4 studs
+              <button @click="showWhatIsAStud = !showWhatIsAStud">
+                What is a wall stud?
               </button>
             </p>
-          </div>
-          <div v-if="showMoreAbout2x4Studs">
-            <p>
-              2x4 studs are recommended for smaller structures like animal
-              housing, and small light duty sheds for storage, gardening tools
-              and push type lawnmowers.
-            </p>
-            Conventional framing practice is to use the same size studs as used
-            for floor joists and roof rafters. However, you may choose an
-            unconventional approach by mixing sizes.
+            <div v-if="showWhatIsAStud">
+              <strong class="whatIs-q"> Q: What is a wall stud?</strong><br />
+              A: A wall stud is a vertical structural element that supports the
+              walls of a building. They are typically made of wood or steel and
+              are used to distribute the weight of the structure evenly across
+              the walls.
+            </div>
 
-            <p>
-              Using 2x4 studs defaults to conventional 16" on centers. You may
-              choose to over-ride that by using more advanced settings
-              later.(This feature is currently in development.)
-            </p>
-          </div>
-          <div class="current_selection" v-if="wallStudSize">
-            Selected Wall Stud Size: {{ wallStudSize }}
-          </div>
+            <div
+              class="traveler-2x4stud-Q-card"
+              :class="{ selected_wood034: wallStudSize === '2x4' }"
+              @click="wallStudSize = '2x4'"
+            >
+              <h3>Use 2x4 Wall Studs</h3>
+              <p>
+                <button @click="showMoreAbout2x4Studs = !showMoreAbout2x4Studs">
+                  more about 2x4 studs
+                </button>
+              </p>
+            </div>
+            <div v-if="showMoreAbout2x4Studs">
+              <p>
+                2x4 studs are recommended for smaller structures like animal
+                housing, and small light duty sheds for storage, gardening tools
+                and push type lawnmowers.
+              </p>
+              Conventional framing practice is to use the same size studs as
+              used for floor joists and roof rafters. However, you may choose an
+              unconventional approach by mixing sizes.
 
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: wallStudSize === '2x6' }"
-            @click="wallStudSize = '2x6'"
-          >
-            <h3>Use 2x6 Wall Studs</h3>
-            <p>
-              <button @click="showMoreAbout2x6Studs = !showMoreAbout2x6Studs">
-                more about 2x6 studs
-              </button>
-            </p>
-            <div v-if="showMoreAbout2x6Studs">
               <p>
-                2x6 studs are recommended for larger structures like equipment
-                sheds and small buildings.
-              </p>
-              <p>
-                Conventional framing practice is to use the same size studs as
-                used for floor joists and roof rafters. However, you may choose
-                an unconventional approach by mixing sizes.
-              </p>
-              <p>
-                Using 2x6 wall studs defaults to conventional 24" on centers.
-                You may choose to over-ride that by using more advanced settings
+                Using 2x4 studs defaults to conventional 16" on centers. You may
+                choose to over-ride that by using more advanced settings
                 later.(This feature is currently in development.)
               </p>
+            </div>
+            <div class="current_selection" v-if="wallStudSize">
+              Selected Wall Stud Size: {{ wallStudSize }}
+            </div>
+
+            <div
+              class="traveler-2x6stud-Q-card"
+              :class="{ selected_wood034: wallStudSize === '2x6' }"
+              @click="wallStudSize = '2x6'"
+            >
+              <h3>Use 2x6 Wall Studs</h3>
+              <p>
+                <button @click="showMoreAbout2x6Studs = !showMoreAbout2x6Studs">
+                  more about 2x6 studs
+                </button>
+              </p>
+              <div v-if="showMoreAbout2x6Studs">
+                <p>
+                  2x6 studs are recommended for larger structures like equipment
+                  sheds and small buildings.
+                </p>
+                <p>
+                  Conventional framing practice is to use the same size studs as
+                  used for floor joists and roof rafters. However, you may
+                  choose an unconventional approach by mixing sizes.
+                </p>
+                <p>
+                  Using 2x6 wall studs defaults to conventional 24" on centers.
+                  You may choose to over-ride that by using more advanced
+                  settings later.(This feature is currently in development.)
+                </p>
+              </div>
+            </div>
+            <p>
+              <button
+                @click="showAdvancedStudOptions = !showAdvancedStudOptions"
+              >
+                🪵 Advanced Stud Spacing Options
+              </button>
+            </p>
+
+            <div v-if="showAdvancedStudOptions" class="traveler-studQ-card">
+              <h3>Stud Spacing Override</h3>
+
+              <!-- Override toggle goes here -->
+              <p>
+                <label>
+                  <input type="checkbox" v-model="wallStudSpacingOverride" />
+                  Override Default Stud Spacing
+                </label>
+              </p>
+              <div v-if="wallStudSpacingOverride">
+                <label>Custom Stud Spacing (12"–48")</label>
+
+                <input
+                  type="number"
+                  v-model="wallStudOverrideSpacing"
+                  min="12"
+                  max="48"
+                  step="2"
+                />
+              </div>
+
+              <!-- Manual spacing input goes here -->
             </div>
           </div>
           <!--===========================================ROOF PEAK DIRECTION=========
           ==========================================================================-->
-          <h2>Roof Peak Direction</h2>
-
-          <p>
-            <button @click="showMoreAboutRoofPeak = !showMoreAboutRoofPeak">
-              more about roof peaks and gables
-            </button>
-          </p>
-          <div v-if="showMoreAboutRoofPeak">
-            <p>
-              <strong class="whatIs-q">Q: What is a roof peak?</strong><br />
-              A: A roof peak is the highest point of a roof, typically found at
-              the center of a gable roof.
-            </p>
+          <div class="roof-peak-section">
+            <h2>Roof Peak Direction</h2>
 
             <p>
-              <strong class="whatIs-q">Q: What is a gable?</strong><br />
-              A: A gable is the triangular section of a wall between the edges
-              of a sloping roof.
-            </p>
-          </div>
-
-          <div
-            class="travelerQ-card roof_option"
-            :class="{ selected_roofPeak: roofPeakDirection === 'width' }"
-            @click="roofPeakDirection = 'width'"
-          >
-            <img
-              :src="roofPeakWidth"
-              alt="Roof peak runs width"
-              class="roof_direction_image"
-            />
-            <h3>Peak Runs Width</h3>
-            <p>Gable ends on the left and right walls.</p>
-            <p>Eaves overhangs on the front and back.</p>
-          </div>
-
-          <p class="current_selection" v-if="roofPeakDirection">
-            Selected Roof Direction: {{ roofPeakDirection }}
-          </p>
-
-          <div
-            class="travelerQ-card roof_option"
-            :class="{ selected_roofPeak: roofPeakDirection === 'depth' }"
-            @click="roofPeakDirection = 'depth'"
-          >
-            <img
-              :src="roofPeakDepth"
-              alt="Roof peak runs depth"
-              class="roof_direction_image"
-            />
-            <h3>Peak Runs Depth</h3>
-            <p>Gable ends on the front and rear walls.</p>
-            <p>Eaves overhangs on the left and right.</p>
-          </div>
-          <h2>Roof Rafters</h2>
-          <p>
-            <button @click="showWhatIsARoofRafter = !showWhatIsARoofRafter">
-              What is a roof rafter?
-            </button>
-          </p>
-          <p v-if="showWhatIsARoofRafter">
-            <strong class="whatIs-q"> Q: What is a roof rafter?</strong><br />
-            A: A roof rafter is a structural component that supports the roof
-            and transfers the load to the walls.
-          </p>
-          <div class="current_selection" v-if="roofRafterSizeSize">
-            Selected Roof Rafter Size: {{ roofRafterSize }}
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: roofRafterSize === '2x4' }"
-            @click="roofRafterSize = '2x4'"
-          >
-            <h3>Use 2x4 Roof Rafters</h3>
-            <p>
-              <button
-                @click="
-                  showMoreAbout2x4RoofRafters = !showMoreAbout2x4RoofRafters
-                "
-              >
-                More about 2x4 roof rafters
+              <button @click="showMoreAboutRoofPeak = !showMoreAboutRoofPeak">
+                more about roof peaks and gables
               </button>
             </p>
-            <div v-if="showMoreAbout2x4RoofRafters">
+            <div v-if="showMoreAboutRoofPeak">
               <p>
-                2x4 roof rafters are typically used in smaller structures and
-                are less expensive than larger rafters.
-              </p>
-              <p>
-                2x4 roof rafters are recommended for smaller structures like
-                animal housing, and small light duty sheds for storage,
-                gardening tools and push type lawnmowers.
+                <strong class="whatIs-q">Q: What is a roof peak?</strong><br />
+                A: A roof peak is the highest point of a roof, typically found
+                at the center of a gable roof.
               </p>
 
               <p>
-                Conventional framing practice is to use the same size roof
-                rafters as used for floor joists and wall studs. However, you
-                may choose an unconventional approach by mixing sizes.
+                <strong class="whatIs-q">Q: What is a gable?</strong><br />
+                A: A gable is the triangular section of a wall between the edges
+                of a sloping roof.
               </p>
-              <p>
-                Using 2x4 roof rafters defaults to conventional 16" on centers.
-                You may choose to over-ride that by using more advanced settings
-                later.(This feature is currently in development.)
-              </p>
-            </div>
-          </div>
-
-          <div class="current_selection" v-if="roofRafterSize">
-            Selected Roof Rafter Size: {{ roofRafterSize }}
-          </div>
-
-          <div
-            class="travelerQ-card"
-            :class="{ selected_wood034: roofRafterSize === '2x6' }"
-            @click="roofRafterSize = '2x6'"
-          >
-            <h3>Use 2x6 Roof Rafters</h3>
-            <p>
-              <button
-                @click="
-                  showMoreAbout2x6RoofRafters = !showMoreAbout2x6RoofRafters
-                "
-              >
-                More about 2x6 roof rafters
-              </button>
-            </p>
-            <div v-if="showMoreAbout2x6RoofRafters">
-              <p>
-                2x6 roof rafters are recommended for larger structures such as
-                equipment sheds, workshops, garages, and small buildings.
-              </p>
-
-              <p>
-                Compared to 2x4 rafters, 2x6 rafters provide greater strength
-                and are better suited for longer spans and heavier roof loads.
-              </p>
-
-              <p>
-                Using 2x6 roof rafters defaults to conventional 24" on-center
-                spacing. This can be customized later using advanced settings.
-                (This feature is currently in development.)
-              </p>
-            </div>
-          </div>
-
-          <h2>Roof Pitch</h2>
-          <p>
-            <button @click="showWhatIsRoofPitch = !showWhatIsRoofPitch">
-              More about roof pitch
-            </button>
-          </p>
-          <div v-if="showWhatIsRoofPitch">
-            <p>
-              <strong class="whatIs-q"> Q: What is roof pitch?</strong><br />
-              A: Roof pitch is the slope of the roof, typically expressed as a
-              ratio of rise over run.
-            </p>
-            <p>
-              <strong class="whatIs-q"> Q: What is rise?</strong><br />
-              A: Rise is the vertical distance the roof rises over a horizontal
-              distance (run).
-            </p>
-            <p>
-              The smaller the ratio, the flatter the roof. A 3:12 ratio is 15
-              degrees, a 6:12 ratio is 26.57 degrees, and a 12:12 ratio is 45
-              degrees.
-            </p>
-          </div>
-          <div class="travelerQ-card">
-            <label class="dimension-label">Roof Pitch: </label>
-            <input type="number" v-model="roofPitch" min="3" max="12" />
-            <span class="dimension-value">:12</span>
-          </div>
-
-          <h2>Roof Over Hang: Eaves</h2>
-          <p>
-            <button @click="showWhatAreEaves = !showWhatAreEaves">
-              What are eaves?
-            </button>
-          </p>
-          <div v-if="showWhatAreEaves">
-            <p>
-              <strong class="whatIs-q"> Q: What are eaves?</strong><br />
-              A: Eaves are the portions of the roof that extend past the
-              exterior walls of the building. They help direct rain and snow
-              away from the siding, doors, windows and walls and can provide
-              additional shade and weather protection.
-            </p>
-          </div>
-          <div class="travelerQ-card">
-            <label class="dimension-label">Eaves Over Hang: </label>
-            <input
-              type="number"
-              v-model="eavesOverHang"
-              min="2"
-              max="20"
-              step="2"
-            />
-            <span class="dimension-value">inches</span>
-          </div>
-
-          <h2>Roof Over Hang: Gable Ends</h2>
-          <p>
-            <button @click="showWhatAreGableEnds = !showWhatAreGableEnds">
-              What are gable ends?
-            </button>
-          </p>
-          <div v-if="showWhatAreGableEnds">
-            <p>
-              <strong class="whatIs-q">
-                Q: What are gable ends overhangs?</strong
-              ><br />
-              A: Gable overhangs are the parts of the roof that extend beyond
-              the gable-end walls of the building. They provide additional
-              weather protection and can improve the overall appearance of the
-              structure.
-            </p>
-          </div>
-          <div class="travelerQ-card">
-            <label class="dimension-label">Gable Ends Over Hang: </label>
-            <input
-              type="number"
-              v-model="gableEndsOverHang"
-              min="0"
-              max="0"
-              step="2"
-            />
-            <span class="dimension-value">inches</span>
-            <p>
-              We are currently working on gable ends overhangs and hope to have
-              that option available soon.
-            </p>
-          </div>
-          <!--===================================================================
-          =========================START OF LEFT WALL WINDOW======================
-          ========================================================================-->
-          <div class="window-section">
-            <h2>Left Wall Window</h2>
-
-            <p>
-              <button
-                @click="showWhatIsALeftWallWindow = !showWhatIsALeftWallWindow"
-              >
-                What is a left wall window?
-              </button>
-            </p>
-
-            <p v-if="showWhatIsALeftWallWindow">
-              <strong class="whatIs-q">Q: What is a left wall window?</strong
-              ><br />
-              A: A left wall window is an optional rough opening placed in the
-              left wall of the structure. Window dimensions, height above the
-              floor, and framing options can be customized.
-            </p>
-
-            <div class="current_selection" v-if="leftWallRO2Window === 1">
-              Left Wall Window: Included
             </div>
 
             <div
-              class="left-traveler-windowQ-card"
-              :class="{ left_selected_window: leftWallRO2Window === 1 }"
-              @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
+              class="travelerQ-card roof_option"
+              :class="{ selected_roofPeak: roofPeakDirection === 'width' }"
+              @click="roofPeakDirection = 'width'"
             >
-              <h3>🪟 Add Left Wall Window</h3>
+              <img
+                :src="roofPeakWidth"
+                alt="Roof peak runs width"
+                class="roof_direction_image"
+              />
+              <h3>Peak Runs Width</h3>
+              <p>Gable ends on the left and right walls.</p>
+              <p>Eaves overhangs on the front and back.</p>
             </div>
 
-            <div v-if="leftWallRO2Window === 1">
-              <button
-                @click="
-                  showMoreAboutLeftWallWindow = !showMoreAboutLeftWallWindow
-                "
-              >
-                {{
-                  showMoreAboutLeftWallWindow
-                    ? "▼ Advanced Left Window Options"
-                    : "▶ Advanced Left Window Options"
-                }}
+            <p class="current_selection" v-if="roofPeakDirection">
+              Selected Roof Direction: {{ roofPeakDirection }}
+            </p>
+
+            <div
+              class="travelerQ-card roof_option"
+              :class="{ selected_roofPeak: roofPeakDirection === 'depth' }"
+              @click="roofPeakDirection = 'depth'"
+            >
+              <img
+                :src="roofPeakDepth"
+                alt="Roof peak runs depth"
+                class="roof_direction_image"
+              />
+              <h3>Peak Runs Depth</h3>
+              <p>Gable ends on the front and rear walls.</p>
+              <p>Eaves overhangs on the left and right.</p>
+            </div>
+          </div>
+          <div class="roof-rafters-section">
+            <h2>Roof Rafters</h2>
+            <p>
+              <button @click="showWhatIsARoofRafter = !showWhatIsARoofRafter">
+                What is a roof rafter?
               </button>
+            </p>
+            <p v-if="showWhatIsARoofRafter">
+              <strong class="whatIs-q"> Q: What is a roof rafter?</strong><br />
+              A: A roof rafter is a structural component that supports the roof
+              and transfers the load to the walls.
+            </p>
+            <div class="current_selection" v-if="roofRafterSizeSize">
+              Selected Roof Rafter Size: {{ roofRafterSize }}
+            </div>
 
-              <div v-if="showMoreAboutLeftWallWindow">
-                <!--============================Start Of Advanced Window Options==============
-              ================================================================================-->
-                <h2>🪟 Advanced Window Options</h2>
+            <div
+              class="travelerQ-card"
+              :class="{ selected_wood034: roofRafterSize === '2x4' }"
+              @click="roofRafterSize = '2x4'"
+            >
+              <h3>Use 2x4 Roof Rafters</h3>
+              <p>
+                <button
+                  @click="
+                    showMoreAbout2x4RoofRafters = !showMoreAbout2x4RoofRafters
+                  "
+                >
+                  More about 2x4 roof rafters
+                </button>
+              </p>
+              <div v-if="showMoreAbout2x4RoofRafters">
+                <p>
+                  2x4 roof rafters are typically used in smaller structures and
+                  are less expensive than larger rafters.
+                </p>
+                <p>
+                  2x4 roof rafters are recommended for smaller structures like
+                  animal housing, and small light duty sheds for storage,
+                  gardening tools and push type lawnmowers.
+                </p>
 
-                <div class="left-traveler-windowQ-card">
-                  <p>
-                    These options control the size and placement of the left
-                    wall rough opening. The reference image below is intended to
-                    help visualize how each setting affects the final design.
-                  </p>
-                  <p class="tip-inline">
-                    💡 Tip: You can use the arrows or directly type your input
-                    values. Quarter-inch increments are supported.
-                  </p>
+                <p>
+                  Conventional framing practice is to use the same size roof
+                  rafters as used for floor joists and wall studs. However, you
+                  may choose an unconventional approach by mixing sizes.
+                </p>
+                <p>
+                  Using 2x4 roof rafters defaults to conventional 16" on
+                  centers. You may choose to over-ride that by using more
+                  advanced settings later.(This feature is currently in
+                  development.)
+                </p>
+              </div>
+            </div>
 
-                  <h4>Left Window Reference Diagram</h4>
-                  <!--=====================================================WINDOW LEGEND=========
-============================================================================-->
-                  <div class="left-window-dimension-legend">
-                    <div class="window-legend-width">RO Width</div>
-                    <div class="window-legend-height">RO Height</div>
-                    <div class="window-legend-headers">Headers</div>
-                    <div class="window-legend-stud-index">
-                      First Bay Stud Index
-                    </div>
-                    <div class="window-legend-dff">Dist From Floor</div>
-                  </div>
+            <div class="current_selection" v-if="roofRafterSize">
+              Selected Roof Rafter Size: {{ roofRafterSize }}
+            </div>
 
-                  <div class="dimension-reference-container">
-                    <img
-                      src="./assets/Left-Window-Reference-Image_v1.png"
-                      alt="Window reference"
-                      class="dimensions_reference_image"
-                    />
-                  </div>
-                  <h4>Window Reference</h4>
-                  <ul>
-                    <li>
-                      For added clarity, this reference image illustrates a
-                      typical 8' wide × 12' deep × 8' wall height structure with
-                      the roof peak running in the depth direction.
-                    </li>
-                    <li>
-                      The left wall window rough opening shown is 42" wide × 32"
-                      high, with the rough opening positioned 36" above the
-                      floor.
-                    </li>
-                    <li>
-                      The window is located at Stud Index 1. This means there
-                      are 1 empty bay. The greater the stud index number, the
-                      farther the opening is positioned from the front corner.
-                    </li>
-                    <li>
-                      A Stud Index of 0 represents the default centered position
-                      in the wall.
-                    </li>
-                    <li>
-                      This image is provided as a reference to help explain
-                      window configuration settings. Your actual building
-                      dimensions, window sizes, and locations may differ based
-                      on the selections made within the configurator.
-                    </li>
-                    <li>
-                      The reference images throughout the configurator are also
-                      representative of the style and level of detail customers
-                      can expect to see in their final drawing package.
-                      Additional drawing examples and sample plans will be
-                      provided as the project continues to develop.
-                    </li>
-                    <p>
-                      💡 Tip: Check with your window and door supplier for their
-                      recommended rough opening sizes for your particular
-                      windows and doors.
-                    </p>
-                  </ul>
+            <div
+              class="travelerQ-card"
+              :class="{ selected_wood034: roofRafterSize === '2x6' }"
+              @click="roofRafterSize = '2x6'"
+            >
+              <h3>Use 2x6 Roof Rafters</h3>
+              <p>
+                <button
+                  @click="
+                    showMoreAbout2x6RoofRafters = !showMoreAbout2x6RoofRafters
+                  "
+                >
+                  More about 2x6 roof rafters
+                </button>
+              </p>
+              <div v-if="showMoreAbout2x6RoofRafters">
+                <p>
+                  2x6 roof rafters are recommended for larger structures such as
+                  equipment sheds, workshops, garages, and small buildings.
+                </p>
 
-                  <!-- RO WIDTH -->
+                <p>
+                  Compared to 2x4 rafters, 2x6 rafters provide greater strength
+                  and are better suited for longer spans and heavier roof loads.
+                </p>
 
-                  <div class="dimension-row">
-                    <label class="window-legend-width dimension-label"
-                      >RO Width:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="leftWallRO2Width"
-                      min="12"
-                      max="72"
-                      step="0.25"
-                    />
-
-                    <span class="window-legend-width dimension-value">
-                      {{ leftWallRO2Width }}"
-                    </span>
-                  </div>
-                  <div v-if="windowWidthWarning" class="warning_box">
-                    ⚠️ The requested rough opening width may exceed the
-                    available wall space, or exceeds the failsafe limits set for
-                    the model. The Fusion model can safely resolve this
-                    condition, however the final design may require adjustments
-                    during human review. Please consider making your rough
-                    opening smaller or making your wall longer.
-                  </div>
-
-                  <!-- RO HEIGHT -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-height dimension-label"
-                      >RO Height:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="leftWallRO2Height"
-                      min="12"
-                      max="72"
-                      step="0.25"
-                    />
-
-                    <span class="window-legend-height dimension-value">
-                      {{ leftWallRO2Height }}"
-                    </span>
-                  </div>
-
-                  <!-- DISTANCE FROM FLOOR -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-dff dimension-label"
-                      >Distance From Floor:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="leftWallRO2FloorHeight"
-                      min="0"
-                      step="0.25"
-                    />
-
-                    <span class="window-legend-dff dimension-value">
-                      {{ leftWallRO2FloorHeight }}"
-                    </span>
-                  </div>
-                  <div v-if="windowFitWarning" class="warning_box">
-                    ⚠️ The selected rough opening height, distance from floor,
-                    and header size may exceed the available wall height. The
-                    Fusion model includes safeguards and may adjust the design,
-                    however final placement may require review.
-                  </div>
-
-                  <!-- HEADER SIZE -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-headers dimension-label"
-                      >Header Size:</label
-                    >
-
-                    <select v-model="leftWallRO2HeaderSize">
-                      <option value="2x4">2x4</option>
-                      <option value="2x6">2x6</option>
-                    </select>
-                    <span class="window-legend-headers dimension-value">
-                      {{ leftWallRO2HeaderSize }}
-                    </span>
-                  </div>
-
-                  <!-- STUD INDEX -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-stud-index dimension-label"
-                      >Stud Index:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="leftWallRO2StudIndex"
-                      min="0"
-                      step="1"
-                    />
-
-                    <span class="window-legend-stud-index dimension-value">
-                      {{ leftWallRO2StudIndexDisplay }}
-                    </span>
-                    <div v-if="studIndexWarning" class="warning_box">
-                      ⚠️ The selected stud index may exceed the available wall
-                      length. The Fusion model can safely resolve this
-                      condition, however the final design may require
-                      adjustments during human review.
-                    </div>
-                  </div>
-                  <p>
-                    <button
-                      @click="showMoreAboutLeftWallWindow = false"
-                      class="clear-window-button"
-                    >
-                      🪟 Close Left Window Options
-                    </button>
-                  </p>
-                </div>
+                <p>
+                  Using 2x6 roof rafters defaults to conventional 24" on-center
+                  spacing. This can be customized later using advanced settings.
+                  (This feature is currently in development.)
+                </p>
               </div>
             </div>
           </div>
-          <!--CLOSING DIV ABOVE THIS LINE IS THE DIV THAT CLOSES THE ABOVE CLASS window-section==
+          <!--================================================ROOF PITCH SECTION==========-->
+          <div class="roof-pitch-section">
+            <h2>Roof Pitch</h2>
+            <p>
+              <button @click="showWhatIsRoofPitch = !showWhatIsRoofPitch">
+                More about roof pitch
+              </button>
+            </p>
+            <div v-if="showWhatIsRoofPitch">
+              <p>
+                <strong class="whatIs-q"> Q: What is roof pitch?</strong><br />
+                A: Roof pitch is the slope of the roof, typically expressed as a
+                ratio of rise over run.
+              </p>
+              <p>
+                <strong class="whatIs-q"> Q: What is rise?</strong><br />
+                A: Rise is the vertical distance the roof rises over a
+                horizontal distance (run).
+              </p>
+              <p>
+                The smaller the ratio, the flatter the roof. A 3:12 ratio is 15
+                degrees, a 6:12 ratio is 26.57 degrees, and a 12:12 ratio is 45
+                degrees.
+              </p>
+            </div>
+            <div class="travelerQ-card">
+              <label class="dimension-label">Roof Pitch: </label>
+              <input type="number" v-model="roofPitch" min="3" max="12" />
+              <span class="dimension-value">:12</span>
+            </div>
+
+            <h2>Roof Over Hang: Eaves</h2>
+            <p>
+              <button @click="showWhatAreEaves = !showWhatAreEaves">
+                What are eaves?
+              </button>
+            </p>
+            <div v-if="showWhatAreEaves">
+              <p>
+                <strong class="whatIs-q"> Q: What are eaves?</strong><br />
+                A: Eaves are the portions of the roof that extend past the
+                exterior walls of the building. They help direct rain and snow
+                away from the siding, doors, windows and walls and can provide
+                additional shade and weather protection.
+              </p>
+            </div>
+            <div class="travelerQ-card">
+              <label class="dimension-label">Eaves Over Hang: </label>
+              <input
+                type="number"
+                v-model="eavesOverHang"
+                min="2"
+                max="20"
+                step="2"
+              />
+              <span class="dimension-value">inches</span>
+            </div>
+
+            <h2>Roof Over Hang: Gable Ends</h2>
+            <p>
+              <button @click="showWhatAreGableEnds = !showWhatAreGableEnds">
+                What are gable ends?
+              </button>
+            </p>
+            <div v-if="showWhatAreGableEnds">
+              <p>
+                <strong class="whatIs-q">
+                  Q: What are gable ends overhangs?</strong
+                ><br />
+                A: Gable overhangs are the parts of the roof that extend beyond
+                the gable-end walls of the building. They provide additional
+                weather protection and can improve the overall appearance of the
+                structure.
+              </p>
+            </div>
+            <div class="travelerQ-card">
+              <label class="dimension-label">Gable Ends Over Hang: </label>
+              <input
+                type="number"
+                v-model="gableEndsOverHang"
+                min="0"
+                max="0"
+                step="2"
+              />
+              <span class="dimension-value">inches</span>
+              <p>
+                We are currently working on gable ends overhangs and hope to
+                have that option available soon.
+              </p>
+            </div>
+          </div>
+          <!--===================================================================
+          =========================START OF LEFT WALL WINDOW - at top header======================
+          ========================================================================-->
+          <div class="window-section-container">
+            <div class="window-section">
+              <h2>Left Wall Window</h2>
+
+              <p>
+                <button
+                  @click="
+                    showWhatIsALeftWallWindow = !showWhatIsALeftWallWindow
+                  "
+                >
+                  What is a left wall window?
+                </button>
+              </p>
+
+              <p v-if="showWhatIsALeftWallWindow">
+                <strong class="whatIs-q">Q: What is a left wall window?</strong
+                ><br />
+                A: A left wall window is an optional rough opening placed in the
+                left wall of the structure. Window dimensions, height above the
+                floor, and framing options can be customized.
+              </p>
+
+              <div class="current_selection" v-if="leftWallRO2Window === 1">
+                Left Wall Window: Included
+              </div>
+
+              <div
+                class="left-traveler-windowQ-card"
+                :class="{ left_selected_window: leftWallRO2Window === 1 }"
+                @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
+              >
+                <h3>🪟 Add Left Wall Window</h3>
+              </div>
+
+              <div v-if="leftWallRO2Window === 1">
+                <button
+                  @click="
+                    showMoreAboutLeftWallWindow = !showMoreAboutLeftWallWindow
+                  "
+                >
+                  {{
+                    showMoreAboutLeftWallWindow
+                      ? "▼ Advanced Left Window Options"
+                      : "▶ Advanced Left Window Options"
+                  }}
+                </button>
+
+                <div v-if="showMoreAboutLeftWallWindow">
+                  <!--============================Start Of Advanced Window Options==============
+              ================================================================================-->
+                  <h2>🪟 Advanced Window Options</h2>
+
+                  <div class="left-traveler-windowQ-card">
+                    <p>
+                      These options control the size and placement of the left
+                      wall rough opening. The reference image below is intended
+                      to help visualize how each setting affects the final
+                      design.
+                    </p>
+                    <p class="tip-inline">
+                      💡 Tip: You can use the arrows or directly type your input
+                      values. Quarter-inch increments are supported.
+                    </p>
+
+                    <h4>Left Window Reference Diagram</h4>
+                    <!--=====================================================WINDOW LEGEND=========
+============================================================================-->
+                    <div class="left-window-dimension-legend">
+                      <div class="window-legend-width">RO Width</div>
+                      <div class="window-legend-height">RO Height</div>
+                      <div class="window-legend-headers">Headers</div>
+                      <div class="window-legend-stud-index">
+                        Distance From Front Corner (stud index 1)
+                      </div>
+                      <div class="window-legend-dff">Dist From Floor</div>
+                    </div>
+
+                    <div class="reference-image-container">
+                      <img
+                        src="./assets/Left-Window-Reference-Image_v1.png"
+                        alt="Window reference"
+                        class="dimensions_reference_image"
+                      />
+                    </div>
+                    <h4>Window Reference</h4>
+                    <ul>
+                      <li>
+                        For added clarity, this reference image illustrates a
+                        typical 8' wide × 12' deep × 8' wall height structure
+                        with the roof peak running in the depth direction.
+                      </li>
+                      <li>
+                        The left wall window rough opening shown is 42" wide ×
+                        32" high, with the rough opening positioned 36" above
+                        the floor.
+                      </li>
+                      <li>
+                        The window is located aproximately 16" from the front
+                        corner. This means there is 1 empty bay. Your actual
+                        requested measurement and the drawings may differ
+                        slightly, as the model will attempt to place the rough
+                        opening at the closest available stud.
+                      </li>
+                      <li>
+                        A Distance From Front Corner of "Centered" represents
+                        the default centered position in the wall.
+                      </li>
+                      <li>
+                        This image is provided as a reference to help explain
+                        window configuration settings. Your actual building
+                        dimensions, window sizes, and locations may differ based
+                        on the selections made within the configurator.
+                      </li>
+                      <li>
+                        The reference images throughout the configurator are
+                        also representative of the style and level of detail
+                        customers can expect to see in their final drawing
+                        package. Additional drawing examples and sample plans
+                        will be provided as the project continues to develop.
+                      </li>
+                      <p>
+                        💡 Tip: Check with your window and door supplier for
+                        their recommended rough opening sizes for your
+                        particular windows and doors.
+                      </p>
+                    </ul>
+
+                    <!-- RO WIDTH -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-width dimension-label"
+                        >RO Width:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="leftWallRO2Width"
+                        min="12"
+                        max="72"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-width dimension-value">
+                        {{ leftWallRO2Width }}"
+                      </span>
+                    </div>
+                    <div v-if="windowWidthWarning" class="warning_box">
+                      ⚠️ The requested rough opening width may exceed the
+                      available wall space, or exceeds the failsafe limits set
+                      for the model. The Fusion model can safely resolve this
+                      condition, however the final design may require
+                      adjustments during human review. Please consider making
+                      your rough opening smaller or making your wall longer.
+                    </div>
+
+                    <!-- RO HEIGHT -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-height dimension-label"
+                        >RO Height:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="leftWallRO2Height"
+                        min="12"
+                        max="72"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-height dimension-value">
+                        {{ leftWallRO2Height }}"
+                      </span>
+                    </div>
+
+                    <!-- DISTANCE FROM FLOOR -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-dff dimension-label"
+                        >Distance From Floor:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="leftWallRO2FloorHeight"
+                        min="0"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-dff dimension-value">
+                        {{ leftWallRO2FloorHeight }}"
+                      </span>
+                    </div>
+                    <div v-if="windowFitWarning" class="warning_box">
+                      ⚠️ The selected rough opening height, distance from floor,
+                      and header size may exceed the available wall height. The
+                      Fusion model includes safeguards and may adjust the
+                      design, however final placement may require review.
+                    </div>
+
+                    <!-- HEADER SIZE -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-headers dimension-label"
+                        >Header Size:</label
+                      >
+
+                      <select v-model="leftWallRO2HeaderSize">
+                        <option value="2x4">2x4</option>
+                        <option value="2x6">2x6</option>
+                      </select>
+                      <span class="window-legend-headers dimension-value">
+                        {{ leftWallRO2HeaderSize }}
+                      </span>
+                    </div>
+
+                    <!-- STUD INDEX -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-stud-index dimension-label"
+                        >Distance From Front Corner:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="leftWallRO2StudIndex"
+                        min="0"
+                        :step="wallStudSpacing"
+                      />
+
+                      <span class="window-legend-stud-index dimension-value">
+                        {{ leftWallRO2StudIndexDisplay }}
+                      </span>
+                      <div v-if="studIndexWarning" class="warning_box">
+                        ⚠️ The selected stud index may exceed the available wall
+                        length. The Fusion model can safely resolve this
+                        condition, however the final design may require
+                        adjustments during human review.
+                      </div>
+                    </div>
+                    <p>
+                      <button
+                        @click="showMoreAboutLeftWallWindow = false"
+                        class="clear-window-button"
+                      >
+                        🪟 Close Left Window Options
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--CLOSING DIV ABOVE THIS LINE IS THE DIV THAT CLOSES THE LEFT WINDOW==
           =========================START OF RIGHT WALL WINDOW======================
           ========================================================================-->
-          <div class="window-section">
-            <h2>Right Wall Window</h2>
 
-            <p>
-              <button
-                @click="
-                  showWhatIsARightWallWindow = !showWhatIsARightWallWindow
-                "
+            <div class="window-section">
+              <h2>Right Wall Window</h2>
+
+              <p>
+                <button
+                  @click="
+                    showWhatIsARightWallWindow = !showWhatIsARightWallWindow
+                  "
+                >
+                  What is a right wall window?
+                </button>
+              </p>
+
+              <p v-if="showWhatIsARightWallWindow">
+                <strong class="whatIs-q">Q: What is a right wall window?</strong
+                ><br />
+                A: A right wall window is an optional rough opening placed in
+                the right wall of the structure. Window dimensions, height above
+                the floor, and framing options can be customized.
+              </p>
+
+              <div class="current_selection" v-if="rightWallRO4Window === 1">
+                Right Wall Window: Included
+              </div>
+
+              <div
+                class="right-traveler-windowQ-card"
+                :class="{ right_selected_window: rightWallRO4Window === 1 }"
+                @click="rightWallRO4Window = rightWallRO4Window === 1 ? 0 : 1"
               >
-                What is a right wall window?
-              </button>
-            </p>
+                <h3>🪟 Add Right Wall Window</h3>
+              </div>
 
-            <p v-if="showWhatIsARightWallWindow">
-              <strong class="whatIs-q">Q: What is a right wall window?</strong
-              ><br />
-              A: A right wall window is an optional rough opening placed in the
-              right wall of the structure. Window dimensions, height above the
-              floor, and framing options can be customized.
-            </p>
+              <div v-if="rightWallRO4Window === 1">
+                <button
+                  @click="
+                    showMoreAboutRightWallWindow = !showMoreAboutRightWallWindow
+                  "
+                >
+                  {{
+                    showMoreAboutRightWallWindow
+                      ? "▼ Advanced Right Window Options"
+                      : "▶ Advanced Right Window Options"
+                  }}
+                </button>
 
-            <div class="current_selection" v-if="rightWallRO4Window === 1">
-              Right Wall Window: Included
-            </div>
-
-            <div
-              class="right-traveler-windowQ-card"
-              :class="{ right_selected_window: rightWallRO4Window === 1 }"
-              @click="rightWallRO4Window = rightWallRO4Window === 1 ? 0 : 1"
-            >
-              <h3>🪟 Add Right Wall Window</h3>
-            </div>
-
-            <div v-if="rightWallRO4Window === 1">
-              <button
-                @click="
-                  showMoreAboutRightWallWindow = !showMoreAboutRightWallWindow
-                "
-              >
-                {{
-                  showMoreAboutRightWallWindow
-                    ? "▼ Advanced Right Window Options"
-                    : "▶ Advanced Right Window Options"
-                }}
-              </button>
-
-              <div v-if="showMoreAboutRightWallWindow">
-                <!--============================Start Of Advanced Window Options==============
+                <div v-if="showMoreAboutRightWallWindow">
+                  <!--============================Start Of Advanced Window Options==============
               ================================================================================-->
-                <h2>🪟 Advanced Window Options</h2>
+                  <h2>🪟 Advanced Window Options</h2>
 
-                <div class="right-traveler-windowQ-card">
-                  <p>
-                    These options control the size and placement of the right
-                    wall rough opening. The reference image below is intended to
-                    help visualize how each setting affects the final design.
-                  </p>
-                  <p class="tip-inline">
-                    💡 Tip: You can use the arrows or directly type your input
-                    values. Quarter-inch increments are supported.
-                  </p>
-
-                  <h4>Right Window Reference Diagram</h4>
-                  <!--===================================WINDOW LEGEND=========
-============================================================================-->
-                  <div class="right-window-dimension-legend">
-                    <div class="window-legend-width">RO Width</div>
-                    <div class="window-legend-height">RO Height</div>
-                    <div class="window-legend-headers">Headers</div>
-                    <div class="window-legend-stud-index">
-                      Fourth Bay Stud Index
-                    </div>
-                    <div class="window-legend-dff">Dist From Floor</div>
-                  </div>
-                  <!--===========================NEED A IMAGE FOR RHS WINDOW============-->
-                  <div class="dimension-reference-container">
-                    <img
-                      src="./assets/Right-Window-Reference-Image_v1.png"
-                      alt="Window reference"
-                      class="dimensions_reference_image"
-                    />
-                  </div>
-                  <h4>Window Reference</h4>
-                  <ul>
-                    <!--==========USE A DIFFERENT SIZE AND ROOF DIRECTION THAN LHS=========-->
-                    <li>
-                      For added clarity, this reference image illustrates a
-                      typical 10' wide × 10' deep × 8' wall height structure
-                      with the roof peak running in the width direction and the
-                      door rough opening is 60"w × 80"h.
-                    </li>
-                    <li>
-                      The right wall window rough opening shown is 36" wide ×
-                      42" high, with the rough opening positioned 28" above the
-                      floor.
-                    </li>
-                    <li>
-                      The window is located at Stud Index 4. This means there
-                      are 4 empty bays. The greater the stud index number, the
-                      farther the opening is positioned from the front corner.
-                    </li>
-                    <li>
-                      A Stud Index of 0 represents the default centered position
-                      in the wall.
-                    </li>
-                    <li>
-                      This image is provided as a reference to help explain
-                      window configuration settings. Your actual building
-                      dimensions, window sizes, and locations may differ based
-                      on the selections made within the configurator.
-                    </li>
-                    <li>
-                      The reference images throughout the configurator are also
-                      representative of the style and level of detail customers
-                      can expect to see in their final drawing package.
-                      Additional drawing examples and sample plans will be
-                      provided as the project continues to develop.
-                    </li>
+                  <div class="right-traveler-windowQ-card">
                     <p>
-                      💡 Tip: Check with your window and door supplier for their
-                      recommended rough opening sizes for your particular
-                      windows and doors.
+                      These options control the size and placement of the right
+                      wall rough opening. The reference image below is intended
+                      to help visualize how each setting affects the final
+                      design.
                     </p>
-                  </ul>
+                    <p class="tip-inline">
+                      💡 Tip: You can use the arrows or directly type your input
+                      values. Quarter-inch increments are supported.
+                    </p>
 
-                  <!-- RO WIDTH -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-width dimension-label"
-                      >RO Width:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="rightWallRO4Width"
-                      min="12"
-                      max="72"
-                      step="0.25"
-                    />
-
-                    <span class="window-legend-width dimension-value">
-                      {{ rightWallRO4Width }}"
-                    </span>
-                  </div>
-                  <div v-if="windowWidthWarning" class="warning_box">
-                    ⚠️ The requested rough opening width may exceed the
-                    available wall space, or exceeds the failsafe limits set for
-                    the model. The Fusion model can safely resolve this
-                    condition, however the final design may require adjustments
-                    during human review. Please consider making your rough
-                    opening smaller or making your wall longer.
-                  </div>
-
-                  <!-- RO HEIGHT -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-height dimension-label"
-                      >RO Height:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="rightWallRO4Height"
-                      min="12"
-                      max="72"
-                      step="0.25"
-                    />
-
-                    <span class="window-legend-height dimension-value">
-                      {{ rightWallRO4Height }}"
-                    </span>
-                  </div>
-
-                  <!-- DISTANCE FROM FLOOR -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-dff dimension-label"
-                      >Distance From Floor:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="rightWallRO4FloorHeight"
-                      min="0"
-                      step="0.25"
-                    />
-
-                    <span class="window-legend-dff dimension-value">
-                      {{ rightWallRO4FloorHeight }}"
-                    </span>
-                  </div>
-                  <div v-if="windowFitWarning" class="warning_box">
-                    ⚠️ The selected rough opening height, distance from floor,
-                    and header size may exceed the available wall height. The
-                    Fusion model includes safeguards and may adjust the design,
-                    however final placement may require review.
-                  </div>
-
-                  <!-- HEADER SIZE -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-headers dimension-label"
-                      >Header Size:</label
-                    >
-
-                    <select v-model="rightWallRO4HeaderSize">
-                      <option value="2x4">2x4</option>
-                      <option value="2x6">2x6</option>
-                    </select>
-                    <span class="window-legend-headers dimension-value">
-                      {{ rightWallRO4HeaderSize }}
-                    </span>
-                  </div>
-
-                  <!-- STUD INDEX -->
-
-                  <div class="dimension-row">
-                    <label class="window-legend-stud-index dimension-label"
-                      >Stud Index:</label
-                    >
-
-                    <input
-                      type="number"
-                      v-model="rightWallRO4StudIndex"
-                      min="0"
-                      step="1"
-                    />
-
-                    <span class="window-legend-stud-index dimension-value">
-                      {{ rightWallRO4StudIndexDisplay }}
-                    </span>
-                    <div v-if="studIndexWarning" class="warning_box">
-                      ⚠️ The selected stud index may exceed the available wall
-                      length. The Fusion model can safely resolve this
-                      condition, however the final design may require
-                      adjustments during human review.
+                    <h4>Right Window Reference Diagram</h4>
+                    <!--===================================WINDOW LEGEND=========
+============================================================================-->
+                    <div class="right-window-dimension-legend">
+                      <div class="window-legend-width">RO Width</div>
+                      <div class="window-legend-height">RO Height</div>
+                      <div class="window-legend-headers">Headers</div>
+                      <div class="window-legend-stud-index">
+                        Distance From Front Corner (Fourth Bay Stud Index)
+                      </div>
+                      <div class="window-legend-dff">Dist From Floor</div>
                     </div>
+
+                    <div class="reference-image-container">
+                      <img
+                        src="./assets/Right-Window-Reference-Image_v1.png"
+                        alt="Window reference"
+                        class="dimensions_reference_image"
+                      />
+                    </div>
+                    <h4>Window Reference</h4>
+                    <ul>
+                      <!--==========USE A DIFFERENT SIZE AND ROOF DIRECTION THAN LHS=========-->
+                      <li>
+                        For added clarity, this reference image illustrates a
+                        typical 10' wide × 10' deep × 8' wall height structure
+                        with the roof peak running in the width direction and
+                        the door rough opening is 60"w × 80"h.
+                      </li>
+                      <li>
+                        The right wall window rough opening shown is 36" wide ×
+                        42" high, with the rough opening positioned 28" above
+                        the floor.
+                      </li>
+                      <li>
+                        The window is located at approx 64" Distance From Front
+                        Corner (Stud Index 4). This means there are 4 empty
+                        bays. The greater Distance From Front Corner, the
+                        farther the opening is positioned from the front corner.
+                      </li>
+                      <li>
+                        A Distance From Front Corner of "Centered" represents
+                        the default centered position in the wall. The greater
+                        Distance From Front Corner, the farther the opening is
+                        positioned from the front corner.
+                      </li>
+                      <li>
+                        This image is provided as a reference to help explain
+                        window configuration settings. Your actual building
+                        dimensions, window sizes, and locations may differ based
+                        on the selections made within the configurator.
+                      </li>
+                      <li>
+                        The reference images throughout the configurator are
+                        also representative of the style and level of detail
+                        customers can expect to see in their final drawing
+                        package. Additional drawing examples and sample plans
+                        will be provided as the project continues to develop.
+                      </li>
+                      <p>
+                        💡 Tip: Check with your window and door supplier for
+                        their recommended rough opening sizes for your
+                        particular windows and doors.
+                      </p>
+                    </ul>
+
+                    <!-- RO WIDTH -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-width dimension-label"
+                        >RO Width:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="rightWallRO4Width"
+                        min="12"
+                        max="72"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-width dimension-value">
+                        {{ rightWallRO4Width }}"
+                      </span>
+                    </div>
+                    <div v-if="windowWidthWarning" class="warning_box">
+                      ⚠️ The requested rough opening width may exceed the
+                      available wall space, or exceeds the failsafe limits set
+                      for the model. The Fusion model can safely resolve this
+                      condition, however the final design may require
+                      adjustments during human review. Please consider making
+                      your rough opening smaller or making your wall longer.
+                    </div>
+
+                    <!-- RO HEIGHT -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-height dimension-label"
+                        >RO Height:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="rightWallRO4Height"
+                        min="12"
+                        max="72"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-height dimension-value">
+                        {{ rightWallRO4Height }}"
+                      </span>
+                    </div>
+
+                    <!-- DISTANCE FROM FLOOR -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-dff dimension-label"
+                        >Distance From Floor:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="rightWallRO4FloorHeight"
+                        min="0"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-dff dimension-value">
+                        {{ rightWallRO4FloorHeight }}"
+                      </span>
+                    </div>
+                    <div v-if="windowFitWarning" class="warning_box">
+                      ⚠️ The selected rough opening height, distance from floor,
+                      and header size may exceed the available wall height. The
+                      Fusion model includes safeguards and may adjust the
+                      design, however final placement may require review.
+                    </div>
+
+                    <!-- HEADER SIZE -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-headers dimension-label"
+                        >Header Size:</label
+                      >
+
+                      <select v-model="rightWallRO4HeaderSize">
+                        <option value="2x4">2x4</option>
+                        <option value="2x6">2x6</option>
+                      </select>
+                      <span class="window-legend-headers dimension-value">
+                        {{ rightWallRO4HeaderSize }}
+                      </span>
+                    </div>
+
+                    <!-- STUD INDEX -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-stud-index dimension-label"
+                        >Distance From Front Corner:</label
+                      >
+
+                      <input
+                        type="number"
+                        v-model="rightWallRO4StudIndex"
+                        min="0"
+                        :step="wallStudSpacing"
+                      />
+
+                      <span class="window-legend-stud-index dimension-value">
+                        {{ rightWallRO4StudIndexDisplay }}
+                      </span>
+                      <div v-if="studIndexWarning" class="warning_box">
+                        ⚠️ The selected stud index may exceed the available wall
+                        length. The Fusion model can safely resolve this
+                        condition, however the final design may require
+                        adjustments during human review.
+                      </div>
+                    </div>
+                    <p>
+                      <button
+                        @click="showMoreAboutRightWallWindow = false"
+                        class="clear-window-button"
+                      >
+                        🪟 Close Right Window Options
+                      </button>
+                    </p>
                   </div>
-                  <p>
-                    <button
-                      @click="showMoreAboutRightWallWindow = false"
-                      class="clear-window-button"
-                    >
-                      🪟 Close Right Window Options
-                    </button>
-                  </p>
                 </div>
               </div>
             </div>
@@ -1959,6 +2062,10 @@ function loadTheMechanism() {
 </template>
 <!--=====================================Start of Styling===================
 =================================================================================-->
+/*COLOR SYSTEM: GREEN = BUILDING DEFINITIONS, BROWN = STRUCTURE FOUNDATION FLOOR
+STUDS, BLUE = OPENINGS WINDOWS DOORS
+====================================================*/
+
 <style scoped>
 .heroHeader {
   text-align: center;
@@ -2030,7 +2137,7 @@ h4 {
 
   background: rgba(255, 255, 255, 0.85);
 
-  box-shadow: 6px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 4px 6px rgba(0, 0, 0, 0.15);
 
   text-align: center;
 }
@@ -2058,7 +2165,7 @@ h4 {
 .scopeBuilding-card {
   border: 2px solid #5e3d16; /* darker wood color */
   border-radius: 8px;
-  box-shadow: 6px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 4px 6px rgba(0, 0, 0, 0.15);
   padding: 15px;
   margin-top: 4px;
   box-sizing: border-box;
@@ -2068,7 +2175,7 @@ h4 {
 .building-card {
   border: 2px solid #5e3d16; /* darker wood color */
   border-radius: 8px;
-  box-shadow: 6px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 4px 6px rgba(0, 0, 0, 0.15);
   padding: 16px;
   margin-top: 12px;
   box-sizing: border-box;
@@ -2119,8 +2226,7 @@ h4 {
   min-width: 0;
 }
 
-.change-building-link
-/*.summary-card*/ {
+.change-building-link {
   pointer-events: auto;
 }
 
@@ -2129,6 +2235,21 @@ h4 {
   grid-template-columns: minmax(280px, 38%) minmax(0, 62%);
   gap: 20px;
   align-items: start;
+}
+/*========================================THIS IS THE START OF PAGE 3=============
+=================================================================================*/
+/*======these are the containers for Fusion screen shots==========*/
+.reference-image-container {
+  /*border: solid red 5px;*/
+  border-radius: 30px;
+  overflow: hidden;
+}
+/*and because they don't fill the container (wierd corner instances)
+======these are the Fusion screen shots==========*/
+.reference-image-container img {
+  display: block;
+  width: 100%;
+  border-radius: inherit;
 }
 
 .landingPage3 {
@@ -2149,15 +2270,9 @@ h4 {
   margin-top: 8px;
 }
 
-.page3-control-panel {
-  /*border: solid 6px yellow;*/
-  max-height: 42vh;
-  min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  font-family: "Inter", sans-serif;
-  line-height: 1.6;
+.collapse-thanks-button {
+  display: block;
+  margin: 8px auto 0;
 }
 
 .page3-tape-image {
@@ -2166,7 +2281,98 @@ h4 {
   max-width: 420px;
   margin: 0 auto 16px;
 }
+/*======================================CONTROL PANEL===============================
+====================================================================================*/
+.page3-control-panel {
+  /*border: solid 6px yellow;*/
+  max-height: 53vh;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+}
 
+.CP-summary-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+/*summary sections are in the control panel*/
+.dimensions-summary-section {
+  border-left: 6px solid rgb(120, 150, 120);
+  background-color: rgba(168, 192, 168, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.foundation-summary-section {
+  border-left: 6px solid #c19a6b;
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.floor-joist-summary-section {
+  border-left: 6px solid #c19a6b;
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.plywood-summary-section {
+  border-left: 6px solid #c19a6b;
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.roof-peak-summary-section {
+  border-left: 6px solid #7d8590;
+  background-color: rgba(125, 133, 144, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.roof-rafters-summary-section {
+  border-left: 6px solid #c19a6b;
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.roof-pitch-summary-section {
+  border-left: 6px solid #7d8590;
+  background-color: rgba(125, 133, 144, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.load-mechanism-button {
+  position: sticky;
+  bottom: 0;
+  flex: 0 0 auto;
+  width: calc(100% - 16px);
+  margin: 8px;
+  z-index: 2;
+  box-sizing: border-box;
+}
+/*====================================THIS IS RHS SETTINGS===================*/
 .options-column {
   min-width: 0;
   padding: 10px;
@@ -2178,44 +2384,46 @@ h4 {
   padding: 10px;
   /*border: 3px solid #5e3d16; /* this can be used for de-bugging, darker wood color */
   border-radius: 8px;
-  /*box-shadow: 6px 8px #5e3d16; /* this can be used for de-bugging, darker wood color */
+  /*box-shadow: 4px 6px #5e3d16; /* this can be used for de-bugging, darker wood color */
 }
 
-/*.summary-card {
-  background: transparent;
-  border-radius: 8px;
-  padding: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  flex: 1 1 auto;
-}*/
-
-.load-mechanism-button {
-  position: sticky;
-  bottom: 0;
-  flex: 0 0 auto;
-  width: calc(100% - 16px);
-  margin: 8px;
-  z-index: 2;
-  box-sizing: border-box;
+/*================================CURRENT SELECTION IS A GLOBAL DEFINITION
+==================================FOR THE HEADER THAT SHOWS WHAT THE USER SELECTED======*/
+.current_selection {
+  font-size: 1.2rem;
+  text-align: center;
+  color: #d8b36a;
+  text-shadow: 1px 1px 1px black;
+  margin: 8px 0;
 }
-
-.collapsed-welcome-button {
-  display: block;
-  margin: 8px auto 0;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-}
-
+/*======================================TRAVELER Q CARDS ARE THE ORIGINAL
+=========================================NAMED CARDS UNTIL THEY STARTED GETTING
+=========================================DIVIDED INTO CATEGORIES AND COLORS APPLIED==WIPROGRESS*/
 .travelerQ-card {
   border: 1px solid #5e3d16; /* darker wood color */
   border-radius: 8px;
   padding: 16px;
   margin-top: 12px;
-  box-shadow: 8px 10px #5e3d16;
+  box-shadow: 4px 6px #5e3d16;
+}
+/*===================================DIMENSIONS SECTION======================*/
+
+.traveler-dimensions-Q-card {
+  /*background-color: rgba(168, 192, 168, 0.12);*/
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.dimensions-section {
+  /*border-left: 6px solid rgb(120, 150, 120);*/
+  box-shadow: 4px 6px rgb(120, 150, 120);
+  background-color: rgba(168, 192, 168, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .dimension-row {
@@ -2258,6 +2466,128 @@ h4 {
   font-size: 1.3rem;
   font-weight: bold;
   margin-bottom: 12px;
+}
+/*=================================================FOUNDATION SECTION=============*/
+
+.foundation-section {
+  box-shadow: 4px 6px #c19a6b;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.skids_reference_image {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  margin-right: auto;
+}
+/*===================================================FLOOR JOIST SECTION=================*/
+.floor-joist-section {
+  box-shadow: 4px 6px #c19a6b;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+/*===================================================PLYWOOD SECTION=================*/
+.plywood-section {
+  box-shadow: 4px 6px #c19a6b;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+/*===================================================STUD SECTION=================*/
+.stud-section {
+  box-shadow: 4px 6px #c19a6b;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.traveler-2x4stud-Q-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  border: 2px solid #5e3d16; /* darker wood color */
+  box-shadow: 4px 6px #5e3d16; /* darker wood color */
+  background-color: rgba(193, 154, 107, 0.12);
+  /*background-size: cover;
+  background-position: center; these would go if there was a background image added*/
+}
+
+.traveler-2x6stud-Q-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+
+  border: 2px solid #5e3d16; /* darker wood color */
+  box-shadow: 4px 6px #5e3d16; /* darker wood color */
+
+  /*background-size: cover;
+  background-position: center;*/
+  background-color: rgba(193, 154, 107, 0.12);
+}
+/*==================================ROOF SECTION=======================*/
+.roof-peak-section {
+  box-shadow: 4px 6px #7d8590;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(125, 133, 144, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.roof-rafters-section {
+  box-shadow: 4px 6px #c19a6b;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.roof-pitch-section {
+  box-shadow: 4px 6px #7d8590;
+  /*border-left: 6px solid #c19a6b;*/
+  background-color: rgba(125, 133, 144, 0.12);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+/*========================================WINDOW SECTION================*/
+.window-section-container {
+  box-shadow: 4px 6px #4a90e2;
+  background-color: rgba(74, 144, 226, 0.07);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.window-section {
+  box-shadow: 4px 6px rgb#4a902a;
+  /*border-left: 6px solid #4a90e2;*/
+  /*background-color: rgba(74, 144, 226, 0.07);*/
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .left-window-dimension-legend {
@@ -2357,26 +2687,42 @@ h4 {
   font-weight: bold;
 }
 
-.skids_reference_image {
-  width: 100%;
-  max-width: 400px;
-  display: block;
-  margin-right: auto;
+.left-traveler-windowQ-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  border: 2px solid #4a90e2;
+  box-shadow: 4px 6px #4a90e2;
+  background-color: rgba(74, 144, 226, 0.07);
+  /*background-size: cover;
+  background-position: center; these would go if there was a background image added*/
 }
 
-.current_selection {
-  font-size: 1.2rem;
-  text-align: center;
-  color: #d8b36a;
-  text-shadow: 1px 1px 1px black;
-  margin: 8px 0;
+.right-traveler-windowQ-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  border: 2px solid #4a90e2;
+  box-shadow: 4px 6px #4a90e2;
+  background-color: rgba(74, 144, 226, 0.07);
+}
+
+.left_selected_window {
+  border: 5px solid #4a90e2;
+  box-shadow: 10px 12px #4a90e2;
+
+  background-color: rgba(74, 144, 226, 0.16);
+
+  /*background-image: ;*/
+  /*background-size: cover;
+  background-position: center;*/
 }
 
 .selected_wood004 {
   background-image: url("./assets/Wood004_4K-JPG_Color.jpg");
   background-size: cover;
   background-position: center;
-  border: 3px solid #d8b36a;
+  /*border: 3px solid #d8b36a;*/
   color: white;
 }
 
@@ -2405,7 +2751,7 @@ h4 {
 .selected_roofPeak {
   border: 3px solid #7d8590;
   border-radius: 8px;
-  box-shadow: 8px 10px #7d8590;
+  box-shadow: 10px 12px #7d8590;
   background-color: rgba(125, 133, 144, 0.08);
 }
 
@@ -2414,39 +2760,13 @@ h4 {
   flex-shrink: 0;
 }
 
-.left-traveler-windowQ-card {
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 12px;
-  border: 2px solid #4a90e2;
-  box-shadow: 5px 6px #4a90e2;
-  background-color: rgba(74, 144, 226, 0.07);
-  /*background-size: cover;
-  background-position: center; these would go if there was a background image added*/
-}
-
-.right-traveler-windowQ-card {
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 12px;
-
-  border: 2px solid #4a90e2;
-  box-shadow: 5px 6px #4a90e2;
-
-  /*background-size: cover;
-  background-position: center;*/
-  background-color: rgba(74, 144, 226, 0.16);
-}
-
-.left_selected_window {
-  border: 5px solid #4a90e2;
-  box-shadow: 10px 12px #4a90e2;
-
-  background-color: rgba(74, 144, 226, 0.07);
-
-  /*background-image: ;*/
-  /*background-size: cover;
-  background-position: center;*/
+.stud-summary-section {
+  border-left: 6px solid #c19a6b;
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .left-window-summary-section {

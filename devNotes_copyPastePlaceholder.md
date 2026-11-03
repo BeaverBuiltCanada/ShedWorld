@@ -150,10 +150,106 @@ The reference images throughout the configurator are also representative of the 
 ```
 
 ```text
-CHOOSER_04_a_TOGGLE___Wall_Y_Right_Has_A_RO4_Window___TrueOrFalse
-CHOOSER_04_B_Wndw_RghOpn_RO4__Limited_WindowWidth_Inches_Requested
-CHOOSER_04_C___Wndw_RghOpn_RO4__Limited_Height_Inches_Requested
-CHOOSER_04_D___Wndw_RghOpn_RO4__Limited_ZDistance_DistFrmFlr_Inches_Requested
-CHOOSER_04_Fi_RO4_OPENING___Window_Use_2x6_Headers___TrueOrFalse
+Build a drawing package structure:
+Page 1
+--------
+Cover Sheet
+
+Page 2
+--------
+Foundation Plan
+
+Page 3
+--------
+Floor Framing
+
+Page 4
+--------
+Left Wall
+
+Page 5
+--------
+Right Wall
+
+Page 6
+--------
+Front Wall
+
+Page 7
+--------
+Rear Wall
+
+Page 8
+--------
+Roof Framing
+
+Page 9
+--------
+Material List
+Then every building uses that structure.
+
+The dimensions change.
+
+The layout does not.
+```
+
+```text
+For window distance from front corner:
+Fusion stud spacing over ride and what it expects from json
+================================================================
+this parameter turns stud spacing over ride on or off
+Currently we have no inputs for this .
+If this is set to 1, the inputs should fall to between 12 and 48" I would say likely step 2" seems reasonable.
+
+Name: CHOOSER_01d_ssii_TOGGLE___WALLS_Stud_Spacing_Inches_ManualOverRide_TrueOrFalse
+    unitless: 1 or 0
+
+===============================================================
+This is a inch unit, so Fusion expects a value such as 12, 18, 20 etc. I would include 16 and 24 in this for the simple reason, someone may want to use 2x4 on 24" centers. That is really the whole reason behind the over ride. Wierd numbers such as 32" are more for animal housing type structures. Or who knows, this could likely easily morph into cabinetry. Same principals. I shouldnt say easily though. oops. If it was easy, everyone would be doing it.
+
+Name: CHOOSER_01d_ssiii___WALLS_Stud_SpacingForOverRide_INCHES
+Comment: MinMax limiters 12 - 48
+Uses: Name: VAULT_UNIVERSE_WALL_XY_Stud_Spacing_Clamped
+    Expression: CHOOSER_01d_ssii_TOGGLE___WALLS_Stud_Spacing_Inches_ManualOverRide_TrueOrFalse * if(CHOOSER_01d_ssiii___WALLS_Stud_SpacingForOverRide_INCHES < 12 in; 12 in; if(CHOOSER_01d_ssiii___WALLS_Stud_SpacingForOverRide_INCHES > 48 in; 48 in; CHOOSER_01d_ssiii___WALLS_Stud_SpacingForOverRide_INCHES)) + ( 1 - CHOOSER_01d_ssii_TOGGLE___WALLS_Stud_Spacing_Inches_ManualOverRide_TrueOrFalse ) * ( CHOOSER_01d_ssi_TOGGLE____WALLS_Use_2x6_STUDS_TrueorFalse * 24 in + ( 1 - CHOOSER_01d_ssi_TOGGLE____WALLS_Use_2x6_STUDS_TrueorFalse ) * 16 in )
+
+
+We are already using:
+CHOOSER_02_v_RO2_OPENING___Place_Window_By_Stud_Indexer
 CHOOSER_04_E___RO4_OPENING___Place_Window_By_Stud_Indexer
+```
+
+```text
+for windows, I wrapped the window section in a class:
+
+<!--=====START OF LEFT WALL WINDOW - at top header======-->
+          <div class="window-section">  here
+            <h2>Left Wall Window</h2>
+
+            <p>
+              <button
+                @click="showWhatIsALeftWallWindow = !showWhatIsALeftWallWindow"
+              >
+                What is a left wall window?
+              </button>
+            </p>
+
+            <p v-if="showWhatIsALeftWallWindow">
+              <strong class="whatIs-q">Q: What is a left wall window?</strong
+              ><br />
+              A: A left wall window is...
+            </p>
+
+            <div class="current_selection" v-if="leftWallRO2Window === 1">
+              Left Wall Window: Included
+            </div>
+
+and here I introduced the class Q-card idea...
+            <div
+              class="left-traveler-windowQ-card"
+              :class="{ left_selected_window: leftWallRO2Window === 1 }"
+              @click="leftWallRO2Window = leftWallRO2Window === 1 ? 0 : 1"
+            >
+              <h3>🪟 Add Left Wall Window</h3>
+            </div>
+
 ```
