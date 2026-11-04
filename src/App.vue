@@ -714,11 +714,14 @@ function loadTheMechanism() {
         <!--======================================TOP OF CONTROL PANEL=====================-->
         <aside class="page3-sidebar">
           <div class="page3-control-panel">
-            <p>
-              (these are system default values and will update with your
-              choices)
-            </p>
-            <h4>Your Current Building Selections:</h4>
+            <div class="dashboard-header">
+              <h2>DASHBOARD</h2>
+              <h4>Your Current Building Selections:</h4>
+            </div>
+            <div class="dashboard-intro">
+              <p>(Updates automatically as you make selections.)</p>
+            </div>
+
             <div class="dimensions-summary-section">
               <div class="CP-summary-row">
                 <span>Depth:</span><span>{{ depth }}'</span>
@@ -761,10 +764,15 @@ function loadTheMechanism() {
                 <span>{{ wallStudSize }}</span>
               </div>
 
-              <div v-if="wallStudSpacingOverride === 1">
+              <div class="CP-summary-row">
+                <span>Stud Spacing Override:</span>
+                <span>{{ studSpacingOverrideDisplay }}</span>
+              </div>
+
+              <div v-if="wallStudSpacingOverride">
                 <div class="CP-summary-row">
                   <span>Stud Spacing:</span>
-                  <span>{{ wallStudSpacing }}" O/C</span>
+                  <span>{{ currentStudSpacing }}" O/C</span>
                 </div>
               </div>
             </div>
@@ -891,6 +899,8 @@ function loadTheMechanism() {
                   alt="Building dimensions reference"
                   class="dimensions_reference_image"
                 />
+              </div>
+              <div>
                 <!--Start of RED GREEN BLUE legend-->
                 <div class="dimension-legend">
                   <div class="legend-depth">Depth</div>
@@ -2323,18 +2333,6 @@ h4 {
 /*========================================THIS IS THE START OF PAGE 3=============
 =================================================================================*/
 /*======these are the containers for Fusion screen shots==========*/
-.reference-image-container {
-  /*border: solid red 5px;*/
-  border-radius: 30px;
-  overflow: hidden;
-}
-/*and because they don't fill the container (wierd corner instances)
-======these are the Fusion screen shots==========*/
-.reference-image-container img {
-  display: block;
-  width: 100%;
-  border-radius: inherit;
-}
 
 .landingPage3 {
   position: sticky;
@@ -2367,6 +2365,7 @@ h4 {
 }
 /*======================================CONTROL PANEL===============================
 ====================================================================================*/
+
 .page3-control-panel {
   /*border: solid 6px yellow;*/
   max-height: 53vh;
@@ -2376,6 +2375,20 @@ h4 {
   overflow-y: auto;
   font-family: "Inter", sans-serif;
   line-height: 1.6;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  background: inherit; /* match panel background */
+  z-index: 10;
+  padding-bottom: 10px;
+}
+
+.dashboard-header h2,
+h4 {
+  margin: 0;
 }
 
 .CP-summary-row {
@@ -2469,6 +2482,9 @@ h4 {
   /*border: 3px solid #5e3d16; /* this can be used for de-bugging, darker wood color */
   border-radius: 8px;
   /*box-shadow: 4px 6px #5e3d16; /* this can be used for de-bugging, darker wood color */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /*================================CURRENT SELECTION IS A GLOBAL DEFINITION
@@ -2487,21 +2503,70 @@ h4 {
   border: 1px solid #5e3d16; /* darker wood color */
   border-radius: 8px;
   padding: 16px;
-  margin-top: 12px;
+  /*margin-top: 12px;*/
   box-shadow: 4px 6px #5e3d16;
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 /*===================================DIMENSIONS SECTION======================*/
+.reference-image-container {
+  /*border: solid red 3px;*/
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding-top: 10px;
+}
+/*and because they don't fill the container (wierd corner instances)
+======these are the Fusion screen shots==========*/
+.reference-image-container img {
+  /*border: 3px solid blue;*/
+  display: block;
+  max-width: 100%;
+  width: auto;
+  border-radius: 0;
+}
+
+.dimensions_reference_image {
+  /*there are currently 3 other instances of this. two iso above the dimensions legend,
+   left window and right window images */
+  width: 100%;
+  max-width: 600px;
+  display: block;
+  margin-right: auto;
+}
+
+.dimension-legend {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 40px;
+  margin: 0;
+  padding-top: 10px;
+}
+
+.legend-width {
+  border-left: 8px solid red;
+  color: red;
+  text-shadow: 1px 1px 1px black;
+  padding-left: 10px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
 
 .traveler-dimensions-Q-card {
   /*background-color: rgba(168, 192, 168, 0.12);*/
   border-radius: 6px;
   padding: 8px;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .dimensions-section {
-  /*border-left: 6px solid rgb(120, 150, 120);*/
+  /*border: 3px solid red;*/
   box-shadow: 4px 6px rgb(120, 150, 120);
   background-color: rgba(168, 192, 168, 0.12);
   border-radius: 10px;
@@ -2530,32 +2595,11 @@ h4 {
   margin-left: 10px;
 }
 
-.dimensions_reference_image {
-  width: 100%;
-  max-width: 600px;
-  display: block;
-  margin-right: auto;
-}
-
-.dimension-legend {
-  align-self: flex-start;
-  margin-bottom: 40px;
-}
-
-.legend-width {
-  border-left: 8px solid red;
-  color: red;
-  text-shadow: 1px 1px 1px black;
-  padding-left: 10px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
 /*=================================================FOUNDATION SECTION=============*/
 
 .foundation-section {
   box-shadow: 4px 6px #c19a6b;
-  /*border-left: 6px solid #c19a6b;*/
+  /*border: 3px solid blue;*/
   background-color: rgba(193, 154, 107, 0.12);
   border-radius: 10px;
   padding: 8px;
@@ -2603,18 +2647,18 @@ h4 {
 .traveler-2x4stud-Q-card {
   border-radius: 8px;
   padding: 16px;
-  margin-top: 12px;
   border: 2px solid #5e3d16; /* darker wood color */
   box-shadow: 4px 6px #5e3d16; /* darker wood color */
   background-color: rgba(193, 154, 107, 0.12);
   /*background-size: cover;
   background-position: center; these would go if there was a background image added*/
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .traveler-2x6stud-Q-card {
   border-radius: 8px;
   padding: 16px;
-  margin-top: 12px;
 
   border: 2px solid #5e3d16; /* darker wood color */
   box-shadow: 4px 6px #5e3d16; /* darker wood color */
@@ -2622,6 +2666,8 @@ h4 {
   /*background-size: cover;
   background-position: center;*/
   background-color: rgba(193, 154, 107, 0.12);
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 /*==================================ROOF SECTION=======================*/
 .roof-peak-section {
@@ -2774,21 +2820,25 @@ h4 {
 .left-traveler-windowQ-card {
   border-radius: 8px;
   padding: 16px;
-  margin-top: 12px;
+  /*margin-top: 12px;*/
   border: 2px solid #4a90e2;
   box-shadow: 4px 6px #4a90e2;
   background-color: rgba(74, 144, 226, 0.07);
   /*background-size: cover;
   background-position: center; these would go if there was a background image added*/
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .right-traveler-windowQ-card {
   border-radius: 8px;
   padding: 16px;
-  margin-top: 12px;
+  /*margin-top: 12px;*/
   border: 2px solid #4a90e2;
   box-shadow: 4px 6px #4a90e2;
   background-color: rgba(74, 144, 226, 0.07);
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .left_selected_window {
