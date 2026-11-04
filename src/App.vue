@@ -1,4 +1,8 @@
 <!--  this is a Vue/HTML comment -->
+/*=================THIS IS HOW YOU COMMENT OUT======================
+MULTI-LINES==========================================================
+====================================================*/
+
 <script setup>
 import { ref, computed, watch } from "vue";
 import roofPeakWidth from "./assets/roofPeakWidth.png";
@@ -9,29 +13,45 @@ import tapeMeasure from "./assets/tapeMeasureBorder.png";
 import "@fontsource/inter";
 import "@fontsource/oswald";
 
+/*===================UTILITY FUNCTIONS==================*/
+
+function acceptTerms() {
+  acceptedTerms.value = true;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "instant",
+  });
+}
+
 const acceptedTerms = ref(false);
 const showFAQ = ref(false);
 const showTerms = ref(false);
 const showWelcomeDetails = ref(true);
 const buildingType = ref("");
-const width = ref(12); // Default width is 12 feet
+const topPlateThickness = 1.5; /*============WINDOW HEIGHT WARNING USES THIS======*/
+
+/*=========================================================DIMENSIONS=============*/
+const width = ref(12); // Default width is 12 feet before any selection made.
 const showWhatIsWidth = ref(false);
-const depth = ref(12); // Default depth is 12 feet
+const depth = ref(12); // Default depth is 12 feet before any selection made.
 const showWhatIsDepth = ref(false);
-const wallHeight = ref(8); // Default wall height is 8 feet
+const wallHeight = ref(8); // Default wall height is 8 feet before any selection made.
 const showWhatIsWallHeight = ref(false);
 const floorArea = computed(() => width.value * depth.value);
 const perimeter = computed(() => width.value * 2 + depth.value * 2);
 const wallArea = computed(() => perimeter.value * wallHeight.value);
-const roofPeakDirection = ref("");
+
+/*=============================================FOUNDATION SKIDS===================*/
 const showWhatIsASkid = ref(false);
 const skidType = ref("");
 const centerSkid = ref("");
+/*==============================================FLOOR JOISTS===================*/
 const showWhatIsAJoist = ref(false);
 const floorJoistSize = ref("");
 const show2x4FloorJoistInfo = ref(false);
 const show2x6FloorJoistInfo = ref(false);
-/*=========FLOOR PLYWOOD==========*/
+/*=============================================FLOOR PLYWOOD==========*/
 const floorPlywoodThickness = ref("2"); // Default floor plywood thickness should be set to 5/8"
 const plywoodDisplay = computed(() => {
   switch (floorPlywoodThickness.value) {
@@ -47,6 +67,12 @@ const plywoodDisplay = computed(() => {
       return floorPlywoodThickness.value;
   }
 });
+/*====================================================WALL STUDS=================*/
+/*=========================
+== STUDS DISPLAY==========*/
+const studSpacingOverrideDisplay = computed(() => {
+  return wallStudSpacingOverride.value ? "Included" : "Not Included";
+});
 const showWhatIsAStud = ref(false);
 const wallStudSize = ref("");
 const showMoreAbout2x4Studs = ref(false);
@@ -54,6 +80,14 @@ const showMoreAbout2x6Studs = ref(false);
 const showAdvancedStudOptions = ref(false);
 const wallStudSpacingOverride = ref(false);
 const wallStudOverrideSpacing = ref(24);
+const currentStudSpacing = computed(() => {
+  if (wallStudSpacingOverride.value) {
+    return wallStudOverrideSpacing.value;
+  }
+  return wallStudSize.value === "2x6" ? 24 : 16;
+});
+/*====================================================ROOF=======================*/
+const roofPeakDirection = ref("");
 const showMoreAboutRoofPeak = ref(false);
 const showWhatIsARoofRafter = ref(false);
 const showMoreAbout2x4RoofRafters = ref(false);
@@ -68,7 +102,11 @@ const dimensionWarning = computed(() => {
   return Number(width.value) > Number(depth.value);
 });
 
-/*===========START OF LEFT WALL WINDOW==============*/
+/*====================================================== LEFT WALL WINDOW (RO2)========
+===================================================== stands for rough opening 2 =======
+===================================================== this is in Fusion left wall=====*/
+/*====================
+==LEFT WINDOW DISPLAYS*/
 const leftWallRO2WindowDisplay = computed(() => {
   return leftWallRO2Window.value === 1 ? "Included" : "Not Installed";
 });
@@ -85,26 +123,24 @@ const leftWallRO2HeaderSizeDisplay = computed(() => {
 
 const showWhatIsALeftWallWindow = ref(false);
 const showMoreAboutLeftWallWindow = ref(false);
-
+/*===================
+==LEFT WINDOW INPUTS*/
 const leftWallRO2Window = ref(0);
-
 const leftWallRO2Width = ref(24);
-
 const leftWallRO2Height = ref(24);
-
 const leftWallRO2FloorHeight = ref(10);
-
 const leftWallRO2HeaderSize = ref("2x4");
-
 const leftWallRO2StudIndex = ref(0);
 
-const windowWidthWarning = computed(() => {
+/*=====================
+==LEFT WINDOW WARNINGS*/
+const leftWindowWidthWarning = computed(() => {
   const wallLengthInches = Number(depth.value) * 12;
 
   return Number(leftWallRO2Width.value) > wallLengthInches - 10;
 });
 
-const windowFitWarning = computed(() => {
+const leftWindowFitWarning = computed(() => {
   const wallHeightInches = Number(wallHeight.value) * 12;
 
   const headerHeight = leftWallRO2HeaderSize.value === "2x6" ? 5.5 : 3.5;
@@ -112,36 +148,32 @@ const windowFitWarning = computed(() => {
   const requiredHeight =
     Number(leftWallRO2FloorHeight.value) +
     Number(leftWallRO2Height.value) +
-    headerHeight;
+    headerHeight +
+    topPlateThickness;
 
   return requiredHeight > wallHeightInches;
 });
 
-const studIndexWarning = computed(() => {
+const leftWindowWarning = computed(() => {
   if (Number(leftWallRO2StudIndex.value) === 0) {
     return false;
   }
 
   const wallLengthInches = Number(depth.value) * 12;
-  const estimatedBayCount = Math.floor(wallLengthInches / 16);
+  const cornerClearance = 12;
 
-  return Number(leftWallRO2StudIndex.value) > estimatedBayCount;
+  return (
+    Number(leftWallRO2StudIndex.value) +
+      Number(leftWallRO2Width.value) +
+      cornerClearance >
+    wallLengthInches
+  );
 });
-/*==================START OF RIGHT WALL WINDOW================*/
-//======================================================
-// RIGHT WALL WINDOW
-//======================================================
-
-const rightWallRO4Window = ref(1);
-const rightWallRO4Width = ref(24);
-const rightWallRO4Height = ref(24);
-const rightWallRO4FloorHeight = ref(10);
-const rightWallRO4HeaderSize = ref("2x4");
-const rightWallRO4StudIndex = ref(0);
-
-const showWhatIsARightWallWindow = ref(false);
-const showMoreAboutRightWallWindow = ref(false);
-
+/*============================================= RIGHT WALL WINDOW (RO4)============
+================================================ stands for rough opening 4 =======
+============================================== this is in Fusion right wall=============*/
+/*====================
+==RIGHT WINDOW DISPLAYS*/
 const rightWallRO4WindowDisplay = computed(() => {
   return rightWallRO4Window.value === 1 ? "Included" : "Not Installed";
 });
@@ -156,19 +188,63 @@ const rightWallRO4HeaderSizeDisplay = computed(() => {
   return rightWallRO4HeaderSize.value === "2x6" ? "2x6 Header" : "2x4 Header";
 });
 
-const wallStudSpacing = computed(() => {
-  return wallStudSize.value === "2x6" ? 24 : 16;
+/*===================
+==RIGHT WINDOW INPUTS*/
+const rightWallRO4Window = ref(1);
+const rightWallRO4Width = ref(24);
+const rightWallRO4Height = ref(24);
+const rightWallRO4FloorHeight = ref(10);
+const rightWallRO4HeaderSize = ref("2x4");
+const rightWallRO4StudIndex = ref(0);
+
+const showWhatIsARightWallWindow = ref(false);
+const showMoreAboutRightWallWindow = ref(false);
+
+/*=====================
+==RIGHT WINDOW WARNINGS*/
+const rightWindowWidthWarning = computed(() => {
+  const wallLengthInches = Number(depth.value) * 12;
+
+  return Number(rightWallRO4Width.value) > wallLengthInches - 10;
 });
 
-function acceptTerms() {
-  acceptedTerms.value = true;
+const rightWindowFitWarning = computed(() => {
+  const wallHeightInches = Number(wallHeight.value) * 12;
 
-  window.scrollTo({
-    top: 0,
-    behavior: "instant",
-  });
-}
+  const headerHeight = rightWallRO4HeaderSize.value === "2x6" ? 5.5 : 3.5;
 
+  const requiredHeight =
+    Number(rightWallRO4FloorHeight.value) +
+    Number(rightWallRO4Height.value) +
+    headerHeight +
+    topPlateThickness;
+
+  return requiredHeight > wallHeightInches;
+});
+
+const rightWindowWarning = computed(() => {
+  if (Number(rightWallRO4StudIndex.value) === 0) {
+    return false;
+  }
+
+  const wallLengthInches = Number(depth.value) * 12;
+  const cornerClearance = 12;
+
+  return (
+    Number(rightWallRO4StudIndex.value) +
+      Number(rightWallRO4Width.value) +
+      cornerClearance >
+    wallLengthInches
+  );
+});
+/*===LEGACY - AUDIT BEFORE DELETING===BECAUSE I MADE const currentStudSpacing AFTER THIS=============
+const wallStudSpacing = computed(() => {
+  return wallStudSize.value === "2x6" ? 24 : 16;
+});=====================*/
+
+/*=================================================END OF RIGHT WINDOW=================*/
+
+/*=============================THESE SET DEFAULTS FOR EACH SELECTED BUILDING TYPE==========*/
 function selectBuildingType(type) {
   buildingType.value = type;
   {
@@ -190,6 +266,7 @@ function selectBuildingType(type) {
     roofPitch.value = "4";
     eavesOverHang.value = "4";
     leftWallRO2Window.value = 0;
+    rightWallRO4Window.value = 0;
   }
 
   if (type === "yardShed") {
@@ -205,6 +282,7 @@ function selectBuildingType(type) {
     roofPitch.value = "6";
     eavesOverHang.value = "6";
     leftWallRO2Window.value = 0;
+    rightWallRO4Window.value = 0;
   }
 
   if (type === "workshopGarage") {
@@ -221,6 +299,7 @@ function selectBuildingType(type) {
     roofPitch.value = "8";
     eavesOverHang.value = "8";
     leftWallRO2Window.value = 0;
+    rightWallRO4Window.value = 0;
   }
 
   if (type === "customStructure") {
@@ -236,6 +315,7 @@ function selectBuildingType(type) {
     roofPitch.value = "10";
     eavesOverHang.value = "8";
     leftWallRO2Window.value = 0;
+    rightWallRO4Window.value = 0;
   }
   window.scrollTo({
     top: 0,
@@ -849,12 +929,12 @@ function loadTheMechanism() {
                   >Your chosen depth is {{ depth }} feet.</span
                 >
                 <div v-if="dimensionWarning" class="warning_box">
-                  ⚠️ Depth is typically treated as the longer dimension of the
+                  💡 Depth is typically treated as the longer dimension of the
                   building. Future floor joist, center skid, and roof
                   calculations will use this orientation as the default
                   assumption. You may continue with any dimensions, but
                   understanding this convention will help when selecting later
-                  options.
+                  options. 🦫
                 </div>
               </div>
               <p>
@@ -1593,7 +1673,7 @@ function loadTheMechanism() {
                 <div v-if="showMoreAboutLeftWallWindow">
                   <!--============================Start Of Advanced Window Options==============
               ================================================================================-->
-                  <h2>🪟 Advanced Window Options</h2>
+                  <h2>🪟 Advanced Left Window Options</h2>
 
                   <div class="left-traveler-windowQ-card">
                     <p>
@@ -1684,18 +1764,17 @@ function loadTheMechanism() {
                         max="72"
                         step="0.25"
                       />
+                      <div v-if="leftWindowWidthWarning" class="warning_box">
+                        ⚠️ The selected opening width leaves less than 10" of
+                        available wall space, which may be insufficient room for
+                        a {{ leftWallRO2Width }}" opening. The Fusion model can
+                        safely resolve this condition, however the final design
+                        may require adjustments during human review. 🦫
+                      </div>
 
                       <span class="window-legend-width dimension-value">
                         {{ leftWallRO2Width }}"
                       </span>
-                    </div>
-                    <div v-if="windowWidthWarning" class="warning_box">
-                      ⚠️ The requested rough opening width may exceed the
-                      available wall space, or exceeds the failsafe limits set
-                      for the model. The Fusion model can safely resolve this
-                      condition, however the final design may require
-                      adjustments during human review. Please consider making
-                      your rough opening smaller or making your wall longer.
                     </div>
 
                     <!-- RO HEIGHT -->
@@ -1712,6 +1791,13 @@ function loadTheMechanism() {
                         max="72"
                         step="0.25"
                       />
+                      <div v-if="rightWindowFitWarning" class="warning_box">
+                        ⚠️ The selected rough opening height, distance from
+                        floor, and header size may exceed the available wall
+                        height. The Fusion model includes safeguards and may
+                        adjust the design, however final placement may require
+                        review.
+                      </div>
 
                       <span class="window-legend-height dimension-value">
                         {{ leftWallRO2Height }}"
@@ -1735,12 +1821,6 @@ function loadTheMechanism() {
                       <span class="window-legend-dff dimension-value">
                         {{ leftWallRO2FloorHeight }}"
                       </span>
-                    </div>
-                    <div v-if="windowFitWarning" class="warning_box">
-                      ⚠️ The selected rough opening height, distance from floor,
-                      and header size may exceed the available wall height. The
-                      Fusion model includes safeguards and may adjust the
-                      design, however final placement may require review.
                     </div>
 
                     <!-- HEADER SIZE -->
@@ -1770,17 +1850,19 @@ function loadTheMechanism() {
                         type="number"
                         v-model="leftWallRO2StudIndex"
                         min="0"
-                        :step="wallStudSpacing"
+                        :step="currentStudSpacing"
                       />
 
                       <span class="window-legend-stud-index dimension-value">
                         {{ leftWallRO2StudIndexDisplay }}
                       </span>
-                      <div v-if="studIndexWarning" class="warning_box">
-                        ⚠️ The selected stud index may exceed the available wall
-                        length. The Fusion model can safely resolve this
-                        condition, however the final design may require
-                        adjustments during human review.
+                      <div v-if="leftWindowWarning" class="warning_box">
+                        ⚠️ Distance From Front Corner leaves less than 12" of
+                        clearance from the back corner, which may be
+                        insufficient room for a
+                        {{ leftWallRO2Width }}" opening. The Fusion model can
+                        safely resolve this condition, however the final design
+                        may require adjustments during human review. 🦫
                       </div>
                     </div>
                     <p>
@@ -1848,7 +1930,7 @@ function loadTheMechanism() {
                 <div v-if="showMoreAboutRightWallWindow">
                   <!--============================Start Of Advanced Window Options==============
               ================================================================================-->
-                  <h2>🪟 Advanced Window Options</h2>
+                  <h2>🪟 Advanced Right Window Options</h2>
 
                   <div class="right-traveler-windowQ-card">
                     <p>
@@ -1942,18 +2024,17 @@ function loadTheMechanism() {
                         max="72"
                         step="0.25"
                       />
+                      <div v-if="rightWindowWidthWarning" class="warning_box">
+                        ⚠️ The selected opening width leaves less than 10" of
+                        available wall space, which may be insufficient room for
+                        a {{ rightWallRO4Width }}" opening. The Fusion model can
+                        safely resolve this condition, however the final design
+                        may require adjustments during human review. 🦫
+                      </div>
 
                       <span class="window-legend-width dimension-value">
                         {{ rightWallRO4Width }}"
                       </span>
-                    </div>
-                    <div v-if="windowWidthWarning" class="warning_box">
-                      ⚠️ The requested rough opening width may exceed the
-                      available wall space, or exceeds the failsafe limits set
-                      for the model. The Fusion model can safely resolve this
-                      condition, however the final design may require
-                      adjustments during human review. Please consider making
-                      your rough opening smaller or making your wall longer.
                     </div>
 
                     <!-- RO HEIGHT -->
@@ -1970,6 +2051,13 @@ function loadTheMechanism() {
                         max="72"
                         step="0.25"
                       />
+                      <div v-if="rightWindowFitWarning" class="warning_box">
+                        ⚠️ The selected rough opening height, distance from
+                        floor, and header size may exceed the available wall
+                        height. The Fusion model includes safeguards and may
+                        adjust the design, however final placement may require
+                        review.
+                      </div>
 
                       <span class="window-legend-height dimension-value">
                         {{ rightWallRO4Height }}"
@@ -1993,12 +2081,6 @@ function loadTheMechanism() {
                       <span class="window-legend-dff dimension-value">
                         {{ rightWallRO4FloorHeight }}"
                       </span>
-                    </div>
-                    <div v-if="windowFitWarning" class="warning_box">
-                      ⚠️ The selected rough opening height, distance from floor,
-                      and header size may exceed the available wall height. The
-                      Fusion model includes safeguards and may adjust the
-                      design, however final placement may require review.
                     </div>
 
                     <!-- HEADER SIZE -->
@@ -2028,17 +2110,19 @@ function loadTheMechanism() {
                         type="number"
                         v-model="rightWallRO4StudIndex"
                         min="0"
-                        :step="wallStudSpacing"
+                        :step="currentStudSpacing"
                       />
 
                       <span class="window-legend-stud-index dimension-value">
                         {{ rightWallRO4StudIndexDisplay }}
                       </span>
-                      <div v-if="studIndexWarning" class="warning_box">
-                        ⚠️ The selected stud index may exceed the available wall
-                        length. The Fusion model can safely resolve this
-                        condition, however the final design may require
-                        adjustments during human review.
+                      <div v-if="rightWindowWarning" class="warning_box">
+                        ⚠️ Distance From Front Corner leaves less than 12" of
+                        clearance from the back corner, which may be
+                        insufficient room for a
+                        {{ rightWallRO4Width }}" opening. The Fusion model can
+                        safely resolve this condition, however the final design
+                        may require adjustments during human review. 🦫
                       </div>
                     </div>
                     <p>
