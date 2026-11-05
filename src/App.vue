@@ -10,6 +10,7 @@ import roofPeakDepth from "./assets/roofPeakDepth.png";
 import twoIso from "./assets/two_iso.png";
 import skidsShowing from "./assets/skidsShowing.png";
 import tapeMeasure from "./assets/tapeMeasureBorder.png";
+import frontDoorReferenceImage from "./assets/Front-Door-Reference-Image-v1.png";
 import "@fontsource/inter";
 import "@fontsource/oswald";
 
@@ -100,6 +101,86 @@ const eavesOverHang = ref(6); // Default eaves overhang is 6 inches
 const showWhatAreGableEnds = ref(false);
 const dimensionWarning = computed(() => {
   return Number(width.value) > Number(depth.value);
+});
+/*====================================================== FRONT DOOR SECTION (RO3)========
+===================================================== stands for rough opening 3 =======
+===================================================== this is in Fusion front door====*/
+/*====================
+== FRONT DOOR DISPLAYS
+======================*/
+
+const frontDoorDisplay = computed(() => {
+  return frontDoor.value === 1 ? "Included" : "Not Installed";
+});
+
+const frontDoorDistanceDisplay = computed(() => {
+  return frontDoorStudIndex.value === 0
+    ? "Centered"
+    : `${frontDoorStudIndex.value}"`;
+});
+
+const frontDoorHeaderSizeDisplay = computed(() => {
+  return frontDoorHeaderSize.value === "2x6" ? "2x6 Header" : "2x4 Header";
+});
+
+/*====================
+== FRONT DOOR INPUTS
+======================*/
+
+const showWhatIsAFrontDoor = ref(false);
+const showMoreAboutFrontDoor = ref(false);
+
+const frontDoor = ref(0);
+
+const frontDoorWidth = ref(36);
+
+const frontDoorHeight = ref(80);
+
+const frontDoorFloorHeight = ref(0);
+
+const frontDoorHeaderSize = ref("2x6");
+
+const frontDoorStudIndex = ref(0);
+
+/*=====================
+== FRONT DOOR WARNINGS
+=======================*/
+// width warning
+const frontDoorWidthWarning = computed(() => {
+  const wallLengthInches = Number(width.value) * 12;
+
+  return Number(frontDoorWidth.value) > wallLengthInches - 10;
+});
+// height warning
+const frontDoorFitWarning = computed(() => {
+  const wallHeightInches = Number(wallHeight.value) * 12;
+
+  const headerHeight = frontDoorHeaderSize.value === "2x6" ? 5.5 : 3.5;
+
+  const requiredHeight =
+    Number(frontDoorFloorHeight.value) +
+    Number(frontDoorHeight.value) +
+    headerHeight +
+    topPlateThickness;
+
+  return requiredHeight > wallHeightInches;
+});
+
+// distance from corner warning
+const frontDoorWarning = computed(() => {
+  if (Number(frontDoorStudIndex.value) === 0) {
+    return false;
+  }
+
+  const wallLengthInches = Number(width.value) * 12;
+  const cornerClearance = 12;
+
+  return (
+    Number(frontDoorStudIndex.value) +
+      Number(frontDoorWidth.value) +
+      cornerClearance >
+    wallLengthInches
+  );
 });
 
 /*====================================================== LEFT WALL WINDOW (RO2)========
@@ -258,6 +339,7 @@ function selectBuildingType(type) {
     depth.value = 4;
     wallHeight.value = 4;
     skidType.value = "2x4flat";
+    centerSkid.value = "";
     floorJoistSize.value = "2x4";
     floorPlywoodThickness.value = "1";
     wallStudSize.value = "2x4";
@@ -265,8 +347,27 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "4";
     eavesOverHang.value = "4";
-    leftWallRO2Window.value = 0;
+
+    frontDoor.value = 1;
+    frontDoorWidth.value = 24;
+    frontDoorHeight.value = 24;
+    frontDoorFloorHeight.value = 0;
+    frontDoorHeaderSize.value = "2x4";
+    frontDoorStudIndex.value = 0;
+
+    leftWallRO2Window.value = 1;
+    leftWallRO2Width.value = 12;
+    leftWallRO2Height.value = 12;
+    leftWallRO2FloorHeight.value = 12;
+    leftWallRO2HeaderSize.value = "2x4";
+    leftWallRO2StudIndex.value = 0;
+
     rightWallRO4Window.value = 0;
+    rightWallRO4Width.value = 12;
+    rightWallRO4Height.value = 12;
+    rightWallRO4FloorHeight.value = 12;
+    rightWallRO4HeaderSize.value = "2x4";
+    rightWallRO4StudIndex.value = 0;
   }
 
   if (type === "yardShed") {
@@ -274,6 +375,7 @@ function selectBuildingType(type) {
     depth.value = 8;
     wallHeight.value = 6;
     skidType.value = "2x4flat";
+    centerSkid.value = "";
     floorJoistSize.value = "2x4";
     floorPlywoodThickness.value = "2";
     wallStudSize.value = "2x4";
@@ -281,8 +383,27 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x4";
     roofPitch.value = "6";
     eavesOverHang.value = "6";
-    leftWallRO2Window.value = 0;
-    rightWallRO4Window.value = 0;
+
+    frontDoor.value = 1;
+    frontDoorWidth.value = 60;
+    frontDoorHeight.value = 60;
+    frontDoorFloorHeight.value = 0;
+    frontDoorHeaderSize.value = "2x4";
+    frontDoorStudIndex.value = 0;
+
+    leftWallRO2Window.value = 1;
+    leftWallRO2Width.value = 24;
+    leftWallRO2Height.value = 24;
+    leftWallRO2FloorHeight.value = 24;
+    leftWallRO2HeaderSize.value = "2x4";
+    leftWallRO2StudIndex.value = 0;
+
+    rightWallRO4Window.value = 1;
+    rightWallRO4Width.value = 24;
+    rightWallRO4Height.value = 24;
+    rightWallRO4FloorHeight.value = 24;
+    rightWallRO4HeaderSize.value = "2x4";
+    rightWallRO4StudIndex.value = 0;
   }
 
   if (type === "workshopGarage") {
@@ -298,24 +419,63 @@ function selectBuildingType(type) {
     roofRafterSize.value = "2x6";
     roofPitch.value = "8";
     eavesOverHang.value = "8";
-    leftWallRO2Window.value = 0;
-    rightWallRO4Window.value = 0;
+
+    frontDoor.value = 1;
+    frontDoorWidth.value = 36;
+    frontDoorHeight.value = 80;
+    frontDoorFloorHeight.value = 0;
+    frontDoorHeaderSize.value = "2x6";
+    frontDoorStudIndex.value = 0;
+
+    leftWallRO2Window.value = 1;
+    leftWallRO2Width.value = 48;
+    leftWallRO2Height.value = 32;
+    leftWallRO2FloorHeight.value = 33;
+    leftWallRO2HeaderSize.value = "2x6";
+    leftWallRO2StudIndex.value = 0;
+
+    rightWallRO4Window.value = 1;
+    rightWallRO4Width.value = 48;
+    rightWallRO4Height.value = 32;
+    rightWallRO4FloorHeight.value = 33;
+    rightWallRO4HeaderSize.value = "2x6";
+    rightWallRO4StudIndex.value = 0;
   }
 
   if (type === "customStructure") {
-    width.value = 12;
-    depth.value = 12;
+    width.value = 24;
+    depth.value = 24;
     wallHeight.value = 10;
     skidType.value = "4x4";
+    centerSkid.value = "Use Center Skid";
     floorJoistSize.value = "2x6";
-    floorPlywoodThickness.value = "3";
+    floorPlywoodThickness.value = "4";
     wallStudSize.value = "2x6";
     roofPeakDirection.value = "depth";
     roofRafterSize.value = "2x6";
     roofPitch.value = "10";
-    eavesOverHang.value = "8";
-    leftWallRO2Window.value = 0;
-    rightWallRO4Window.value = 0;
+    eavesOverHang.value = "16";
+
+    frontDoor.value = 1;
+    frontDoorWidth.value = 192; /*double garage door*/
+    frontDoorHeight.value = 96; /* but double check, once confirmed add note here.*/
+    frontDoorFloorHeight.value = 0;
+    frontDoorHeaderSize.value = "2x6";
+    frontDoorStudIndex.value = 0;
+
+    leftWallRO2Window.value = 1;
+    leftWallRO2Width.value = 60;
+    leftWallRO2Height.value = 48;
+    leftWallRO2FloorHeight.value = 30;
+    leftWallRO2HeaderSize.value = "2x6";
+    leftWallRO2StudIndex.value = 0;
+
+    rightWallRO4Window.value = 1;
+    rightWallRO4Width.value = 60;
+    rightWallRO4Height.value = 48;
+    rightWallRO4FloorHeight.value = 30;
+    rightWallRO4HeaderSize.value = "2x6";
+    rightWallRO4StudIndex.value = 0;
   }
   window.scrollTo({
     top: 0,
@@ -339,6 +499,14 @@ function loadTheMechanism() {
     roofRafterSize: roofRafterSize.value,
     roofPitch: roofPitch.value,
     eavesOverHang: eavesOverHang.value,
+
+    frontDoor: frontDoor.value,
+    frontDoorWidth: frontDoorWidth.value,
+    frontDoorHeight: frontDoorHeight.value,
+    frontDoorFloorHeight: frontDoorFloorHeight.value,
+    frontDoorHeaderSize: frontDoorHeaderSize.value,
+    frontDoorStudIndex: frontDoorStudIndex.value,
+
     leftWallRO2Window: leftWallRO2Window.value,
     leftWallRO2Width: leftWallRO2Width.value,
     leftWallRO2Height: leftWallRO2Height.value,
@@ -354,7 +522,7 @@ function loadTheMechanism() {
   };
 
   const json = JSON.stringify(config, null, 2);
-
+  /*==Right now, when you click Load The Mechanism, your Vue app is doing the const blob block below============*/
   const blob = new Blob([json], {
     type: "application/json",
   });
@@ -370,6 +538,7 @@ function loadTheMechanism() {
 
   URL.revokeObjectURL(url);
 }
+/*=========and that is what launches the Save / Save As experience.===*/
 </script>
 
 <template>
@@ -721,7 +890,7 @@ function loadTheMechanism() {
             <div class="dashboard-intro">
               <p>(Updates automatically as you make selections.)</p>
             </div>
-
+            <!--=====================DASHBOARD BUILDING FOOTPRINT DIMENSIONS===============-->
             <div class="dimensions-summary-section">
               <div class="CP-summary-row">
                 <span>Depth:</span><span>{{ depth }}'</span>
@@ -733,6 +902,7 @@ function loadTheMechanism() {
                 <span>Wall Height:</span><span>{{ wallHeight }}'</span>
               </div>
             </div>
+            <!--=====================DASHBOARD FOUNDATION===============-->
             <div class="foundation-summary-section">
               <div class="CP-summary-row">
                 <span>Foundation Skids:</span>
@@ -743,20 +913,21 @@ function loadTheMechanism() {
                 <span>{{ centerSkid || "No" }}</span>
               </div>
             </div>
-
+            <!--====================================DASHBOARD FLOOR JOISTS===============-->
             <div class="floor-joist-summary-section">
               <div class="CP-summary-row">
                 <span>Floor Joists:</span>
                 <span>{{ floorJoistSize }}</span>
               </div>
             </div>
+            <!--==================================DASHBOARD FLOOR PLYWOOD===============-->
             <div class="plywood-summary-section">
               <div class="CP-summary-row">
                 <span>Floor Plywood:</span>
                 <span>{{ plywoodDisplay }}</span>
               </div>
             </div>
-
+            <!--===============================================DASHBOARD WALL STUDS===============-->
             <!--======================THIS IS THE START OF THE ADVANCED STUD SYSTEM===-->
             <div class="stud-summary-section">
               <div class="CP-summary-row">
@@ -776,19 +947,22 @@ function loadTheMechanism() {
                 </div>
               </div>
             </div>
-            <!--======================THIS IS THE END OF THE ADVANCED STUD SYSTEM===-->
+            <!--========================THIS IS THE END OF THE ADVANCED STUD SYSTEM===-->
+            <!--==========================DASHBOARD ROOF PEAK DIRECTION===============-->
             <div class="roof-peak-summary-section">
               <div class="CP-summary-row">
                 <span>Roof Peak Direction:</span>
                 <span>{{ roofPeakDirection }}</span>
               </div>
             </div>
+            <!--==================================DASHBOARD ROOF RAFTERS===============-->
             <div class="roof-rafters-summary-section">
               <div class="CP-summary-row">
                 <span>Roof Rafters:</span>
                 <span>{{ roofRafterSize }}</span>
               </div>
             </div>
+            <!--==================================DASHBOARD ROOF PITCH/EAVES/GABLES===========-->
             <div class="roof-pitch-summary-section">
               <div class="CP-summary-row">
                 <span>Roof Pitch:</span>
@@ -803,6 +977,43 @@ function loadTheMechanism() {
                 <span>{{ gableEndsOverHang }}</span>
               </div>
             </div>
+            <!--====================================DASHBOARD FRONT DOOR===============-->
+            <!--===========THIS IS THE START OF THE FRONT DOOR SUMMARY SECTION=========-->
+            <div class="front-door-summary-section">
+              <div class="CP-summary-row">
+                <span>Front Door:</span>
+                <span>{{ frontDoorDisplay }}</span>
+              </div>
+
+              <div v-if="frontDoor === 1">
+                <div class="CP-summary-row">
+                  <span>Door Width:</span>
+                  <span>{{ frontDoorWidth }}"</span>
+                </div>
+
+                <div class="CP-summary-row">
+                  <span>Door Height:</span>
+                  <span>{{ frontDoorHeight }}"</span>
+                </div>
+
+                <div class="CP-summary-row">
+                  <span>Distance From Floor:</span>
+                  <span>{{ frontDoorFloorHeight }}"</span>
+                </div>
+
+                <div class="CP-summary-row">
+                  <span>Header:</span>
+                  <span>{{ frontDoorHeaderSizeDisplay }}</span>
+                </div>
+
+                <div class="CP-summary-row">
+                  <span>Distance From Left Corner:</span>
+                  <span>{{ frontDoorDistanceDisplay }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!--==========================DASHBOARD WINDOWS START HERE===============-->
             <!--===========THIS IS THE START OF THE LEFT WINDOW SUMMARY SECTION=========-->
             <div class="left-window-summary-section">
               <div class="CP-summary-row">
@@ -881,7 +1092,7 @@ function loadTheMechanism() {
       =================================================================================-->
       <div class="options-column">
         <div class="main-column">
-          <!--==========DIMENSIONS SECTION===============-->
+          <!--=======================================DIMENSIONS SECTION===============-->
           <div class="dimensions-section">
             <h2>Building Dimensions</h2>
             <!-- double isometric pic with the view cubes -->
@@ -1072,7 +1283,7 @@ function loadTheMechanism() {
               <p>reference, Wall Area: {{ wallArea }} sq ft</p>
             </div>
           </div>
-          <!--=========================START OF FOUNDATION SECTION==================-->
+          <!--=================================START OF FOUNDATION SECTION==================-->
           <!--======================================================================-->
           <div class="foundation-section">
             <h2>Foundation Skids</h2>
@@ -1169,7 +1380,7 @@ function loadTheMechanism() {
               Selected Center Skid: {{ centerSkid }}
             </div>
           </div>
-          <!--=====================================================FLOOR JOISTS======
+          <!--=====================================================FLOOR JOISTS SECTION======
 =====================================================================================-->
           <div class="floor-joist-section">
             <h2>Floor Joists</h2>
@@ -1263,8 +1474,7 @@ function loadTheMechanism() {
               </div>
             </div>
           </div>
-          <!--=========================================================PLYWOOD============
-=========================-->
+          <!--=========================================================PLYWOOD SECTION=====-->
           <div class="plywood-section">
             <h2>Floor Plywood</h2>
             <div class="travelerQ-card selected_osb">
@@ -1277,7 +1487,7 @@ function loadTheMechanism() {
               </select>
             </div>
           </div>
-          <!--===============================THIS IS THE START OF WALL STUDS=======
+          <!--===============================THIS IS THE START OF WALL STUDS SECTION=======
           ======================================================================-->
           <div class="stud-section">
             <h2>Wall Studs</h2>
@@ -1631,6 +1841,286 @@ function loadTheMechanism() {
             </div>
           </div>
           <!--===================================================================
+          =================================FRONT DOOR SECTION===================
+          ========================================================================-->
+          <div class="door-section-container">
+            <div class="door-section">
+              <h2>Front Door</h2>
+
+              <p>
+                <button @click="showWhatIsAFrontDoor = !showWhatIsAFrontDoor">
+                  What is a front door?
+                </button>
+              </p>
+
+              <p v-if="showWhatIsAFrontDoor">
+                <strong class="whatIs-q">Q: What is a front door?</strong><br />
+                A: A front door is an optional rough opening placed in the front
+                wall of the structure. Door dimensions, height above the floor,
+                and framing options can be customized. It could potentially be
+                used as a door, a window, or a higher positioned chicken coop
+                door.
+              </p>
+
+              <div class="current_selection" v-if="frontDoor === 1">
+                Front Door: Included
+              </div>
+
+              <div
+                class="traveler-frontDoor-Q-card"
+                :class="{ front_selected_door: frontDoor === 1 }"
+                @click="frontDoor = frontDoor === 1 ? 0 : 1"
+              >
+                <h3>🚪 Add Front Door</h3>
+              </div>
+
+              <div v-if="frontDoor === 1">
+                <button
+                  @click="showMoreAboutFrontDoor = !showMoreAboutFrontDoor"
+                >
+                  {{
+                    showMoreAboutFrontDoor
+                      ? "▼ Advanced Front Door Options"
+                      : "▶ Advanced Front Door Options"
+                  }}
+                </button>
+
+                <div v-if="showMoreAboutFrontDoor">
+                  <!--============================Start Of Advanced Door Options==============
+        ================================================================================-->
+
+                  <h2>🚪 Advanced Front Door Options</h2>
+
+                  <div class="traveler-frontDoor-Q-card">
+                    <p>
+                      These options control the size and placement of the front
+                      wall rough opening. The reference image below is intended
+                      to help visualize how each setting affects the final
+                      design.
+                    </p>
+                    <p class="tip-inline">
+                      💡 Tip: You can make this opening a higher positioned door
+                      opening, for example a chicken coop door, or make it a
+                      window opening, simply by changing the default 0 distance
+                      from floor.
+                    </p>
+
+                    <h4>Front Door Reference Diagram</h4>
+
+                    <!--=====================================================DOOR LEGEND=========
+============================================================================-->
+
+                    <div class="left-window-dimension-legend">
+                      <div class="window-legend-width">Door Width</div>
+                      <div class="window-legend-height">Door Height</div>
+                      <div class="window-legend-headers">Headers</div>
+                      <div class="window-legend-stud-index">
+                        Distance From Left Corner (stud index 1)
+                      </div>
+                      <div class="window-legend-dff">Dist From Floor</div>
+                    </div>
+
+                    <div class="reference-image-container">
+                      <img
+                        :src="frontDoorReferenceImage"
+                        alt="Front door reference"
+                        class="dimensions_reference_image"
+                      />
+                    </div>
+
+                    <h4>Door Reference</h4>
+
+                    <ul>
+                      <li>
+                        For added clarity, this reference image illustrates a
+                        typical 12' wide × 12' deep × 8' wall height structure
+                        with the roof peak running in the depth direction.
+                      </li>
+
+                      <li>
+                        The front door rough opening shown is representative
+                        only, and is 36" wide × 82" height. Your actual
+                        requested dimensions and location may differ based on
+                        your selections.
+                      </li>
+
+                      <li>
+                        The door is located approximately 16" from the left
+                        corner. This means there is 1 empty bay. Your actual
+                        requested measurement and the drawings may differ
+                        slightly, as the model will attempt to place the rough
+                        opening at the closest available stud.
+                      </li>
+
+                      <li>
+                        A Distance From Left Corner of "Centered" represents the
+                        default centered position in the wall.
+                      </li>
+
+                      <li>
+                        This image is provided as a reference to help explain
+                        door configuration settings. Your actual building
+                        dimensions, opening sizes, and locations may differ
+                        based on the selections made within the configurator.
+                      </li>
+
+                      <li>
+                        The reference images throughout the configurator are
+                        also representative of the style and level of detail
+                        customers can expect to see in their final drawing
+                        package. Additional drawing examples and sample plans
+                        will be provided as the project continues to develop.
+                      </li>
+
+                      <p>
+                        💡 Tip: Check with your window and door supplier for
+                        their recommended rough opening sizes for your
+                        particular products.
+                      </p>
+                      <p class="tip-inline">
+                        💡 Tip: You can use the arrows or directly type your
+                        input values. Quarter-inch increments are supported.
+                      </p>
+                    </ul>
+
+                    <!-- DOOR WIDTH -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-width dimension-label">
+                        Door Width:
+                      </label>
+
+                      <input
+                        type="number"
+                        v-model="frontDoorWidth"
+                        min="12"
+                        max="80"
+                        step="0.25"
+                      />
+
+                      <div v-if="frontDoorWidthWarning" class="warning_box">
+                        ⚠️ The selected opening width leaves less than 10" of
+                        available wall space, which may be insufficient room for
+                        a {{ frontDoorWidth }}" opening. The Fusion model can
+                        safely resolve this condition, however the final design
+                        may require adjustments during human review. 🦫
+                      </div>
+
+                      <span class="window-legend-width dimension-value">
+                        {{ frontDoorWidth }}"
+                      </span>
+                    </div>
+
+                    <!-- DOOR HEIGHT -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-height dimension-label">
+                        Door Height:
+                      </label>
+
+                      <input
+                        type="number"
+                        v-model="frontDoorHeight"
+                        min="12"
+                        max="108"
+                        step="0.25"
+                      />
+
+                      <div v-if="frontDoorFitWarning" class="warning_box">
+                        ⚠️ The selected rough opening height, distance from
+                        floor, and header size may exceed the available wall
+                        height. The Fusion model includes safeguards and may
+                        adjust the design, however final placement may require
+                        review.
+                      </div>
+
+                      <span class="window-legend-height dimension-value">
+                        {{ frontDoorHeight }}"
+                      </span>
+                    </div>
+
+                    <!-- DISTANCE FROM FLOOR -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-dff dimension-label">
+                        Distance From Floor:
+                      </label>
+
+                      <input
+                        type="number"
+                        v-model="frontDoorFloorHeight"
+                        min="0"
+                        step="0.25"
+                      />
+
+                      <span class="window-legend-dff dimension-value">
+                        {{ frontDoorFloorHeight }}"
+                      </span>
+                    </div>
+
+                    <!-- HEADER SIZE -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-headers dimension-label">
+                        Header Size:
+                      </label>
+
+                      <select v-model="frontDoorHeaderSize">
+                        <option value="2x4">2x4</option>
+                        <option value="2x6">2x6</option>
+                      </select>
+
+                      <span class="window-legend-headers dimension-value">
+                        {{ frontDoorHeaderSize }}
+                      </span>
+                    </div>
+
+                    <!-- DISTANCE FROM LEFT CORNER -->
+
+                    <div class="dimension-row">
+                      <label class="window-legend-stud-index dimension-label">
+                        Distance From Left Corner:
+                      </label>
+
+                      <input
+                        type="number"
+                        v-model="frontDoorStudIndex"
+                        min="0"
+                        :step="currentStudSpacing"
+                      />
+
+                      <span class="window-legend-stud-index dimension-value">
+                        {{ frontDoorDistanceDisplay }}
+                      </span>
+
+                      <div v-if="frontDoorWarning" class="warning_box">
+                        ⚠️ Distance From Left Corner leaves less than 12" of
+                        clearance from the right corner, which may be
+                        insufficient room for a
+                        {{ frontDoorWidth }}" opening. The Fusion model can
+                        safely resolve this condition, however the final design
+                        may require adjustments during human review. 🦫
+                      </div>
+                    </div>
+
+                    <p>
+                      <button
+                        @click="showMoreAboutFrontDoor = false"
+                        class="clear-window-button"
+                      >
+                        🚪 Close Front Door Options
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--CLOSING DIV ABOVE THIS LINE IS THE DIV THAT CLOSES THE FRONT DOOR==
+          ========================================================================-->
+
+          <!--===================================================================
           =========================START OF LEFT WALL WINDOW - at top header======================
           ========================================================================-->
           <div class="window-section-container">
@@ -1692,9 +2182,9 @@ function loadTheMechanism() {
                       to help visualize how each setting affects the final
                       design.
                     </p>
-                    <p class="tip-inline">
-                      💡 Tip: You can use the arrows or directly type your input
-                      values. Quarter-inch increments are supported.
+                    <p>
+                      💡 Tip: You can make this a door opening, simply by
+                      changing the distance from floor to 0 (zero).
                     </p>
 
                     <h4>Left Window Reference Diagram</h4>
@@ -1753,6 +2243,10 @@ function loadTheMechanism() {
                         package. Additional drawing examples and sample plans
                         will be provided as the project continues to develop.
                       </li>
+                      <p class="tip-inline">
+                        💡 Tip: You can use the arrows or directly type your
+                        input values. Quarter-inch increments are supported.
+                      </p>
                       <p>
                         💡 Tip: Check with your window and door supplier for
                         their recommended rough opening sizes for your
@@ -1801,7 +2295,7 @@ function loadTheMechanism() {
                         max="72"
                         step="0.25"
                       />
-                      <div v-if="rightWindowFitWarning" class="warning_box">
+                      <div v-if="leftWindowHeightWarning" class="warning_box">
                         ⚠️ The selected rough opening height, distance from
                         floor, and header size may exceed the available wall
                         height. The Fusion model includes safeguards and may
@@ -1825,6 +2319,7 @@ function loadTheMechanism() {
                         type="number"
                         v-model="leftWallRO2FloorHeight"
                         min="0"
+                        max="72"
                         step="0.25"
                       />
 
@@ -1866,7 +2361,7 @@ function loadTheMechanism() {
                       <span class="window-legend-stud-index dimension-value">
                         {{ leftWallRO2StudIndexDisplay }}
                       </span>
-                      <div v-if="leftWindowWarning" class="warning_box">
+                      <div v-if="leftWindowFitWarning" class="warning_box">
                         ⚠️ Distance From Front Corner leaves less than 12" of
                         clearance from the back corner, which may be
                         insufficient room for a
@@ -1949,9 +2444,9 @@ function loadTheMechanism() {
                       to help visualize how each setting affects the final
                       design.
                     </p>
-                    <p class="tip-inline">
-                      💡 Tip: You can use the arrows or directly type your input
-                      values. Quarter-inch increments are supported.
+                    <p>
+                      💡 Tip: You can make this a door opening, simply by
+                      changing the distance from floor to 0 (zero).
                     </p>
 
                     <h4>Right Window Reference Diagram</h4>
@@ -1970,7 +2465,7 @@ function loadTheMechanism() {
                     <div class="reference-image-container">
                       <img
                         src="./assets/Right-Window-Reference-Image_v1.png"
-                        alt="Window reference"
+                        alt="Right Window reference"
                         class="dimensions_reference_image"
                       />
                     </div>
@@ -2013,6 +2508,10 @@ function loadTheMechanism() {
                         package. Additional drawing examples and sample plans
                         will be provided as the project continues to develop.
                       </li>
+                      <p class="tip-inline">
+                        💡 Tip: You can use the arrows or directly type your
+                        input values. Quarter-inch increments are supported.
+                      </p>
                       <p>
                         💡 Tip: Check with your window and door supplier for
                         their recommended rough opening sizes for your
@@ -2085,6 +2584,7 @@ function loadTheMechanism() {
                         type="number"
                         v-model="rightWallRO4FloorHeight"
                         min="0"
+                        max="72"
                         step="0.25"
                       />
 
@@ -2197,7 +2697,9 @@ h4 {
 .landingPage2 p,
 .landingPage1 li {
   font-family: "Inter", sans-serif;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  font-weight: 500;
 }
 
 .landingPage1 button,
@@ -2332,7 +2834,7 @@ h4 {
 }
 /*========================================THIS IS THE START OF PAGE 3=============
 =================================================================================*/
-/*======these are the containers for Fusion screen shots==========*/
+/*======GLOBAL CSS FOR PAGE 3==========*/
 
 .landingPage3 {
   position: sticky;
@@ -2362,6 +2864,46 @@ h4 {
   width: 75%;
   max-width: 420px;
   margin: 0 auto 16px;
+}
+
+.reference-image-container {
+  /*border: solid red 3px;*/
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding-top: 0px;
+}
+/*and because they don't fill the container (wierd corner instances)
+======these are the Fusion screen shots==========*/
+.reference-image-container img {
+  /*border: 3px solid blue;*/
+  display: block;
+  max-width: 100%;
+  width: auto;
+  border-radius: 0;
+}
+
+.warning_box {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+  color: #856404;
+  font-weight: bold;
+}
+/*================================CURRENT SELECTION IS A GLOBAL DEFINITION================
+FOR THE HEADER THAT SHOWS WHAT THE USER SELECTED. YOU WILL SEE IT BETWEEN 2X4 SKID TYPE ETC.======*/
+.current_selection {
+  /*border: solid 3px #d86aaa;*/
+  font-size: 1.2rem;
+  text-align: center;
+  color: #d8b36a;
+  text-shadow: 1px 1px 1px black;
+  margin: 8px 0;
 }
 /*======================================CONTROL PANEL===============================
 ====================================================================================*/
@@ -2396,7 +2938,7 @@ h4 {
   justify-content: space-between;
 }
 
-/*summary sections are in the control panel*/
+/*=============================summary sections are in the control panel===================*/
 .dimensions-summary-section {
   border-left: 6px solid rgb(120, 150, 120);
   background-color: rgba(168, 192, 168, 0.12);
@@ -2407,12 +2949,18 @@ h4 {
 }
 
 .foundation-summary-section {
-  border-left: 6px solid #c19a6b;
+  /*border-left: 6px solid #c19a6b;*/
   background-color: rgba(193, 154, 107, 0.12);
   border-radius: 6px;
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+
+  background-image: url("./assets/Wood004_4K-JPG_Color.jpg");
+  background-size: cover;
+  background-position: center;
+  /*border: 3px solid #d8b36a;*/
+  color: #e7d9c6;
 }
 
 .floor-joist-summary-section {
@@ -2422,15 +2970,42 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+
+  background-image: url("./assets/Wood034_4k-JPG_Color.jpg");
+  background-size: cover;
+  background-position: center;
+  /*border: 3px solid #d8b36a;*/
+  color: black;
 }
 
 .plywood-summary-section {
+  /*order-left: 6px solid #c19a6b;*/
+  background-color: rgba(193, 154, 107, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+
+  background-image: url("./assets/Chipboard004_4k-JPG_Color.jpg");
+  background-size: cover;
+  background-position: center;
+  /*border: 3px solid #d8b36a;*/
+  color: black;
+}
+
+.stud-summary-section {
   border-left: 6px solid #c19a6b;
   background-color: rgba(193, 154, 107, 0.12);
   border-radius: 6px;
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+
+  background-image: url("./assets/Wood034_4k-JPG_Color.jpg");
+  background-size: cover;
+  background-position: center;
+  /*border: 3px solid #d8b36a;*/
+  color: black;
 }
 
 .roof-peak-summary-section {
@@ -2449,11 +3024,46 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+
+  background-image: url("./assets/Wood034_4k-JPG_Color.jpg");
+  background-size: cover;
+  background-position: center;
+  /*border: 3px solid #d8b36a;*/
+  color: black;
 }
 
 .roof-pitch-summary-section {
   border-left: 6px solid #7d8590;
   background-color: rgba(125, 133, 144, 0.12);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.front-door-summary-section {
+  border-left: 6px solid #c19a6b;
+  background-color: #eee2d9;
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+
+  /*border: solid magenta 3px;*/
+}
+
+.left-window-summary-section {
+  border-left: 6px solid #4a90e2;
+  background-color: rgba(74, 144, 226, 0.07);
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.right-window-summary-section {
+  border-left: 6px solid #4a90e2;
+  background-color: rgba(74, 144, 226, 0.16);
   border-radius: 6px;
   padding: 8px;
   margin-top: 6px;
@@ -2487,15 +3097,6 @@ h4 {
   gap: 20px;
 }
 
-/*================================CURRENT SELECTION IS A GLOBAL DEFINITION
-==================================FOR THE HEADER THAT SHOWS WHAT THE USER SELECTED======*/
-.current_selection {
-  font-size: 1.2rem;
-  text-align: center;
-  color: #d8b36a;
-  text-shadow: 1px 1px 1px black;
-  margin: 8px 0;
-}
 /*======================================TRAVELER Q CARDS ARE THE ORIGINAL
 =========================================NAMED CARDS UNTIL THEY STARTED GETTING
 =========================================DIVIDED INTO CATEGORIES AND COLORS APPLIED==WIPROGRESS*/
@@ -2509,25 +3110,6 @@ h4 {
   margin-bottom: 24px;
 }
 /*===================================DIMENSIONS SECTION======================*/
-.reference-image-container {
-  /*border: solid red 3px;*/
-  border-radius: 30px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
-  padding-top: 10px;
-}
-/*and because they don't fill the container (wierd corner instances)
-======these are the Fusion screen shots==========*/
-.reference-image-container img {
-  /*border: 3px solid blue;*/
-  display: block;
-  max-width: 100%;
-  width: auto;
-  border-radius: 0;
-}
 
 .dimensions_reference_image {
   /*there are currently 3 other instances of this. two iso above the dimensions legend,
@@ -2680,6 +3262,24 @@ h4 {
   margin-bottom: 6px;
 }
 
+.roof_direction_image {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.roof_option {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.selected_roofPeak {
+  border: 3px solid #7d8590;
+  border-radius: 8px;
+  box-shadow: 10px 12px #7d8590;
+  background-color: rgba(125, 133, 144, 0.08);
+}
+
 .roof-rafters-section {
   box-shadow: 4px 6px #c19a6b;
   /*border-left: 6px solid #c19a6b;*/
@@ -2699,7 +3299,35 @@ h4 {
   margin-top: 6px;
   margin-bottom: 6px;
 }
+/*=======================================FRONT DOOR SECTION===================*/
+.door-section-container {
+  /*border: solid magenta 3px;*/
+  box-shadow: 4px 6px #c19a6b;
+  background-color: #eee2d9;
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
 
+.door-section {
+  border: solid #c19a6b 3px;
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.traveler-frontDoor-Q-card {
+  /*this is the inner card the holds the "Add Front Door" header*/
+  border: 2px solid #c19a6b;
+  border-radius: 8px;
+  padding: 16px;
+
+  box-shadow: 4px 6px #c19a6b;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
 /*========================================WINDOW SECTION================*/
 .window-section-container {
   box-shadow: 4px 6px #4a90e2;
@@ -2807,16 +3435,6 @@ h4 {
   margin-bottom: 12px;
 }
 
-.warning_box {
-  background-color: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 8px;
-  padding: 12px;
-  margin: 12px 0;
-  color: #856404;
-  font-weight: bold;
-}
-
 .left-traveler-windowQ-card {
   border-radius: 8px;
   padding: 16px;
@@ -2876,42 +3494,6 @@ h4 {
   color: rgb(43, 4, 4);
 }
 
-.roof_option {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.selected_roofPeak {
-  border: 3px solid #7d8590;
-  border-radius: 8px;
-  box-shadow: 10px 12px #7d8590;
-  background-color: rgba(125, 133, 144, 0.08);
-}
-
-.roof_direction_image {
-  width: 120px;
-  flex-shrink: 0;
-}
-
-.stud-summary-section {
-  border-left: 6px solid #c19a6b;
-  background-color: rgba(193, 154, 107, 0.12);
-  border-radius: 6px;
-  padding: 8px;
-  margin-top: 6px;
-  margin-bottom: 6px;
-}
-
-.left-window-summary-section {
-  border-left: 6px solid #4a90e2;
-  background-color: rgba(74, 144, 226, 0.07);
-  border-radius: 6px;
-  padding: 8px;
-  margin-top: 6px;
-  margin-bottom: 6px;
-}
-
 .right_selected_window {
   border: 5px solid #4a90e2;
   box-shadow: 10px 12px #4a90e2;
@@ -2920,15 +3502,6 @@ h4 {
   /*background-image: ;*/
   background-size: cover;
   background-position: center;
-}
-
-.right-window-summary-section {
-  border-left: 6px solid #4a90e2;
-  background-color: rgba(74, 144, 226, 0.16);
-  border-radius: 6px;
-  padding: 8px;
-  margin-top: 6px;
-  margin-bottom: 6px;
 }
 
 @media (max-width: 800px) {
