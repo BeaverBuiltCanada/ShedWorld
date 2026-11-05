@@ -453,11 +453,11 @@ function selectBuildingType(type) {
     wallStudSize.value = "2x6";
     roofPeakDirection.value = "depth";
     roofRafterSize.value = "2x6";
-    roofPitch.value = "10";
+    roofPitch.value = "6";
     eavesOverHang.value = "16";
 
     frontDoor.value = 1;
-    frontDoorWidth.value = 192; /*double garage door*/
+    frontDoorWidth.value = 108; /*single garage door*/
     frontDoorHeight.value = 96; /* but double check, once confirmed add note here.*/
     frontDoorFloorHeight.value = 0;
     frontDoorHeaderSize.value = "2x6";
@@ -1994,7 +1994,7 @@ function loadTheMechanism() {
                         type="number"
                         v-model="frontDoorWidth"
                         min="12"
-                        max="80"
+                        max="108"
                         step="0.25"
                       />
 
@@ -2022,7 +2022,7 @@ function loadTheMechanism() {
                         type="number"
                         v-model="frontDoorHeight"
                         min="12"
-                        max="108"
+                        max="96"
                         step="0.25"
                       />
 
