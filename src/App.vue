@@ -5,6 +5,7 @@ MULTI-LINES==========================================================
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import JSZip from "jszip";
 import roofPeakWidth from "./assets/roofPeakWidth.png";
 import roofPeakDepth from "./assets/roofPeakDepth.png";
 import twoIso from "./assets/two_iso.png";
@@ -483,7 +484,7 @@ function selectBuildingType(type) {
   });
 }
 /*==========================================EXPORT JSON=============================*/
-function loadTheMechanism() {
+async function loadTheMechanism() {
   const config = {
     width: Number(width.value),
     depth: Number(depth.value),
@@ -522,17 +523,21 @@ function loadTheMechanism() {
   };
 
   const json = JSON.stringify(config, null, 2);
-  /*==Right now, when you click Load The Mechanism, your Vue app is doing the const blob block below============*/
-  const blob = new Blob([json], {
-    type: "application/json",
+  /*==Right now, when you click LOAD THE MECHANISM™, your Vue app is doing the const blob block below============*/
+  const zip = new JSZip();
+
+  zip.file("config.json", json);
+
+  const zipBlob = await zip.generateAsync({
+    type: "blob",
   });
 
-  const url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(zipBlob);
 
   const link = document.createElement("a");
 
   link.href = url;
-  link.download = "config.json";
+  link.download = "BeaverBuiltConfiguration.zip";
 
   link.click();
 
@@ -889,6 +894,12 @@ function loadTheMechanism() {
             </div>
             <div class="dashboard-intro">
               <p>(Updates automatically as you make selections.)</p>
+              <ol>
+                <li>After completing your design, click LOAD THE MECHANISM™</li>
+                <li>Save the ZIP file somewhere you can easily find it</li>
+                <li>Continue to Submission</li>
+                <li>Upload your ZIP file for review</li>
+              </ol>
             </div>
             <!--=====================DASHBOARD BUILDING FOOTPRINT DIMENSIONS===============-->
             <div class="dimensions-summary-section">
@@ -1082,8 +1093,17 @@ function loadTheMechanism() {
               </div>
             </div>
             <button class="load-mechanism-button" @click="loadTheMechanism">
-              Load The Mechanism
+              LOAD THE MECHANISM™
             </button>
+            <div class="next-step-link">
+              <a
+                href="https://www.beaverbuiltcanada.ca/submit-your-mechanism"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Continue to Submission →
+              </a>
+            </div>
           </div>
         </aside>
       </div>
