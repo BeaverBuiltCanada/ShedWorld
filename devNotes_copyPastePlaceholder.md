@@ -1,5 +1,11 @@
 # BeaverBuilt Notes
 
+```text
+naming convention for incoming orders:
+
+YYYY-MM-DD_FullName
+```
+
 ## todays goals starts here.
 
 reminder: make a clear statement that even though the Qcards are labeled windows, using the advanced settings can create a door opening by setting dff to zero. Same goes for front door, could actually be a window by setting dff up from floor level.
@@ -147,6 +153,27 @@ Left Window Reference Diagram
 This image is provided as a reference to help explain window configuration settings. Your actual building dimensions, window sizes, and locations may differ based on the selections made within the configurator.
 
 The reference images throughout the configurator are also representative of the style and level of detail customers can expect to see in their final drawing package. Additional drawing examples and sample plans will be provided as the project continues to develop.
+```
+
+```text
+site map proposal
+HOME
+│
+├── About Us
+│
+├── Work Gallery
+│
+├── Custom Building Configurator
+│
+└── Submit Your Mechanism™
+        │
+        ├── Name
+        ├── Email
+        ├── Upload config.json
+        ├── Notes
+        │
+        └── RECEIVED THE MECHANISM™ 🦫
+
 ```
 
 ```text
