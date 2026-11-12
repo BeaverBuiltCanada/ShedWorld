@@ -1323,33 +1323,33 @@ async function loadTheMechanism() {
                   What Is A Skid?
                 </button>
               </p>
-            </div>
 
-            <div v-if="showWhatIsASkid">
-              <p>
-                <strong class="whatIs-q"> Q: What is a skid?</strong><br />
-                A: A skid is a horizontal support beam that runs along the
-                bottom of a structure, providing stability and support. Skids
-                are typically made of pressure-treated lumber because they are
-                usually in contact with the ground. They are used in various
-                types of buildings, including sheds, workshops, and animal
-                housing. They help distribute the weight of the structure evenly
-                and can also make it easier to move the building if necessary.
-                By not being permanently fixed to the ground, skids allow for
-                some flexibility in placement and can help prevent moisture
-                damage by elevating the structure slightly above the ground
-                level. Skids also do not require permanent anchoring, which can
-                sometimes be an advantage when navigating building codes and
-                municipal bylaws. As always, be sure to follow the rules and
-                requirements of your local jurisdiction.
-              </p>
-              <p>
-                By default, this configurator will use four skids around the
-                underside perimeter of the building. For larger depth span
-                buildings it is recommended to use a center skid also. The
-                center skid will be automatically positioned for equal spacing
-                and parallel between the front skid and the back skid.
-              </p>
+              <div v-if="showWhatIsASkid">
+                <p>
+                  <strong class="whatIs-q"> Q: What is a skid?</strong><br />
+                  A: A skid is a horizontal support beam that runs along the
+                  bottom of a structure, providing stability and support. Skids
+                  are typically made of pressure-treated lumber because they are
+                  usually in contact with the ground. They are used in various
+                  types of buildings, including sheds, workshops, and animal
+                  housing. They help distribute the weight of the structure
+                  evenly and can also make it easier to move the building if
+                  necessary. By not being permanently fixed to the ground, skids
+                  allow for some flexibility in placement and can help prevent
+                  moisture damage by elevating the structure slightly above the
+                  ground level. Skids also do not require permanent anchoring,
+                  which can sometimes be an advantage when navigating building
+                  codes and municipal bylaws. As always, be sure to follow the
+                  rules and requirements of your local jurisdiction.
+                </p>
+                <p>
+                  By default, this configurator will use four skids around the
+                  underside perimeter of the building. For larger depth span
+                  buildings it is recommended to use a center skid also. The
+                  center skid will be automatically positioned for equal spacing
+                  and parallel between the front skid and the back skid.
+                </p>
+              </div>
             </div>
             <div
               class="travelerQ-card"
@@ -1443,9 +1443,9 @@ async function loadTheMechanism() {
 
               <div v-if="show2x4FloorJoistInfo">
                 <p>
-                  2x4 joists are recommended for smaller structures like animal
-                  housing, and small light duty sheds for storage, gardening
-                  tools and push type lawnmowers.
+                  2x4 joists are recommended for smaller structures like pets
+                  and smaller animal housing, and small light duty sheds for
+                  storage, gardening tools and push type lawnmowers.
                 </p>
                 Conventional framing practice is to use the same size floor
                 joists as used for wall studs and roof rafters. However, you may
@@ -1455,7 +1455,8 @@ async function loadTheMechanism() {
                 <p>
                   Using 2x4 joists defaults to conventional framing method of
                   16" on centers. You may choose to over-ride that by using more
-                  advanced settings later.
+                  advanced settings later. (floor joist spacing over-ride is
+                  currently under development)
                 </p>
               </div>
             </div>
@@ -1489,8 +1490,8 @@ async function loadTheMechanism() {
                 <p>
                   Using 2x6 floor joists defaults to conventional framing method
                   of 24" on centers. You may choose to over-ride that by using
-                  more advanced settings later.(This feature is currently in
-                  development.)
+                  more advanced settings later.(floor joist spacing over-ride is
+                  currently under development)
                 </p>
               </div>
             </div>
@@ -1582,7 +1583,7 @@ async function loadTheMechanism() {
                 <p>
                   Using 2x6 wall studs defaults to conventional 24" on centers.
                   You may choose to over-ride that by using more advanced
-                  settings later.
+                  settings below.
                 </p>
               </div>
             </div>
@@ -2969,6 +2970,7 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+  color: #462a06;
 }
 
 .foundation-summary-section {
@@ -2998,7 +3000,8 @@ h4 {
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
-  color: black;
+  /*color: black;*/
+  color: #462a06;
 }
 
 .plywood-summary-section {
@@ -3013,7 +3016,8 @@ h4 {
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
-  color: black;
+  /*color: black;*/
+  color: #462a06;
 }
 
 .stud-summary-section {
@@ -3028,7 +3032,8 @@ h4 {
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
-  color: black;
+  /*color: black;*/
+  color: #462a06;
 }
 
 .roof-peak-summary-section {
@@ -3052,7 +3057,7 @@ h4 {
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
-  color: black;
+  color: #462a06;
 }
 
 .roof-pitch-summary-section {
@@ -3062,6 +3067,7 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+  color: #462a06;
 }
 
 .front-door-summary-section {
@@ -3071,6 +3077,7 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+  color: #462a06;
 
   /*border: solid magenta 3px;*/
 }
@@ -3082,6 +3089,7 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+  color: #462a06;
 }
 
 .right-window-summary-section {
@@ -3091,6 +3099,7 @@ h4 {
   padding: 8px;
   margin-top: 6px;
   margin-bottom: 6px;
+  color: #462a06;
 }
 
 .load-mechanism-button {
@@ -3101,6 +3110,45 @@ h4 {
   margin: 8px;
   z-index: 2;
   box-sizing: border-box;
+}
+
+/*.load-mechanism-button  {
+  hover: background-color: #086e5d;
+  color: #086e47;
+  z-index: 2;
+}*/
+
+.next-step-link {
+  /*position: sticky;*/
+  bottom: 0;
+  flex: 0 0 auto;
+  width: calc(100% - 16px);
+  margin: 8px;
+  z-index: 2;
+  box-sizing: border-box;
+  /*border: solid red 5px;*/
+  text-decoration: none;
+  color: #462a06;
+  position: relative;
+}
+
+.next-step-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 45%;
+  height: 2px;
+  background: currentColor;
+
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease-in;
+}
+
+.next-step-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 /*====================================THIS IS RHS STYLES===================*/
 .options-column {
