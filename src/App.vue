@@ -1439,24 +1439,24 @@ async function loadTheMechanism() {
                   more about 2x4 joists
                 </button>
               </p>
-            </div>
-            <div v-if="show2x4FloorJoistInfo">
-              <p>
-                2x4 joists are recommended for smaller structures like animal
-                housing, and small light duty sheds for storage, gardening tools
-                and push type lawnmowers.
-              </p>
-              Conventional framing practice is to use the same size floor joists
-              as used for wall studs and roof rafters. However, you may choose
-              an unconventional approach by mixing sizes, to suit your design
-              intent.
 
-              <p>
-                Using 2x4 joists defaults to conventional framing method of 16"
-                on centers. You may choose to over-ride that by using more
-                advanced settings later. (This feature is currently in
-                development.)
-              </p>
+              <div v-if="show2x4FloorJoistInfo">
+                <p>
+                  2x4 joists are recommended for smaller structures like animal
+                  housing, and small light duty sheds for storage, gardening
+                  tools and push type lawnmowers.
+                </p>
+                Conventional framing practice is to use the same size floor
+                joists as used for wall studs and roof rafters. However, you may
+                choose an unconventional approach by mixing sizes, to suit your
+                design intent.
+
+                <p>
+                  Using 2x4 joists defaults to conventional framing method of
+                  16" on centers. You may choose to over-ride that by using more
+                  advanced settings later.
+                </p>
+              </div>
             </div>
 
             <div class="current_selection" v-if="floorJoistSize">
@@ -1535,22 +1535,23 @@ async function loadTheMechanism() {
                   more about 2x4 studs
                 </button>
               </p>
-            </div>
-            <div v-if="showMoreAbout2x4Studs">
-              <p>
-                2x4 studs are recommended for smaller structures like animal
-                housing, and small light duty sheds for storage, gardening tools
-                and push type lawnmowers.
-              </p>
-              Conventional framing practice is to use the same size studs as
-              used for floor joists and roof rafters. However, you may choose an
-              unconventional approach by mixing sizes.
 
-              <p>
-                Using 2x4 studs defaults to conventional 16" on centers. You may
-                choose to over-ride that by using more advanced settings
-                later.(This feature is currently in development.)
-              </p>
+              <div v-if="showMoreAbout2x4Studs">
+                <p>
+                  2x4 studs are recommended for smaller structures like animal
+                  housing, and small light duty sheds for storage, gardening
+                  tools and push type lawnmowers.
+                </p>
+                Conventional framing practice is to use the same size studs as
+                used for floor joists and roof rafters. However, you may choose
+                an unconventional approach by mixing sizes.
+
+                <p>
+                  Using 2x4 studs defaults to conventional 16" on centers. You
+                  may choose to over-ride that by using more advanced settings
+                  later.
+                </p>
+              </div>
             </div>
             <div class="current_selection" v-if="wallStudSize">
               Selected Wall Stud Size: {{ wallStudSize }}
@@ -1580,7 +1581,7 @@ async function loadTheMechanism() {
                 <p>
                   Using 2x6 wall studs defaults to conventional 24" on centers.
                   You may choose to over-ride that by using more advanced
-                  settings later.(This feature is currently in development.)
+                  settings later.
                 </p>
               </div>
             </div>
