@@ -1093,7 +1093,8 @@ async function loadTheMechanism() {
               </div>
             </div>
             <button class="load-mechanism-button" @click="loadTheMechanism">
-              LOAD THE MECHANISM™
+              step 1: confirm your choices, LOAD THE MECHANISM™, save to your
+              computer
             </button>
             <div class="next-step-link">
               <a
@@ -1101,7 +1102,7 @@ async function loadTheMechanism() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Continue to Submission →
+                step 2: Continue to Submission →
               </a>
             </div>
           </div>
@@ -1603,8 +1604,8 @@ async function loadTheMechanism() {
                   Override Default Stud Spacing
                 </label>
               </p>
-              <div v-if="wallStudSpacingOverride">
-                <label>Custom Stud Spacing (12"–48")</label>
+              <div class="stud-spacing-row" v-if="wallStudSpacingOverride">
+                <label>Custom Stud Spacing (12" – 48")</label>
 
                 <input
                   type="number"
@@ -1613,6 +1614,7 @@ async function loadTheMechanism() {
                   max="48"
                   step="2"
                 />
+                inches
               </div>
 
               <!-- Manual spacing input goes here -->
@@ -3100,7 +3102,7 @@ h4 {
   z-index: 2;
   box-sizing: border-box;
 }
-/*====================================THIS IS RHS SETTINGS===================*/
+/*====================================THIS IS RHS STYLES===================*/
 .options-column {
   min-width: 0;
   padding: 10px;
@@ -3271,6 +3273,12 @@ h4 {
   background-color: rgba(193, 154, 107, 0.12);
   margin-top: 0;
   margin-bottom: 24px;
+}
+
+.stud-spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 /*==================================ROOF SECTION=======================*/
 .roof-peak-section {
