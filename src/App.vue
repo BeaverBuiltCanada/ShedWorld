@@ -3092,7 +3092,7 @@ h4 {
   margin-top: 6px;
   margin-bottom: 6px;
 
-  background-image: url("./assets/Wood034_4k-JPG_Color.jpg");
+  background-image: url("./assets/Wood034_4K-JPG_Color.jpg");
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
@@ -3124,7 +3124,7 @@ h4 {
   margin-top: 6px;
   margin-bottom: 6px;
 
-  background-image: url("./assets/Wood034_4k-JPG_Color.jpg");
+  background-image: url("./assets/Wood034_4K-JPG_Color.jpg");
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
@@ -3149,7 +3149,7 @@ h4 {
   margin-top: 6px;
   margin-bottom: 6px;
 
-  background-image: url("./assets/Wood034_4k-JPG_Color.jpg");
+  background-image: url("./assets/Wood034_4K-JPG_Color.jpg");
   background-size: cover;
   background-position: center;
   /*border: 3px solid #d8b36a;*/
