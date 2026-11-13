@@ -32,6 +32,7 @@ const showTerms = ref(false);
 const showWelcomeDetails = ref(true);
 const buildingType = ref("");
 const topPlateThickness = 1.5; /*============WINDOW HEIGHT WARNING USES THIS======*/
+const mechanismLoaded = ref(false);
 
 /*=========================================================DIMENSIONS=============*/
 const width = ref(12); // Default width is 12 feet before any selection made.
@@ -483,7 +484,7 @@ function selectBuildingType(type) {
     behavior: "instant",
   });
 }
-/*==========================================EXPORT JSON=============================*/
+/*==========================================EXPORT ZIP FILE=============================*/
 async function loadTheMechanism() {
   const config = {
     width: Number(width.value),
@@ -540,6 +541,71 @@ async function loadTheMechanism() {
   link.download = "BeaverBuiltConfiguration.zip";
 
   link.click();
+
+  /* User has clicked LTM and browser has been told to download */
+  mechanismLoaded.value = true;
+  /*==WATCH FOR CHANGES TO ANY OF THE CONFIGURATION VARIABLES===Now the flow becomes:
+User clicks LTM
+      ↓
+mechanismLoaded = true
+      ↓
+Message appears
+      ↓
+Message stays forever
+      ↓
+User changes width
+      ↓
+mechanismLoaded = false
+      ↓
+Message disappears==============*/
+
+  watch(
+    [
+      buildingType,
+      width,
+      depth,
+      wallHeight,
+
+      skidType,
+      centerSkid,
+
+      floorJoistSize,
+      floorPlywoodThickness,
+
+      wallStudSize,
+      wallStudSpacingOverride,
+      wallStudOverrideSpacing,
+
+      roofPeakDirection,
+      roofRafterSize,
+      roofPitch,
+      eavesOverHang,
+
+      frontDoor,
+      frontDoorWidth,
+      frontDoorHeight,
+      frontDoorFloorHeight,
+      frontDoorHeaderSize,
+      frontDoorStudIndex,
+
+      leftWallRO2Window,
+      leftWallRO2Width,
+      leftWallRO2Height,
+      leftWallRO2FloorHeight,
+      leftWallRO2HeaderSize,
+      leftWallRO2StudIndex,
+
+      rightWallRO4Window,
+      rightWallRO4Width,
+      rightWallRO4Height,
+      rightWallRO4FloorHeight,
+      rightWallRO4HeaderSize,
+      rightWallRO4StudIndex,
+    ],
+    () => {
+      mechanismLoaded.value = false;
+    },
+  );
 
   URL.revokeObjectURL(url);
 }
@@ -612,16 +678,16 @@ async function loadTheMechanism() {
             <button @click="showHelpExample = !showHelpExample">Help</button>
             along the way, should you prefer to see them.
           </p>
-          <P
-            ><strong class="faq-q">
+          <p>
+            <strong class="faq-q">
               Q:What kind of building material can I choose using this
               configurator?</strong
             ><br />
             A: This configurator uses 2x4 and 2x6 standard dimensional lumber.
             Also 4x4 in some cases.
-          </P>
-          <P
-            ><strong class="faq-q">
+          </p>
+          <p>
+            <strong class="faq-q">
               Q:What are some of the more advanced features using this
               configurator, that an experienced builder might find
               useful?</strong
@@ -634,7 +700,7 @@ async function loadTheMechanism() {
             fit your specific needs. You can choose rough opening sizes for
             windows and doors, what size of headers you want to use and you can
             also place the openings by stud index and height from floor.
-          </P>
+          </p>
           <p>
             <strong class="faq-q"> Q: Are these plans free?</strong><br />
             A: No, these are emailed or downloadable plans and cut lists for
@@ -749,7 +815,7 @@ async function loadTheMechanism() {
       <!-- Top of page 2 landing -->
       <!--<h1>WELCOME TO:</h1>-->
       <h2 v-if="!buildingType" class="branding-header page2-brandingHeader">
-        Beaver Built Canada: Custom Building Configurator, v1.0
+        Beaver Built Canada: Custom Building Configurator, v1.1
       </h2>
       <div v-if="!buildingType" class="sticky-tape">
         <img :src="tapeMeasure" alt="Tape Measure" class="tape_measure_image" />
@@ -842,7 +908,7 @@ async function loadTheMechanism() {
     <div v-if="buildingType" class="configurator-layout">
       <div class="landingPage3">
         <h2 class="branding-header page3-brandingHeader">
-          Beaver Built Canada: Custom Building Configurator, v1.0
+          Beaver Built Canada: Custom Building Configurator, v1.1
         </h2>
 
         <button
@@ -1092,17 +1158,47 @@ async function loadTheMechanism() {
                 </div>
               </div>
             </div>
-            <button class="load-mechanism-button" @click="loadTheMechanism">
-              step 1: confirm your choices, LOAD THE MECHANISM™, save to your
-              computer
-            </button>
-            <div class="next-step-link">
+
+            <div class="workflow-step">
+              <div class="step-title">STEP 1</div>
+
+              <button class="load-mechanism-button" @click="loadTheMechanism">
+                confirm your choices above then, LOAD THE MECHANISM™
+              </button>
+
+              <div class="step-help">
+                Save the downloaded ZIP file to your computer.
+              </div>
+            </div>
+
+            <div v-if="mechanismLoaded" class="mechanism-success">
+              ✅ BeaverBuiltConfiguration.zip downloaded.
+
+              <p>
+                💡 Look in your Downloads folder for:
+                BeaverBuiltConfiguration.zip
+              </p>
+
+              <p>
+                Recommended: Rename the file to something meaningful and save it
+                somewhere you can easily find later.
+              </p>
+
+              <p>
+                Examples: YourName-Workshop.zip<br />
+                IceFishingHut.zip<br />
+                12x16Shed.zip
+              </p>
+            </div>
+            <div class="step-title">STEP 2</div>
+            <div class="next-step-link" :class="{ disabled: !mechanismLoaded }">
               <a
                 href="https://www.beaverbuiltcanada.ca/submit-your-mechanism"
                 target="_blank"
                 rel="noopener noreferrer"
+                class="continue-button"
               >
-                step 2: Continue to Submission →
+                CONTINUE TO SUBMISSION →
               </a>
             </div>
           </div>
@@ -1691,7 +1787,7 @@ async function loadTheMechanism() {
               A: A roof rafter is a structural component that supports the roof
               and transfers the load to the walls.
             </p>
-            <div class="current_selection" v-if="roofRafterSizeSize">
+            <div class="current_selection" v-if="roofRafterSize">
               Selected Roof Rafter Size: {{ roofRafterSize }}
             </div>
 
@@ -3105,51 +3201,42 @@ h4 {
 .load-mechanism-button {
   position: sticky;
   bottom: 0;
-  flex: 0 0 auto;
-  width: calc(100% - 16px);
-  margin: 8px;
-  z-index: 2;
-  box-sizing: border-box;
 }
 
-/*.load-mechanism-button  {
-  hover: background-color: #086e5d;
-  color: #086e47;
-  z-index: 2;
-}*/
+.load-mechanism-button:hover,
+.continue-button:hover {
+  background-color: #086e5d;
+  color: #ffffff;
+  cursor: pointer;
+}
 
-.next-step-link {
-  /*position: sticky;*/
-  bottom: 0;
-  flex: 0 0 auto;
-  width: calc(100% - 16px);
+.load-mechanism-button,
+.continue-button {
+  font-family: "Oswald", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
   margin: 8px;
-  z-index: 2;
+  padding: 12px;
+  border: 1px solid #462a06;
+  border-radius: 8px;
   box-sizing: border-box;
-  /*border: solid red 5px;*/
+  width: calc(100% - 16px);
+}
+
+.continue-button {
+  display: block;
+  text-align: center;
   text-decoration: none;
+  background: #f0f0f0;
   color: #462a06;
-  position: relative;
+  transition: all 0.2s ease;
 }
 
-.next-step-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 45%;
-  height: 2px;
-  background: currentColor;
-
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s ease-in;
+.next-step-link.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
-.next-step-link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
 /*====================================THIS IS RHS STYLES===================*/
 .options-column {
   min-width: 0;
