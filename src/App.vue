@@ -623,9 +623,9 @@ Message disappears==============*/
       </div>
       <p>
         Design your own shed, workshop, garage, animal shelter, or outbuilding
-        using standard Canadian dimensional lumber and generate a customized set
-        of downloadable construction plans and cut lists based on your
-        selections.
+        using standard dimensional lumber. Submit your design for review, then
+        receive a customized set of construction plans and cut lists based on
+        your selections.
       </p>
       <p>
         Designs are generated using North American building conventions,
