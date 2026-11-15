@@ -717,11 +717,11 @@ Message disappears==============*/
           </p>
           <p>
             <strong class="faq-q">
-              Q: What is the early builders honor club?</strong
+              Q: What is the Early Builders Honor Club?</strong
             ><br />
-            A: The early builders honor club is a group of early adopters who
+            A: The Early Builders Honor Club is a group of early adopters who
             receive free plans and cut lists for testing and feedback. They have
-            also agreed to allow Beaver Built Canada to use their projects,
+            also agreed to allow BeaverBuilt Canada to use their projects,
             pictures and their feedback on the BeaverBuiltCanada.ca website and
             for marketing purposes. This is based on the honor system, and their
             feedback is greatly appreciated and helps drive improvements for
@@ -730,13 +730,18 @@ Message disappears==============*/
           <p>
             These are real builders of designs they made themselves using this
             configurator; plans and cut lists. You can see their testimonials by
-            clicking this link:
+            clicking this link: in development, this will be a link to the Early
+            Builders Honor Club page on the BeaverBuiltCanada.ca website.
           </p>
           <p>
-            Should you wish to join the early builders honor club, please
-            contact us at: (if the link is active, we are looking for early
-            builders to test and provide feedback on this configurator) and tell
-            them, "Beaver sent me".
+            Should you wish to join the Early Builders Honor Club, please
+            contact us at:
+            <a href="mailto:info@beaverbuiltcanada.ca">
+              info@beaverbuiltcanada.ca
+            </a>
+            (if the link is active, we are looking for early builders to test
+            and provide feedback on this configurator) and tell them,
+            <strong>"Beaver sent me".</strong>
           </p>
           <p>
             <strong class="faq-q"> Q: Do you provide lumber or hardware?</strong
