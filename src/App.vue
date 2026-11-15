@@ -736,7 +736,9 @@ Message disappears==============*/
           <p>
             Should you wish to join the Early Builders Honor Club (EBHC), please
             contact us at:
-            <a href="mailto:info@beaverbuiltcanada.ca">
+            <a
+              href="mailto:info@beaverbuiltcanada.ca?subject=Beaver%20sent%20me"
+            >
               info@beaverbuiltcanada.ca
             </a>
             (if the link is active, we are looking for Early Builders to test
@@ -845,19 +847,14 @@ Message disappears==============*/
           features are available to provide greater control over the final
           design.
         </p>
-        <!--=====================This is currently a link to a photo for development phase=========-->
         <p>
-          Visit
-          <a
-            href="https://beaverbuiltcanada.github.io/memories/trial-chair/"
-            target="_blank"
-            rel="noopener"
-            >BeaverBuiltCanada on github</a
-          >
-          to read the documentation and configurator help topics (some
-          documentation may not be available as work in progress, please check
-          back soon). If you require additional help, feel free to contact us by
-          email at: 🦫
+          Documentation and configurator help topics are currently being
+          prepared. Please check back soon. If you require additional help, feel
+          free to contact us by email at:
+          <a href="mailto:info@beaverbuiltcanada.ca?subject=Beaver%20sent%20me">
+            info@beaverbuiltcanada.ca
+          </a>
+          🦫
         </p>
       </div>
       <!-- ==========================WHAT WOULD YOU LIKE TO BUILD?============================
