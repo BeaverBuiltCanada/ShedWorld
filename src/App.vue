@@ -618,14 +618,17 @@ Message disappears==============*/
      ============================================================-->
     <div class="landingPage1">
       <div class="heroHeader">
-        <h1>Welcome to Beaver Built Canada</h1>
+        <h1>Welcome to BeaverBuilt Canada™</h1>
         <h2>Custom Building Configurator</h2>
       </div>
       <p>
         Design your own shed, workshop, garage, animal shelter, or outbuilding
-        using standard dimensional lumber. Submit your design for review, then
-        receive a customized set of construction plans and cut lists based on
-        your selections.
+        using standard North American dimensional lumber.
+      </p>
+      <p>
+        Submit your design for review, receive a quote, and then have a
+        customized set of construction plans and cut lists prepared from your
+        selections.
       </p>
       <p>
         Designs are generated using North American building conventions,
@@ -636,18 +639,19 @@ Message disappears==============*/
       <h3>Before You Begin:</h3>
       <!--Start of BULLET POINTS on LANDING PAGE-->
       <ul>
+        <li>Use of this configurator is free.</li>
+
         <li>
-          These are emailed or downloadable plans and cut lists intended for
-          personal projects, not free downloads.
+          Construction plans and cut lists are a paid product. Pricing will be
+          provided and approved by you before any purchase is required and may
+          vary depending on project complexity.
         </li>
-        <li>
-          Plans are generated from the selections you make within this
-          configurator.
-        </li>
+
         <li>
           No lumber, hardware, building kits, or construction services are
           included.
         </li>
+
         <li>
           You are responsible for verifying local building codes, permit
           requirements, zoning restrictions, setbacks, site conditions, snow
@@ -701,20 +705,7 @@ Message disappears==============*/
             windows and doors, what size of headers you want to use and you can
             also place the openings by stud index and height from floor.
           </p>
-          <p>
-            <strong class="faq-q"> Q: Are these plans free?</strong><br />
-            A: No, these are emailed or downloadable plans and cut lists for
-            personal projects.
-          </p>
-          <p>
-            <strong class="faq-q"> Q: How much do the plans cost?</strong><br />
-            A: The cost of the plans is (yet to be determined, maybe $20. CAD)
-            for a single building design and cut list. This is a one-time fee
-            for the plans and cut list for your specific building design. You
-            will receive a link to download the plans and cut list after payment
-            is received. You will also receive a link to download the plans and
-            cut list in your email.
-          </p>
+
           <p>
             <strong class="faq-q">
               Q: What is the Early Builders Honor Club? (EBHC)</strong
@@ -757,6 +748,19 @@ Message disappears==============*/
             ><br />
             A: No, these plans are intended for personal use only. Commercial
             use is not recommended.
+          </p>
+          <p>
+            <strong class="faq-q">Q: Are these plans free?</strong><br />
+            A: No. Use of the BeaverBuilt Canada™ configurator is free, but
+            construction plans and cut lists are a paid product.
+          </p>
+
+          <p>
+            <strong class="faq-q">Q: How much do the plans cost?</strong><br />
+            A: Pricing has not yet been finalized. Submitted designs are
+            reviewed before construction plans and cut lists are prepared.
+            Pricing will be provided and approved by you before any purchase is
+            required and may vary depending on project complexity.
           </p>
         </div>
       </div>
@@ -822,7 +826,7 @@ Message disappears==============*/
       <!-- Top of page 2 landing -->
       <!--<h1>WELCOME TO:</h1>-->
       <h2 v-if="!buildingType" class="branding-header page2-brandingHeader">
-        Beaver Built Canada: Custom Building Configurator, v1.1
+        BeaverBuilt Canada: Custom Building Configurator, v1.1
       </h2>
       <div v-if="!buildingType" class="sticky-tape">
         <img :src="tapeMeasure" alt="Tape Measure" class="tape_measure_image" />
@@ -2799,6 +2803,15 @@ h4 {
     2px 2px 3px rgba(0, 0, 0, 0.3);
 
   letter-spacing: 3px;
+}
+
+.heroHeader h1 {
+  margin-bottom: 0;
+}
+
+.heroHeader h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
 }
 
 .pickYourPoison,/*these are a heading and a link text*/
