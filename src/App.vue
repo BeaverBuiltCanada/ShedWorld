@@ -705,37 +705,42 @@ Message disappears==============*/
             windows and doors, what size of headers you want to use and you can
             also place the openings by stud index and height from floor.
           </p>
+          <div class="ebhc-box">
+            <p>
+              <strong class="faq-q">
+                Q: What is the Early Builders Honor Club? (EBHC)</strong
+              ><br />
+              A: The Early Builders Honor Club (EBHC) is a community of early
+              adopters who volunteered to help test the BeaverBuilt Canada™
+              configurator and plan preparation process. Members receive
+              construction plans and cut lists at no cost in exchange for
+              feedback, photos of completed projects, and permission to share
+              their experiences on BeaverBuiltCanada.ca. Their feedback helps
+              improve the configurator, building plans, cut lists, and overall
+              experience for future builders. The projects featured in the
+              gallery were designed using the BeaverBuilt Canada™ configurator
+              and built by real people. We are grateful for their support and
+              contributions during the early stages of development.
+            </p>
+            <p>
+              Meet the members of the Early Builders Honor Club and see projects
+              built using BeaverBuilt Canada™ plans.
+            </p>
 
-          <p>
-            <strong class="faq-q">
-              Q: What is the Early Builders Honor Club? (EBHC)</strong
-            ><br />
-            A: The Early Builders Honor Club (EBHC) is a group of early adopters
-            who receive free plans and cut lists for testing and feedback. They
-            have also agreed to allow BeaverBuilt Canada to use their projects,
-            pictures and their feedback on the BeaverBuiltCanada.ca website and
-            for marketing purposes. This is based on the honor system, and their
-            feedback is greatly appreciated and helps drive improvements for
-            everybody.
-          </p>
-          <p>
-            These are real builders of designs they made themselves using this
-            configurator; plans and cut lists. You can see their testimonials by
-            clicking this link: in development, this will be a link to the EBHC
-            page on the BeaverBuiltCanada.ca website.
-          </p>
-          <p>
-            Should you wish to join the Early Builders Honor Club (EBHC), please
-            contact us at:
-            <a
-              href="mailto:info@beaverbuiltcanada.ca?subject=Beaver%20sent%20me"
-            >
-              info@beaverbuiltcanada.ca
-            </a>
-            (if the link is active, we are looking for Early Builders to test
-            and provide feedback on this configurator) and tell them,
-            <strong>"Beaver sent me".</strong>
-          </p>
+            <p>
+              🦫 <strong>Interested in Joining?</strong><br />
+              We are currently looking for a limited number of Early Builders to
+              help test and improve the BeaverBuilt Canada™ configurator. If you
+              are interested in participating, please contact us at:
+              <a
+                href="mailto:info@beaverbuiltcanada.ca?subject=Beaver%20sent%20me"
+              >
+                info@beaverbuiltcanada.ca
+              </a>
+              and tell us,
+              <strong>"Beaver sent me."</strong>
+            </p>
+          </div>
           <p>
             <strong class="faq-q"> Q: Do you provide lumber or hardware?</strong
             ><br />
@@ -1178,16 +1183,11 @@ Message disappears==============*/
             </div>
 
             <div v-if="mechanismLoaded" class="mechanism-success">
-              ✅ BeaverBuiltConfiguration.zip downloaded.
-
+              ✅ When prompted by your browser, choose a location (such as your
+              desktop), and complete the Save As process.
               <p>
-                💡 Look in your Downloads folder for:
-                BeaverBuiltConfiguration.zip
-              </p>
-
-              <p>
-                Recommended: Rename the file to something meaningful and save it
-                somewhere you can easily find later.
+                💡 Recommended: Rename the file to something meaningful and save
+                it somewhere you can easily find later.
               </p>
 
               <p>
@@ -2855,6 +2855,15 @@ h4 {
 .whatIs-q {
   color: #d8b36a;
   font-family: "Oswald", sans-serif;
+}
+
+.ebhc-box {
+  background: rgba(216, 179, 106, 0.08);
+  border: 2px solid #d8b36a;
+  border-left: 8px solid #d8b36a;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
 }
 
 .acceptance-box {

@@ -8,13 +8,7 @@ YYYY-MM-DD_FullName
 
 ## todays goals starts here.
 
-reminder: make a clear statement that even though the Qcards are labeled windows, using the advanced settings can create a door opening by setting dff to zero. Same goes for front door, could actually be a window by setting dff up from floor level.
-
-1. prove I can get window to polulate the model, with defaults pre set to fit the minimum size structure of 4x4 with 3 1/2 feet walls. A 2x4 header should be the default. I think 12" height and 12" off floor for defaults.
-
-another thing I thought would be cool for choosing window width and height size was if we could have a dragable square, similar to a cropping tool with numbers in a text box that could slide greater or lesser, auto populating beside the crop window... if that is doable.
-
-The Fusion model is stable and will not implode if the size chosen will not fit the wall. I need a way to communicate that, especially because I will not have a rendered model for them, which really sucks!
+EBHC gallery
 
 ## Future Ideas
 
